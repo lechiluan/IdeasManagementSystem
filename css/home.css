@@ -1,0 +1,126 @@
+.bar {
+    list-style-type: none;
+    overflow: hidden;
+    background: #999999;
+    font-size: 12px;
+    font-family: "Work Sans", sans-serif;
+    padding: 0px;
+    height: 25px;
+    color: black;
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding-left: 10px;
+}
+
+.item {
+    float: left;
+}
+.welcome{
+    display: block;
+    text-align: center;
+    padding: 5px 9px;
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+    font-family: "Public Sans", Arial, Helvetica, sans-serif;
+    margin-left: 706px;
+}
+
+.link {
+    display: block;
+    text-align: center;
+    padding: 5px 9px;
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+    font-family: "Public Sans", Arial, Helvetica, sans-serif;
+}
+
+.link:hover {
+    background: #2a1468;
+    color: white;
+}
+
+.banner {
+    padding: 0;
+    border-bottom: 1px solid #dadcdc;
+    background-color: #ffffff;
+}
+
+.selected{
+    display: block;
+    text-align: center;
+    justify-content: center;
+    padding: 5px 9px;
+    color: black;
+    font-size: 30px;
+    font-family: "Public Sans", Arial, Helvetica, sans-serif;
+    margin-left: 1140px;
+    text-decoration: none;
+    margin-top: -50px;
+    margin-bottom: 10px;
+}
+
+.footer{
+    display: block;
+    background-color: #999999;
+    color: #000000;
+    font-size: 20px;
+    line-height: 30px;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+
+}
+
+.footer-title{
+    padding: 15px 0px;
+    border-bottom: 2px solid #000000;
+    width: 30%;
+    margin: 0px 15px 30px 15px;
+    font-size: 20px;
+}
+
+.block-info{
+    display: flex;
+    flex-flow: row wrap;
+    margin: 30px 15px 30px 15px;
+}
+
+.left-info{
+    margin-right: 29%;
+    font-size: 16px;
+}
+
+.right-info{
+    margin-left: 15%;
+    font-size: 16px;
+}
+
+.info-char{
+    width: max-content;
+    font-size: 16px;
+}
+
+.link-info{
+    color: #000000;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.link-info:hover{
+    text-decoration: underline;
+}
+
+.ft-coppyright{
+    text-align: center;
+    font-size: 16px;
+}

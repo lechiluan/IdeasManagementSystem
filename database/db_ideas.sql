@@ -13,7 +13,7 @@ CREATE TABLE Staff (
   FullName VARCHAR(50),
   Email VARCHAR(50),
   Phone VARCHAR(20),
-  Password VARCHAR(20),
+  Password TEXT,
   RoleID INT,
   DepartmentID INT,
   FOREIGN KEY (RoleID) REFERENCES Role(RoleID),

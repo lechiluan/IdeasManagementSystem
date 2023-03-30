@@ -1,2 +1,0 @@
-# IdeasManagementSystem
-Ideas Management System

@@ -6,12 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- fontawesome   -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
-        integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <!-- main css -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
     <title>Quality Assurance Manager</title>
@@ -29,41 +26,34 @@
                     <!-- search bar -->
                     <div class="input-group ms-2">
                         <li class="p-1 d-flex">
-                            <div class="input-group-text bg-gray border-0 rounded-pill"
-                                style="min-height: 40px; min-width: 300px;">
+                            <div class="input-group-text bg-gray border-0 rounded-pill" style="min-height: 40px; min-width: 300px;">
                                 <i class="fas fa-search me-2 text-muted"></i>
-                                <input type="text" class="form-control rounded-pill border-0 bg-gray"
-                                    placeholder="Search Ideas ..." id="searchInput">
-                                <button class="btn btn-outline-secondary border-0 rounded-circle" type="button"
-                                    id="clearSearch"><i class="fas fa-times"></i></button>
+                                <input type="text" class="form-control rounded-pill border-0 bg-gray" placeholder="Search Ideas ..." id="searchInput">
+                                <button class="btn btn-outline-secondary border-0 rounded-circle" type="button" id="clearSearch"><i class="fas fa-times"></i></button>
                             </div>
                         </li>
                     </div>
                 </div>
                 <script>
                     // Clear search input when X button is clicked
-                    document.getElementById('clearSearch').addEventListener('click', function () {
+                    document.getElementById('clearSearch').addEventListener('click', function() {
                         document.getElementById('searchInput').value = '';
                     });
                 </script>
                 <!-- menus -->
                 <div class="col d-flex align-items-center justify-content-end">
                     <!-- notifications -->
-                    <div class="rounded-circle p-1 bg-gray d-flex align-items-center justify-content-center mx-2"
-                        style="width: 38px; height: 38px" type="button" id="notMenu" data-bs-toggle="dropdown"
-                        aria-expanded="false" data-bs-auto-close="outside">
+                    <div class="rounded-circle p-1 bg-gray d-flex align-items-center justify-content-center mx-2" style="width: 38px; height: 38px" type="button" id="notMenu" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                         <i class="fas fa-bell"></i>
                     </div>
                     <!-- notification dd -->
-                    <ul class="dropdown-menu border-0 shadow p-3" aria-labelledby="notMenu"
-                        style="width: 23em; max-height: 600px; overflow-y: auto">
+                    <ul class="dropdown-menu border-0 shadow p-3" aria-labelledby="notMenu" style="width: 23em; max-height: 600px; overflow-y: auto">
                         <!-- header -->
                         <li class="p-1">
                             <div class="d-flex justify-content-between">
                                 <h2>Notifications</h2>
                                 <div>
-                                    <i class="fas fa-ellipsis-h pointer p-2 rounded-circle bg-gray" type="button"
-                                        data-bs-toggle="dropdown"></i>
+                                    <i class="fas fa-ellipsis-h pointer p-2 rounded-circle bg-gray" type="button" data-bs-toggle="dropdown"></i>
                                     <ul class="dropdown-menu">
                                         <li class="dropdown-item d-flex align-items-center" type="button">
                                             <i class="fas fa-check me-3 text-muted"></i>
@@ -89,9 +79,7 @@
                             <a href="#" class="d-flex align-items-center justify-content-evenly text-decoration-none text-dark">
                                 <div class="d-flex align-items-center justify-content-evenly">
                                     <div class="p-2">
-                                        <img src="https://source.unsplash.com/random/1" alt="avatar"
-                                            class="rounded-circle"
-                                            style="width: 58px; height: 58px; object-fit: cover" />
+                                        <img src="https://source.unsplash.com/random/1" alt="avatar" class="rounded-circle" style="width: 58px; height: 58px; object-fit: cover" />
                                     </div>
                                     <div>
                                         <p class="fs-7 m-0">
@@ -109,9 +97,7 @@
                             <a href="#" class=" d-flex align-items-center justify-content-evenly text-decoration-none text-dark ">
                                 <div class="d-flex align-items-center justify-content-evenly">
                                     <div class="p-2">
-                                        <img src="https://source.unsplash.com/random/2" alt="avatar"
-                                            class="rounded-circle"
-                                            style="width: 58px; height: 58px; object-fit: cover" />
+                                        <img src="https://source.unsplash.com/random/2" alt="avatar" class="rounded-circle" style="width: 58px; height: 58px; object-fit: cover" />
                                     </div>
                                     <div>
                                         <p class="fs-7 m-0">
@@ -129,9 +115,7 @@
                             <a href="#" class=" d-flex align-items-center justify-content-evenly text-decoration-none text-dark ">
                                 <div class="d-flex align-items-center justify-content-evenly">
                                     <div class="p-2">
-                                        <img src="https://source.unsplash.com/random/3" alt="avatar"
-                                            class="rounded-circle"
-                                            style="width: 58px; height: 58px; object-fit: cover" />
+                                        <img src="https://source.unsplash.com/random/3" alt="avatar" class="rounded-circle" style="width: 58px; height: 58px; object-fit: cover" />
                                     </div>
                                     <div>
                                         <p class="fs-7 m-0">
@@ -154,17 +138,14 @@
                         align-items-center
                         justify-content-center
                         mx-2
-                    " style="width: 38px; height: 38px" type="button" id="secondMenu" data-bs-toggle="dropdown"
-                        aria-expanded="false" data-bs-auto-close="outside">
+                    " style="width: 38px; height: 38px" type="button" id="secondMenu" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                         <i class="fas fa-caret-down"></i>
                     </div>
                     <!-- sec dd -->
-                    <ul class="dropdown-menu border-0 shadow p-3" aria-labelledby="secMenu"
-                        style="width: 23em;max-height: 600px;">
+                    <ul class="dropdown-menu border-0 shadow p-3" aria-labelledby="secMenu" style="width: 23em;max-height: 600px;">
                         <!-- avatar -->
                         <li class="dropdown-item p-1 rounded d-flex" type="button">
-                            <img src="https://source.unsplash.com/collection/happy-people" alt="avatar"
-                                class="rounded-circle me-2" style="width: 45px; height: 45px; object-fit: cover;">
+                            <img src="https://source.unsplash.com/collection/happy-people" alt="avatar" class="rounded-circle me-2" style="width: 45px; height: 45px; object-fit: cover;">
                             <div>
                                 <p class="m-0"></p>
                                 <p class="m-0 text-muted">My Profile</p>
@@ -200,17 +181,14 @@
         <div class="row justify-content-evenly">
             <!-- ================= Sidebar ================= -->
             <div class="col-12 col-lg-3">
-                <div class="d-none d-xxl-block h-100 fixed-top overflow-hidden scrollbar"
-                    style="max-width: 360px; width: 100%; z-index: 4">
+                <div class="d-none d-xxl-block h-100 fixed-top overflow-hidden scrollbar" style="max-width: 360px; width: 100%; z-index: 4">
                     <ul class="navbar-nav mt-4 ms-3 d-flex flex-column pb-5 mb-5" style="padding-top: 56px">
                         <!-- top -->
                         <!-- avatar -->
                         <li class="dropdown-item p-1 rounded">
                             <a href="#" class="d-flex align-items-center text-decoration-none text-dark">
                                 <div class="p-2">
-                                    <img src="https://source.unsplash.com/collection/happy-people" alt="avatar"
-                                        class="rounded-circle me-2"
-                                        style="width: 38px; height: 38px; object-fit: cover" />
+                                    <img src="https://source.unsplash.com/collection/happy-people" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover" />
                                 </div>
                                 <div>
                                     <p class="m-0">Quality Assurance Manager</p>
@@ -219,8 +197,7 @@
                         </li>
                         <!-- top 1 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="QAManager.html" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="QAManager.html" class="d-flex align-items-center text-decoration-none text-dark" id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                                 </div>
@@ -232,8 +209,7 @@
 
                         <!-- top 2 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="#" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="#" class="d-flex align-items-center text-decoration-none text-dark" id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                                 </div>
@@ -245,8 +221,7 @@
 
                         <!-- top 3 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="Manage_Account.html" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="Manage_Account.html" class="d-flex align-items-center text-decoration-none text-dark" id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon " style="font-size: 35px;"></i>
                                 </div>
@@ -258,8 +233,7 @@
 
                         <!-- top 4 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="QAManager_Role.html" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="QAManager_Role.html" class="d-flex align-items-center text-decoration-none text-dark" id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
                                 </div>
@@ -283,102 +257,122 @@
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createroleModal">
                             <i class="fas fa-plus-circle"></i> Create Role</button>
                     </div>
-            
+
                     <!-- Create role Modal -->
-                    <div class="modal fade" id="createroleModal" tabindex="-1" aria-labelledby="createroleModalLabel"
-                        aria-hidden="true" data-bs-backdrop="false">
+                    <div class="modal fade" id="createroleModal" tabindex="-1" aria-labelledby="createroleModalLabel" aria-hidden="true" data-bs-backdrop="false">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary text-white">
                                     <h5 class="modal-title" id="createroleModalLabel">Create New Role</h5>
-                                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form>
+                                    <form method="post" action="QAManager_Role.php">
                                         <div class="mb-3">
                                             <label for="roleName" class="form-label text-primary">Role ID:</label>
-                                            <input type="text" class="form-control" id="roleName" required>
+                                            <input type="text" class="form-control" id="roleName" name="role_id" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="roleName" class="form-label text-primary">Role Name:</label>
-                                            <input type="text" class="form-control" id="roleName" required>
+                                            <input type="text" class="form-control" id="roleName" name="role_name" required>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary w-100" name="add">Create role</button>
                                         </div>
                                     </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary w-100">Create role</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-            
-                    <!-- role Table -->
-                    <div class="bg-light p-3">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Role Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>QAC</td>
-                                    <td>
-                                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#editroleModal"><i class="fas fa-edit"></i> Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>QAM</td>
-                                    <td>
-                                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#editroleModal"><i class="fas fa-edit"></i> Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Staff</td>
-                                    <td>
-                                        <button class="btn btn-outline-primary" data-bs-toggle="modal"
-                                            data-bs-target="#editroleModal"><i class="fas fa-edit"></i> Edit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <?php
+                    include("connection.php");
+                    if (isset($_POST['add'])) {
+                        $role_id = $_POST['role_id'];
+                        $role_name = $_POST['role_name'];
+                        $sql = "INSERT INTO Role (RoleID, RoleName) VALUES ('$role_id', '$role_name')";
+                        $result = mysqli_query($conn, $sql);
+                        if ($result) {
+                            echo "Role added successfully";
+                        } else {
+                            echo "Error adding role";
+                        }
+                    }
+                    ?>
 
+                    <?php include_once("connection.php"); ?>
 
+                    <?php $sql = "SELECT * FROM Role";
+                    $result = mysqli_query($conn, $sql); ?>
+
+                    <?php if (mysqli_num_rows($result) > 0) : ?>
+
+                        <!-- role Table -->
+                        <div class="bg-light p-3">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Role Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                    <tbody>
+                                        <tr>
+                                            <td><?php echo $row['RoleID']; ?></td>
+                                            <td><?php echo $row['RoleName']; ?></td>
+                                            <td>
+                                                <button class="btn btn-outline-primary" id="edit-role" data-id="<?php echo $row['RoleID']; ?>" data-name="<?php echo $row['RoleName']; ?>" data-toggle="modal" data-target="#editroleModal"><i class="fas fa-edit"></i> Edit</button>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+
+                                    </tbody>
+                            </table>
+                        <?php else : ?>
+                            <p>No roles found.</p>
+                        <?php endif; ?>
+
+                        
+                        <?php
+                            if(isset($_POST["edit"])){
+                                $role_id = $_POST["edit_role_id"];
+                                $role_name = $_POST["role_name"];
+                                $sql = "UPDATE Role SET RoleName = '$role_name' WHERE RoleID = '$role_id'";
+                                $result = mysqli_query($conn, $sql);
+                                if($result){
+                                    echo "Role updated successfully";
+                                    echo "<script>window.location.reload();</script>";
+                                }else{
+                                    echo "Error updating role";
+                                    echo "<script>window.location.reload();</script>";
+                                }
+                            }
+                        ?>
                         <!-- Edit role Modal -->
-                        <div class="modal fade" id="editroleModal" tabindex="-1" aria-labelledby="editroleModalLabel"
-                        aria-hidden="true" data-bs-backdrop="false">
-                        <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title" id="editroleModalLabel">Edit Role</h5>
-                                <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="editroleName" class="form-label text-primary">Role Name:</label>
-                                        <input type="text" class="form-control" id="editroleName" required>
+                        <div class="modal fade" id="editroleModal" tabindex="-1" aria-labelledby="editroleModalLabel" aria-hidden="true" data-bs-backdrop="false">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h5 class="modal-title" id="editroleModalLabel">Edit Role</h5>
+                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                </form>
+                                    <div class="modal-body">
+                                        <form method="post" action="QAManager_Role.php">
+                                            <div class="mb-3">
+                                                <input type="hidden" name="edit_role_id" id="edit_role_id">
+                                                <label for="editroleName" class="form-label text-primary">Role Name:</label>
+                                                <input type="text" class="form-control" id="editroleName" required name="role_name">
+                                            </div>
+                                            <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary" name="edit">Save Changes</button>
+                                    </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                            </div>
                         </div>
-                        </div>
-                        </div>
-
-
                     </div>
                 </div>
             </div>
@@ -395,19 +389,40 @@
                         <p>
                             Privacy &#8226; Terms &#8226; Ideas Uni © 2024
                         </p>
-                    </div>
                 </div>
             </div>
         </div>
+        </div>
     </footer>
-  
+
 
     <!-- bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <!-- main js -->
     <script src="./js/main.js"></script>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            //NOTE: passing value to update house modal
+            var editRole = document.querySelectorAll('#edit-role');
+            editRole.forEach(function(e) {
+                e.addEventListener('click', function() {
+                    var RoleID = e.getAttribute('data-id');
+                    var RoleName = e.getAttribute('data-name');
+
+                    // Set the values in the input fields
+                    document.getElementById('edit_role_id').value = RoleID;
+                    document.getElementById('editroleName').value = RoleName;
+
+                    // Show the modal
+                    var editroleModal = new bootstrap.Modal(document.getElementById('editroleModal'));
+                    editroleModal.show();
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>

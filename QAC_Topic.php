@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./img/favicon.ico">
     <!-- fontawesome   -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
@@ -222,7 +223,7 @@
                         </li>
                         <!-- top 1 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="QAC.html" class="d-flex align-items-center text-decoration-none text-dark"
+                            <a href="QAC.php" class="d-flex align-items-center text-decoration-none text-dark"
                                 id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon " style="font-size: 35px;"></i>
@@ -235,7 +236,7 @@
 
                         <!-- top 2 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="QAC_Topic.html" class="d-flex align-items-center text-decoration-none text-dark"
+                            <a href="QAC_Topic.php" class="d-flex align-items-center text-decoration-none text-dark"
                                 id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
@@ -259,7 +260,7 @@
                         <h3 class="text-dark mb-3 text-center">Latest Topics</h3>
                         <div class="row">
                             <div class="col-6 col-md-4 mb-3">
-                                <a href="QAC_Topic_Detail.html" class="text-decoration-none text-dark">
+                                <a href="QAC_Topic_Detail.php" class="text-decoration-none text-dark">
                                     <div class="bg-light p-3 text-center">
                                         <i class="fas fa-book fa-3x mb-3"></i>
                                         <h5 class="mb-2">Topic Title</h5>
@@ -272,7 +273,7 @@
                                 </a>
                             </div>
                             <div class="col-6 col-md-4 mb-3">
-                                <a href="QAC_Topic_Detail.html" class="text-decoration-none text-dark">
+                                <a href="QAC_Topic_Detail.php" class="text-decoration-none text-dark">
                                     <div class="bg-light p-3 text-center">
                                         <i class="fas fa-book fa-3x mb-3"></i>
                                         <h5 class="mb-2">Topic Title</h5>
@@ -385,7 +386,7 @@
                     </div>
                 </div>
         </div>
-        </footer>
+        </div>
 
 
         <!-- bootstrap -->

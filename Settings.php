@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./img/favicon.ico">
     <!-- fontawesome   -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
@@ -219,7 +220,7 @@
                         </li>
                         <!-- top 1 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="index.html" class="d-flex align-items-center text-decoration-none text-dark" id="back-to-home">
+                            <a href="index.php" class="d-flex align-items-center text-decoration-none text-dark" id="back-to-home">
                               <div class="p-2">
                                 <i class="fa-solid fa-home-lg-alt topic-icon active" style="font-size: 35px;"></i>
                               </div>

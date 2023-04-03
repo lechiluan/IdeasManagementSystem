@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="mswebdialog-title" content="Connecting to University of Greenwich">
+    <!-- Display image title -->
+    <link rel="icon" type="image/png" href="./img/favicon.ico">
     <link rel="stylesheet" type="text/css" href="./css/login.css">
     <style>
         .illustrationClass {

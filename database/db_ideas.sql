@@ -1,65 +1,64 @@
 CREATE TABLE Role (
-  RoleID INT PRIMARY KEY,
-  RoleName VARCHAR(50)
+  RoleID INT PRIMARY KEY AUTO_INCREMENT,
+  RoleName VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Department (
-  DepartmentID INT PRIMARY KEY,
-  DepartmentName VARCHAR(50)
+  DepartmentID INT PRIMARY KEY AUTO_INCREMENT,
+  DepartmentName VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Staff (
-  StaffID INT PRIMARY KEY,
-  FullName VARCHAR(50),
-  Email VARCHAR(50),
-  Phone VARCHAR(20),
-  Password TEXT,
-  RoleID INT,
-  DepartmentID INT,
+  StaffID INT PRIMARY KEY AUTO_INCREMENT,
+  FullName VARCHAR(50) NOT NULL,
+  Email VARCHAR(50) NOT NULL,
+  Password TEXT NOT NULL,
+  RoleID INT NOT NULL,
+  DepartmentID INT NOT NULL,
   FOREIGN KEY (RoleID) REFERENCES Role(RoleID),
   FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
 );
 CREATE TABLE Category (
-  CategoryID INT PRIMARY KEY,
-  CategoryName VARCHAR(50),
-  Description VARCHAR(200),
-  ClosureDate DATE,
-  Deadline DATE
+  CategoryID INT PRIMARY KEY AUTO_INCREMENT,
+  CategoryName VARCHAR(50) NOT NULL,
+  Description VARCHAR(200) NOT NULL,
+  ClosureDate DATE NOT NULL,
+  Deadline DATE NOT NULL
 );
 
 CREATE TABLE Idea (
-  IdeaID INT PRIMARY KEY,
-  Title VARCHAR(100),
-  Content VARCHAR(1000),
-  is_anonymous BOOLEAN,
-  CreateDate DATE,
-  StaffID INT,
-  CategoryID INT,
+  IdeaID INT PRIMARY KEY AUTO_INCREMENT,
+  Title VARCHAR(100) NOT NULL,
+  Content VARCHAR(1000) NOT NULL,
+  is_anonymous BOOLEAN NOT NULL default FALSE,
+  CreateDate DATE NOT NULL,
+  StaffID INT NOT NULL,
+  CategoryID INT NOT NULL,
   FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
   FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID)
 );
 
 CREATE TABLE Document (
-  DocumentID INT PRIMARY KEY,
+  DocumentID INT PRIMARY KEY AUTO_INCREMENT,
   DocumentPath VARCHAR(100),
   IdeaID INT,
   FOREIGN KEY (IdeaID) REFERENCES Idea(IdeaID)
 );
 
 CREATE TABLE Vote (
-  VoteID INT PRIMARY KEY,
-  Status VARCHAR(10),
-  IdeaID INT,
-  StaffID INT,
+  VoteID INT PRIMARY KEY AUTO_INCREMENT,
+  Status BOOLEAN,
+  IdeaID INT NOT NULL,
+  StaffID INT NOT NULL,
   FOREIGN KEY (IdeaID) REFERENCES Idea(IdeaID),
   FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
 );
 
 CREATE TABLE Comment (
-  CommentID INT PRIMARY KEY,
-  CommentContent VARCHAR(500),
-  StaffID INT,
-  IdeaID INT,
+  CommentID INT PRIMARY KEY AUTO_INCREMENT,
+  CommentContent VARCHAR(500) NOT NULL,
+  StaffID INT NOT NULL,
+  IdeaID INT NOT NULL,
   FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
   FOREIGN KEY (IdeaID) REFERENCES Idea(IdeaID)
 );

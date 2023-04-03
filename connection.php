@@ -5,8 +5,4 @@
 	{
 		die("Could not connect to database");
 	}
-    else
-    {
-        echo "Connected to database";
-    }
 ?>

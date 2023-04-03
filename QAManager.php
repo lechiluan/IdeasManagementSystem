@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./img/favicon.ico">
     <!-- fontawesome   -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
         integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
@@ -248,8 +249,8 @@
 
                         <!-- top 2 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="Manage_Department.html" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="QAM_Department.php" class="d-flex align-items-center text-decoration-none text-dark"
+                               id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                                 </div>
@@ -261,8 +262,8 @@
 
                         <!-- top 3 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="Manage_Account.html" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="QAM_Account.php" class="d-flex align-items-center text-decoration-none text-dark"
+                               id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                                 </div>
@@ -274,8 +275,8 @@
                         
                         <!-- top 4 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="QAManager_Role.html" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="QAM_Role.php" class="d-flex align-items-center text-decoration-none text-dark"
+                               id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                                 </div>
@@ -442,7 +443,7 @@
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic</button>
                                             <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete</button>
-                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.html'">View all ideas</button>
+                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -650,7 +651,7 @@
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic</button>
                                             <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete</button>
-                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.html'">View all ideas</button>
+                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -857,7 +858,7 @@
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic</button>
                                             <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete</button>
-                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.html'">View all ideas</button>
+                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas</button>
                                         </td>
                                     </tr>
                                 </tbody>

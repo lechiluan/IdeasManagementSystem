@@ -294,12 +294,12 @@
                 <?php
                 include_once("connection.php");
 
-                use PHPMailer\PHPMailer\PHPMailer;
-                use PHPMailer\PHPMailer\Exception;
-
-                require 'PHPMailer/src/PHPMailer.php';
-                require 'PHPMailer/src/SMTP.php';
-                require 'PHPMailer/src/Exception.php';
+                //                use PHPMailer\PHPMailer\PHPMailer;
+                //                use PHPMailer\PHPMailer\Exception;
+                //
+                //                require 'PHPMailer/src/PHPMailer.php';
+                //                require 'PHPMailer/src/SMTP.php';
+                //                require 'PHPMailer/src/Exception.php';
 
                 // Retrieve the list of roles
                 $sql = "SELECT * FROM Role";
@@ -318,50 +318,50 @@
 
                     $sql = "INSERT INTO Staff (FullName, Email, Password, RoleID, DepartmentID) VALUES ('$full_name','$email', '$password', '$role_id', '$dept_id')";
                     $result = mysqli_query($conn, $sql);
-                    if ($result) {
-                        // Send email to the new staff member about login details
-                        $to = $email;
-                        $subject = 'Login details for new staff member account';
-                        $message = 'Dear ' . $full_name . ',<br><br>';
-                        $message .= 'Your account has been created. Please use the following details to log in:<br><br>';
-                        $message .= 'Email: ' . $email . '<br>';
-                        $message .= 'Password: ' . $_POST['password'] . '<br><br>';
-                        $message .= 'Thank you,<br>The Admin Team';
-
-                        // Set up the email headers
-                        $mail = new PHPMailer(true);
-
-                        try {
-                            // Server settings
-                            $mail->SMTPDebug = 0;
-                            $mail->isSMTP();
-                            $mail->Host = 'smtp.gmail.com';
-                            $mail->SMTPAuth = true;
-                            $mail->Username = 'greenwich.qa@gmail.com';
-                            $mail->Password = 'iebdmpqvvkpjglec';
-                            $mail->SMTPSecure = 'tls';
-                            $mail->Port = 587;
-
-                            // Recipients
-                            $mail->setFrom('greenwich.qa@gmail.com', 'Greenwich QA');
-                            $mail->addAddress($to, $full_name);
-
-                            // Content
-                            $mail->isHTML(true);
-                            $mail->Subject = $subject;
-                            $mail->Body = $message;
-
-                            $mail->send();
-                            echo "<script>alert('Staff member added successfully')</script>";
-                            echo "<script>window.location.href = 'QAM_Account.php'</script>";
-                        } catch (Exception $e) {
-                            echo "<script>alert('Error sending email.')</script>";
-                            echo "<script>window.location.href = 'QAM_Account.php'</script>";
-                        }
-                    } else {
-                        echo "<script>alert('Error adding staff member')</script>";
-                        echo "<script>window.location.href = 'QAM_Account.php'</script>";
-                    }
+//                    if ($result) {
+//                        // Send email to the new staff member about login details
+//                        $to = $email;
+//                        $subject = 'Login details for new staff member account';
+//                        $message = 'Dear ' . $full_name . ',<br><br>';
+//                        $message .= 'Your account has been created. Please use the following details to log in:<br><br>';
+//                        $message .= 'Email: ' . $email . '<br>';
+//                        $message .= 'Password: ' . $_POST['password'] . '<br><br>';
+//                        $message .= 'Thank you,<br>The Admin Team';
+//
+//                        // Set up the email headers
+//                        $mail = new PHPMailer(true);
+//
+//                        try {
+//                            // Server settings
+//                            $mail->SMTPDebug = 0;
+//                            $mail->isSMTP();
+//                            $mail->Host = 'smtp.gmail.com';
+//                            $mail->SMTPAuth = true;
+//                            $mail->Username = 'greenwich.qa@gmail.com';
+//                            $mail->Password = 'iebdmpqvvkpjglec';
+//                            $mail->SMTPSecure = 'tls';
+//                            $mail->Port = 587;
+//
+//                            // Recipients
+//                            $mail->setFrom('greenwich.qa@gmail.com', 'Greenwich QA');
+//                            $mail->addAddress($to, $full_name);
+//
+//                            // Content
+//                            $mail->isHTML(true);
+//                            $mail->Subject = $subject;
+//                            $mail->Body = $message;
+//
+//                            $mail->send();
+                    echo "<script>alert('Staff member added successfully')</script>";
+                    echo "<script>window.location.href = 'QAM_Account.php'</script>";
+//                        } catch (Exception $e) {
+//                            echo "<script>alert('Error sending email.')</script>";
+//                            echo "<script>window.location.href = 'QAM_Account.php'</script>";
+//                        }
+//                    } else {
+//                        echo "<script>alert('Error adding staff member')</script>";
+//                        echo "<script>window.location.href = 'QAM_Account.php'</script>";
+//                    }
                 }
                 ?>
 
@@ -547,14 +547,17 @@
                             <div class="modal-body">
                                 <form method="post" action="QAM_Account.php">
                                     <input type="hidden" name="staffID" id="edit_staff_id">
+                                    <!-- Hidden input to get staff ID -->
                                     <div class="mb-3">
                                         <label for="fullName" class="form-label text-primary">Full Name:</label>
-                                        <input type="text" class="form-control" id="edit_fullname" name="fullName" placeholder="Full Name"
+                                        <input type="text" class="form-control" id="edit_fullname" name="fullName"
+                                               placeholder="Full Name"
                                                required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="email" class="form-label text-primary">Email:</label>
-                                        <input type="email" class="form-control" id="edit_email" name="email" required placeholder="Email">
+                                        <input type="email" class="form-control" id="edit_email" name="email" required
+                                               placeholder="Email">
                                     </div>
                                     <div class="mb-3">
                                         <label for="password" class="form-label text-primary">New Password:</label>

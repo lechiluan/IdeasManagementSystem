@@ -109,7 +109,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             $_SESSION['department_id'] = $row['DepartmentID'];
             
             if (isset($_SESSION['staff_id'])) {
-                echo "<script>window.location.href='QAManager.php'</script>";
+                echo "<script>window.location.href='QAM_Topics.php'</script>";
             }
             
         } else {

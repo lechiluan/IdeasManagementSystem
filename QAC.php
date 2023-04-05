@@ -220,8 +220,8 @@
                         </li>
                         <!-- top 1 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="QAManager.php" class="d-flex align-items-center text-decoration-none text-dark"
-                                id="manage-topics">
+                            <a href="QAM_Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
+                               id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
                                 </div>

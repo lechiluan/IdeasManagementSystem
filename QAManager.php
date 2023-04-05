@@ -532,6 +532,14 @@
                                             <textarea class="form-control" id="topicDescription" rows="5"
                                                 required></textarea>
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="deadlineFirst" class="form-label text-primary">Closing Date of First Deadline:</label>
+                                            <input type="datetime-local" class="form-control" id="deadlineFirst" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="deadlineFinal" class="form-label text-primary">Closing Date of Final Deadline:</label>
+                                            <input type="datetime-local" class="form-control" id="deadlineFinal" required>
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">

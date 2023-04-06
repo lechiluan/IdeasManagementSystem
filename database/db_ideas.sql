@@ -72,3 +72,24 @@ CREATE TABLE Comment (
   FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
   FOREIGN KEY (IdeaID) REFERENCES Idea(IdeaID)
 );
+
+
+INSERT INTO Department (DepartmentID, DepartmentName) VALUES
+(1, 'Academy'),
+(2, 'Office of Student Affairs'),
+(3, 'Marketing'),
+(4, 'Support'),
+(5, 'IT'),
+(6, 'Finance');
+
+INSERT INTO Role (RoleID, RoleName) VALUES
+(1, 'Quality Assurance Manager (QAM)'),
+(2, 'Quality Assurance Coordinator(QAC)'),
+(3, 'Staff');
+
+
+INSERT INTO Staff (StaffID, FullName, Email, Password, RoleID, DepartmentID) VALUES
+(1, 'QAM', 'QAM.greenwich@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 1, 1),
+(2, 'QAC', 'QAC.greenwich@gmail.com', '$2y$10$pjaXpyOBJ9Y964u7E4GWv.wy2IMbLdhd/Wj9vSmw4o/UxI8ya6V2C', 2, 1),
+(3, 'Le Chi Luan', 'chiluan6601@gmail.com', '$2y$10$FlkAQm89yKb4/sOpNEM8UOkPxu.deAdb4vFRq6OAs74aaG5F7vIOu', 3, 2),
+(4, 'Le Trung Kien', 'trungkien@gmail.com', '$2y$10$jukBN3dfGBBjR2RsYz9geuZsbUwPMZnVbb1H7Cj1IoaG0jYMOdciy', 3, 3);

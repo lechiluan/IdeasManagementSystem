@@ -18,12 +18,19 @@ CREATE TABLE Staff (
   FOREIGN KEY (RoleID) REFERENCES Role(RoleID),
   FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
 );
-CREATE TABLE Category (
-  CategoryID INT PRIMARY KEY AUTO_INCREMENT,
-  CategoryName VARCHAR(50) NOT NULL,
+
+CREATE TABLE Topic (
+  TopicID INT PRIMARY KEY AUTO_INCREMENT,
+  TopicIDName VARCHAR(50) NOT NULL,
   Description VARCHAR(200) NOT NULL,
-  ClosureDate DATE NOT NULL,
-  Deadline DATE NOT NULL
+  CreateDate DATETIME NOT NULL,
+  FOREIGN KEY (DeadlineID) REFERENCES Deadline(DeadlineID)
+);
+
+CREATE TABLE Deadline (
+  DeadlineID INT PRIMARY KEY AUTO_INCREMENT,
+  ClosureDate DATETIME NOT NULL,
+  Deadline DATETIME NOT NULL
 );
 
 CREATE TABLE Idea (
@@ -31,11 +38,11 @@ CREATE TABLE Idea (
   Title VARCHAR(100) NOT NULL,
   Content VARCHAR(1000) NOT NULL,
   is_anonymous BOOLEAN NOT NULL default FALSE,
-  CreateDate DATE NOT NULL,
+  CreateDate DATETIME NOT NULL,
   StaffID INT NOT NULL,
-  CategoryID INT NOT NULL,
+  TopicID INT NOT NULL,
   FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
-  FOREIGN KEY (CategoryID) REFERENCES Category(CategoryID)
+  FOREIGN KEY (TopicID) REFERENCES Topic(TopicID)
 );
 
 CREATE TABLE Document (
@@ -59,6 +66,8 @@ CREATE TABLE Comment (
   CommentContent VARCHAR(500) NOT NULL,
   StaffID INT NOT NULL,
   IdeaID INT NOT NULL,
+  is_anonymous BOOLEAN NOT NULL default FALSE,
+  CreateDate DATETIME NOT NULL,
   FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
   FOREIGN KEY (IdeaID) REFERENCES Idea(IdeaID)
 );

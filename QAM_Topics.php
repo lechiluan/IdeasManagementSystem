@@ -287,18 +287,22 @@
                             echo "<script>alert('Topic name is already exist')</script>";
                         } else {
                             $topicDescription = $_POST['topicDescription'];
-                            $sql = "INSERT INTO Topic (TopicName, Description) VALUES ('$topicName', '$topicDescription')";
+                            // Create Date is current time
+                            date_default_timezone_set('Asia/Ho_Chi_Minh');
+                            $date = date('Y-m-d H:i:s');
+                            $sql = "INSERT INTO Topic (TopicName, Description, CreateDate) VALUES ('$topicName', '$topicDescription', '$date')";
                             $result = mysqli_query($conn, $sql);
                             if ($result) {
                                 echo "<script>alert('Topic added successfully')</script>";
-                                echo "<script>window.location.href='QAM_Topic.php'</script>";
+                                echo "<script>window.location.href='QAM_Topics.php'</script>";
                             } else {
                                 echo "<script>alert('Topic not added')</script>";
-                                echo "<script>window.location.href='QAM_Topic.php'</script>";
+                                echo "<script>window.location.href='QAM_Topics.php'</script>";
                             }
                         }
                     }
                     ?>
+
                     <!-- Create Topic Modal -->
                     <div class="modal fade" id="createTopicModal" tabindex="-1" aria-labelledby="createTopicModalLabel" aria-hidden="true" data-bs-backdrop="false">
                         <div class="modal-dialog modal-dialog-centered">
@@ -326,7 +330,53 @@
                             </div>
                         </div>
                     </div>
-
+                    <?php 
+                    // Display Topic
+                    include 'connection.php';
+                    $sql = "SELECT * FROM Topic";
+                    $result = mysqli_query($conn, $sql);
+                    ?>
+                    <!-- Topic list -->
+                    // Button Assign Deadline
+                    <div class="d-flex justify-content-end align-items-center my-4">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignDeadlineModal">
+                            <i class="fas fa-plus-circle"></i> Assign Deadline</button>
+                    </div>
+                    <div class="table-responsive">
+                    <?php if (mysqli_num_rows($result) > 0) { ?>    
+                    <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><input type="checkbox" class="form-check-input" id="checkAll"></th>
+                                    <th scope="col">Topic Name</th>
+                                    <th scope="col">Topic Description</th>
+                                    <th scope="col">Create Data</th>
+                                    <th scope="col">Ideas Count</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" class="form-check-input" id="checkRow"></td>
+                                    <td><?php echo $row['TopicName']; ?></td>
+                                    <td><?php echo $row['Description']; ?></td>
+                                    <td>10</td>
+                                    <td>Closed Submission</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic</button>
+                                        <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete</button>
+                                        <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <?php } ?>
+                        </table>
+                        <?php } else { ?>
+                        <p>No staff found.</p>
+                    <?php } ?>
+                    </div>
 
                     <form class="bg-light p-3">
                         <!-- Deadline -->

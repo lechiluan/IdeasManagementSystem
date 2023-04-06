@@ -14,7 +14,7 @@ CREATE TABLE Staff (
   Email VARCHAR(50) NOT NULL,
   Password TEXT NOT NULL,
   RoleID INT NOT NULL,
-  DepartmentID INT NOT NULL,
+  DepartmentID INT NULL,
   FOREIGN KEY (RoleID) REFERENCES Role(RoleID),
   FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
 );
@@ -30,7 +30,7 @@ CREATE TABLE Topic (
   TopicName VARCHAR(50) NOT NULL,
   Description VARCHAR(200) NOT NULL,
   CreateDate DATETIME NOT NULL,
-  DeadlineID INT NOT NULL,
+  DeadlineID INT NULL,
   FOREIGN KEY (DeadlineID) REFERENCES Deadline(DeadlineID)
 );
 

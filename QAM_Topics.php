@@ -287,7 +287,7 @@
                             echo "<script>alert('Topic name is already exist')</script>";
                         } else {
                             $topicDescription = $_POST['topicDescription'];
-                            $sql = "INSERT INTO Topic (TopicName, TopicDescription) VALUES ('$topicName', '$topicDescription')";
+                            $sql = "INSERT INTO Topic (TopicName, Description) VALUES ('$topicName', '$topicDescription')";
                             $result = mysqli_query($conn, $sql);
                             if ($result) {
                                 echo "<script>alert('Topic added successfully')</script>";

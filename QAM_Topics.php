@@ -337,7 +337,7 @@
                     $result = mysqli_query($conn, $sql);
                     ?>
                     <!-- Topic list -->
-                    // Button Assign Deadline
+                    <!-- Button Assign Deadline -->
                     <div class="d-flex justify-content-end align-items-center my-4">
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignDeadlineModal">
                             <i class="fas fa-plus-circle"></i> Assign Deadline</button>

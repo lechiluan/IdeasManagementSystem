@@ -377,6 +377,7 @@
                         <p>No staff found.</p>
                     <?php } ?>
                     </div>
+                    <!-- assignDeadlineModal -->
 
                     <form class="bg-light p-3">
                         <!-- Deadline -->

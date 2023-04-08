@@ -205,12 +205,12 @@
                                         <div class="mb-3">
                                             <label for="firstClosureDate" class="form-label text-primary">First closure
                                                 date:</label>
-                                            <input type="date" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
+                                            <input type="datetime-local" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="finalClosureDate" class="form-label text-primary">Final closure
                                                 date:</label>
-                                            <input type="date" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
+                                            <input type="datetime-local" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
                                         </div>
                                     </form>
                                 </div>
@@ -465,12 +465,12 @@
                                         <div class="mb-3">
                                             <label for="firstClosureDate" class="form-label text-primary">First closure
                                                 date:</label>
-                                            <input type="date" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
+                                            <input type="datetime-local" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="finalClosureDate" class="form-label text-primary">Final closure
                                                 date:</label>
-                                            <input type="date" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
+                                            <input type="datetime-local" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
                                         </div>
                                     </form>
                                 </div>
@@ -714,12 +714,12 @@
                                         <div class="mb-3">
                                             <label for="firstClosureDate" class="form-label text-primary">First closure
                                                 date:</label>
-                                            <input type="date" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
+                                            <input type="datetime-local" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="finalClosureDate" class="form-label text-primary">Final closure
                                                 date:</label>
-                                            <input type="date" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
+                                            <input type="datetime-local" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
                                         </div>
                                     </form>
                                 </div>

@@ -13,6 +13,15 @@
     <!-- main css -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
     <title>Quality Assurance Manager</title>
+    <style>
+        .topic-list{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            margin-bottom: 30px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 
 <body class="bg-gray">
@@ -101,8 +110,7 @@
 
                     <!-- Topic 1 -->
                     <div class="d-flex justify-content-end align-items-center my-4">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTopicModal">
-                            <i class="fas fa-plus-circle"></i> Create New Topic
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTopicModal" data-id <i class="fas fa-plus-circle"></i> Create New Topic
                         </button>
                     </div>
                     <?php
@@ -161,37 +169,53 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Button Assign Deadline -->
-                    <div class="d-flex justify-content-end align-items-center my-4">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignDeadlineModal">
-                            <i class="fas fa-plus-circle"></i> Assign Deadline
-                        </button>
-                    </div>
                     <?php
-                    // Get the selectedTopicIDs from the AJAX request
-                    $selectedTopicIDs = $_POST['selectedTopics'];
+                    // Check if the form has been submitted
+                    if (isset($_POST['assign'])) {
+                        // Get the selected topics from the hidden input field
+                        $selectedTopics = $_POST['topicID'];
 
-                    // Loop through the selectedTopicIDs and create a new Deadline for each of them
-                    foreach ($selectedTopicIDs as $topicID) {
-                        $closureDate = $_POST['firstClosureDate'];
-                        $deadlineDate = $_POST['finalClosureDate'];
+                        // Get the first and final closure dates from the form
+                        $firstClosureDate = $_POST['firstClosureDate'];
+                        $finalClosureDate = $_POST['finalClosureDate'];
 
-                        $sql = "INSERT INTO Deadline (ClosureDate, Deadline) VALUES ('$closureDate', '$deadlineDate')";
+                        // Convert the closure dates to MySQL datetime format
+                        $firstClosureDate = date('Y-m-d H:i:s', strtotime($firstClosureDate));
+                        $finalClosureDate = date('Y-m-d H:i:s', strtotime($finalClosureDate));
+
+                        // Insert the closure dates into the Deadline table
+                        $sql = "INSERT INTO Deadline (ClosureDate, FinalClosureDate) VALUES ('$firstClosureDate', '$finalClosureDate')";
                         $result = mysqli_query($conn, $sql);
 
-                        // Get the Deadline ID of the newly created Deadline
+                        // Get the ID of the newly inserted row
                         $deadlineID = mysqli_insert_id($conn);
 
-                        // Update the Topic with the new Deadline ID
-                        $sql = "UPDATE Topic SET DeadlineID = $deadlineID WHERE TopicID = $topicID";
-                        $result = mysqli_query($conn, $sql);
+                        foreach ($selectedTopics as $topic) {
+                            // Update the selected topics with the new deadline ID
+                            $sql = "UPDATE Topic SET DeadlineID=$deadlineID WHERE TopicID = ($topic)";
+                            $result = mysqli_query($conn, $sql);
+                        }
+
+                        // Redirect to the topics page
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
                     }
-
-                    // Return a response to the AJAX request
-                    echo "<script>alert('Deadline assigned successfully')</script>";
-                    echo "<script>window.location.href='QAM_Topics.php'</script>";
-
                     ?>
+                    <?php
+                    include 'connection.php';
+                    if (isset($_POST['assign'])) {
+                        $topicID = $_POST['topicID'];
+                        $sql = "DELETE FROM Topic WHERE TopicID = '$topicID'";
+                        $result = mysqli_query($conn, $sql);
+                        if ($result) {
+                            echo "<script>alert('Topic deleted successfully')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        } else {
+                            echo "<script>alert('Topic not deleted')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        }
+                    }
+                    ?>
+
                     <!-- Modal Assign Deadline -->
                     <div class="modal fade" id="assignDeadlineModal" tabindex="-1" aria-labelledby="assignDeadlineModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -202,6 +226,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <form method="post" action="QAM_Topics.php">
+                                        <div id="section_topicID" class="mb-3">
+
+                                        </div>
+
                                         <div class="mb-3">
                                             <label for="firstClosureDate" class="form-label text-primary">First closure
                                                 date:</label>
@@ -212,64 +240,71 @@
                                                 date:</label>
                                             <input type="datetime-local" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
                                         </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-primary" name="assign">Assign</button>
+                                        </div>
                                     </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Assign</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <?php
                     // Display Topic
                     include 'connection.php';
-                    $sql = "SELECT * FROM Topic";
+                    $sql = "SELECT * FROM Topic WHERE DeadlineID IS NULL";
                     $result = mysqli_query($conn, $sql);
                     ?>
-                    <!-- Topic list -->
 
-                    <div class="table-responsive">
-                        <?php if (mysqli_num_rows($result) > 0) { ?>
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"><input type="checkbox" class="form-check-input" id="checkAll"></th>
-                                        <th scope="col">Topic Name</th>
-                                        <th scope="col">Topic Description</th>
-                                        <th scope="col">Create Data</th>
-                                        <th scope="col">Ideas Count</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-                                    <tbody>
+                    <!-- Topic list -->
+                    <div class="topic-list">
+                        <div class="table-responsive">
+                            <?php if (mysqli_num_rows($result) > 0) { ?>
+                                <!-- Button Assign Deadline -->
+                                <div class="d-flex justify-content-start align-items-center my-4">Topics that have not been set deadlines </div>
+                                <div class="d-flex justify-content-end align-items-center my-4">
+                                    <button class="btn btn-primary assign-deadline" id="assignBtn" data-bs-toggle="modal" data-bs-target="#assignDeadlineModal" disabled>Assign Deadline</button>
+                                </div>
+                                <table class="table table-hover" id="nonAssignDeadline-table">
+                                    <thead>
                                         <tr>
-                                            <td><input type="checkbox" class="form-check-input" id="checkRow"></td>
-                                            <td><?php echo $row['TopicName']; ?></td>
-                                            <td><?php echo $row['Description']; ?></td>
-                                            <td>10</td>
-                                            <td>Closed Submission</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic
-                                                </button>
-                                                <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete
-                                                </button>
-                                                <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas
-                                                </button>
-                                            </td>
+                                            <th scope="col"></th>
+                                            <th scope="col">Topic Name</th>
+                                            <th scope="col">Topic Description</th>
+                                            <th scope="col">Create Date</th>
+                                            <th scope="col">Ideas Count</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
                                         </tr>
-                                    </tbody>
-                                <?php } ?>
-                            </table>
-                        <?php } else { ?>
-                            <p>No staff found.</p>
-                        <?php } ?>
+                                    </thead>
+                                    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="checkbox" class="form-check-input" name="selectedTopics[]" id="checkRow"></td>
+                                                <td hidden><?php echo $row['TopicID'] ?></td>
+                                                <td><?php echo $row['TopicName']; ?></td>
+                                                <td><?php echo $row['Description']; ?></td>
+                                                <td><?php echo $row['CreateDate'] ?></td>
+                                                <td>10</td>
+                                                <td>Closed Submission</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete
+                                                    </button>
+                                                    <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    <?php } ?>
+                                </table>
+                            <?php } ?>
+                        </div>
                     </div>
                     <!-- assignDeadlineModal -->
 
-
                     <form class="bg-light p-3">
                         <!-- Deadline -->
                         <div class="row">
@@ -440,495 +475,6 @@
                             </div>
                         </div>
                     </form>
-
-                    <!-- topic 2 -->
-                    <div class="d-flex justify-content-end align-items-center my-4" style="padding-top: 50px;">
-                    </div>
-
-                    <!-- Button Assign Deadline -->
-                    <div class="d-flex justify-content-end align-items-center my-4">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignDeadlineModal">
-                            <i class="fas fa-plus-circle"></i> Assign Deadline
-                        </button>
-                    </div>
-
-                    <!-- Modal Assign Deadline -->
-                    <div class="modal fade" id="assignDeadlineModal" tabindex="-1" aria-labelledby="assignDeadlineModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title" id="assignDeadlineModalLabel">Assign deadline to topics</h5>
-                                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="firstClosureDate" class="form-label text-primary">First closure
-                                                date:</label>
-                                            <input type="datetime-local" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="finalClosureDate" class="form-label text-primary">Final closure
-                                                date:</label>
-                                            <input type="datetime-local" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Assign</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Create Topic Modal -->
-                    <div class="modal fade" id="createTopicModal" tabindex="-1" aria-labelledby="createTopicModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title" id="createTopicModalLabel">Create New Topic</h5>
-                                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="topicName" class="form-label text-primary">Topic Name:</label>
-                                            <input type="text" class="form-control" id="topicName" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="topicDescription" class="form-label text-primary">Topic
-                                                Description:</label>
-                                            <textarea class="form-control" id="topicDescription" rows="5" required></textarea>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="deadlineFirst" class="form-label text-primary">Closing Date of First
-                                                Deadline:</label>
-                                            <input type="datetime-local" class="form-control" id="deadlineFirst" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="deadlineFinal" class="form-label text-primary">Closing Date of Final
-                                                Deadline:</label>
-                                            <input type="datetime-local" class="form-control" id="deadlineFinal" required>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary w-100">Create Topic</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form class="bg-light p-3">
-                        <!-- Deadline -->
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="idea-submission-deadline" class="form-label font-weight-bold fs-4">Deadline
-                                    for Idea Submission</label>
-                                <div class="d-flex flex-column">
-                                    <span class="deadline-time fs-5"><i class="far fa-clock"></i> 4 hours and 56 minutes
-                                        left</span>
-                                    <span class="deadline-status fs-5"><i class="fas fa-exclamation-circle text-danger"></i> The deadline has
-                                        passed</span>
-                                    <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#editDeadlineModal1" data-bs-title="Edit Deadline for Idea Submission"><i class="fas fa-edit"></i>
-                                        Edit Deadline
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="comment-deadline" class="form-label font-weight-bold fs-4">Deadline to Close
-                                    Comment</label>
-                                <div class="d-flex flex-column">
-                                    <span class="deadline-time fs-5"><i class="far fa-clock"></i> 2 days and 4 hours
-                                        left</span>
-                                    <span class="deadline-status fs-5"><i class="fas fa-clock text-success"></i> Open
-                                        for comments</span>
-                                    <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#editDeadlineModal2" data-bs-title="Edit Deadline to Close Comment"><i class="fas fa-edit"></i> Edit
-                                        Deadline
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Edit Deadline Modal -->
-                        <div class="modal fade" id="editDeadlineModal1" tabindex="-1" aria-labelledby="editDeadlineModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title" id="editDeadlineModalLabel">Deadline for Idea Submission
-                                        </h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="newDeadlineTime" class="form-label text-primary">New
-                                                    Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="newDeadlineTime" required>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary w-100">Update Deadline</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="editDeadlineModal2" tabindex="-1" aria-labelledby="editDeadlineModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title" id="editDeadlineModalLabel">Deadline to Close Comment
-                                        </h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="newDeadlineTime" class="form-label text-primary">New
-                                                    Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="newDeadlineTime" required>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary w-100">Update Deadline</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Topic list -->
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Topic Name</th>
-                                        <th scope="col">Topic Description</th>
-                                        <th scope="col">Ideas Count</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Topic 1</td>
-                                        <td>Description of Topic 1</td>
-                                        <td>10</td>
-                                        <td>Closed Submission</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic
-                                            </button>
-                                            <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete
-                                            </button>
-                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Edit Deadline Modal -->
-                        <div class="modal fade" id="editDeadlineModal" tabindex="-1" aria-labelledby="editDeadlineModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title" id="editDeadlineModalLabel">Edit Topic</h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="topicName" class="form-label text-primary">Topic Name:</label>
-                                                <input type="text" class="form-control" id="topicName" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="topicDescription" class="form-label text-primary">Topic
-                                                    Description:</label>
-                                                <textarea class="form-control" id="topicDescription" rows="5" required></textarea>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="deadlineFirst" class="form-label text-primary">Closing Date of
-                                                    First Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="deadlineFirst" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="deadlineFinal" class="form-label text-primary">Closing Date of
-                                                    Final Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="deadlineFinal" required>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary w-100">Save Topic</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Delete Topic Modal -->
-                        <div class="modal fade" id="deleteTopicModal" tabindex="-1" aria-labelledby="deleteTopicModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title" id="deleteTopicModalLabel">Delete Topic</h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to delete this topic?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
-                                        </button>
-                                        <button type="button" class="btn btn-danger">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- topic 3 -->
-                    <div class="d-flex justify-content-end align-items-center my-4" style="padding-top: 50px;">
-                    </div>
-
-                    <!-- Button Assign Deadline -->
-                    <div class="d-flex justify-content-end align-items-center my-4">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignDeadlineModal">
-                            <i class="fas fa-plus-circle"></i> Assign Deadline
-                        </button>
-                    </div>
-
-                    <!-- Modal Assign Deadline -->
-                    <div class="modal fade" id="assignDeadlineModal" tabindex="-1" aria-labelledby="assignDeadlineModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title" id="assignDeadlineModalLabel">Assign deadline to topics</h5>
-                                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="firstClosureDate" class="form-label text-primary">First closure
-                                                date:</label>
-                                            <input type="datetime-local" class="form-control" id="firstClosureDate" name="firstClosureDate" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="finalClosureDate" class="form-label text-primary">Final closure
-                                                date:</label>
-                                            <input type="datetime-local" class="form-control" id="finalClosureDate" name="finalClosureDate" required>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Assign</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Create Topic Modal -->
-                    <div class="modal fade" id="createTopicModal" tabindex="-1" aria-labelledby="createTopicModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title" id="createTopicModalLabel">Create New Topic</h5>
-                                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="topicName" class="form-label text-primary">Topic Name:</label>
-                                            <input type="text" class="form-control" id="topicName" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="topicDescription" class="form-label text-primary">Topic
-                                                Description:</label>
-                                            <textarea class="form-control" id="topicDescription" rows="5" required></textarea>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary w-100">Create Topic</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <form class="bg-light p-3">
-                        <!-- Deadline -->
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="idea-submission-deadline" class="form-label font-weight-bold fs-4">Deadline
-                                    for Idea Submission</label>
-                                <div class="d-flex flex-column">
-                                    <span class="deadline-time fs-5"><i class="far fa-clock"></i> 4 hours and 56 minutes
-                                        left</span>
-                                    <span class="deadline-status fs-5"><i class="fas fa-exclamation-circle text-danger"></i> The deadline has
-                                        passed</span>
-                                    <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#editDeadlineModal1" data-bs-title="Edit Deadline for Idea Submission"><i class="fas fa-edit"></i>
-                                        Edit Deadline
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="comment-deadline" class="form-label font-weight-bold fs-4">Deadline to Close
-                                    Comment</label>
-                                <div class="d-flex flex-column">
-                                    <span class="deadline-time fs-5"><i class="far fa-clock"></i> 2 days and 4 hours
-                                        left</span>
-                                    <span class="deadline-status fs-5"><i class="fas fa-clock text-success"></i> Open
-                                        for comments</span>
-                                    <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#editDeadlineModal2" data-bs-title="Edit Deadline to Close Comment"><i class="fas fa-edit"></i> Edit
-                                        Deadline
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Edit Deadline Modal -->
-                        <div class="modal fade" id="editDeadlineModal1" tabindex="-1" aria-labelledby="editDeadlineModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title" id="editDeadlineModalLabel">Deadline for Idea Submission
-                                        </h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="newDeadlineTime" class="form-label text-primary">New
-                                                    Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="newDeadlineTime" required>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary w-100">Update Deadline</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="editDeadlineModal2" tabindex="-1" aria-labelledby="editDeadlineModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title" id="editDeadlineModalLabel">Deadline to Close Comment
-                                        </h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="newDeadlineTime" class="form-label text-primary">New
-                                                    Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="newDeadlineTime" required>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary w-100">Update Deadline</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Topic list -->
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Topic Name</th>
-                                        <th scope="col">Topic Description</th>
-                                        <th scope="col">Ideas Count</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Topic 1</td>
-                                        <td>Description of Topic 1</td>
-                                        <td>10</td>
-                                        <td>Closed Submission</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal" data-bs-target="#editDeadlineModal">Edit Topic
-                                            </button>
-                                            <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal" data-bs-target="#deleteTopicModal">Delete
-                                            </button>
-                                            <button class="btn btn-sm btn-secondary view-ideas" onclick="window.location.href='QAM_Ideas.php'">View all ideas
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Edit Deadline Modal -->
-                        <div class="modal fade" id="editDeadlineModal" tabindex="-1" aria-labelledby="editDeadlineModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-primary text-white">
-                                        <h5 class="modal-title" id="editDeadlineModalLabel">Edit Topic</h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="mb-3">
-                                                <label for="topicName" class="form-label text-primary">Topic Name:</label>
-                                                <input type="text" class="form-control" id="topicName" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="topicDescription" class="form-label text-primary">Topic
-                                                    Description:</label>
-                                                <textarea class="form-control" id="topicDescription" rows="5" required></textarea>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="deadlineFirst" class="form-label text-primary">Closing Date of
-                                                    First Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="deadlineFirst" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="deadlineFinal" class="form-label text-primary">Closing Date of
-                                                    Final Deadline:</label>
-                                                <input type="datetime-local" class="form-control" id="deadlineFinal" required>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary w-100">Save Topic</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Delete Topic Modal -->
-                        <div class="modal fade" id="deleteTopicModal" tabindex="-1" aria-labelledby="deleteTopicModalLabel" aria-hidden="true" data-bs-backdrop="false">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title" id="deleteTopicModalLabel">Delete Topic</h5>
-                                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to delete this topic?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
-                                        </button>
-                                        <button type="button" class="btn btn-danger">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
                 </div>
             </div>
         </div>
@@ -943,34 +489,35 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <!-- main js -->
     <script src="./js/main.js"></script>
-    <script>
-        // Get the table header checkbox element
-        const checkAll = document.getElementById('checkAll');
-        // Get all the row checkboxes
-        const checkRows = document.querySelectorAll('#checkRow');
 
-        // Add event listener to the table header checkbox
-        checkAll.addEventListener('change', (event) => {
-            // Loop through all the row checkboxes and set their checked state
-            checkRows.forEach((row) => {
-                row.checked = event.target.checked;
-            });
+    <script>
+        const checkboxes = document.querySelectorAll('#nonAssignDeadline-table input[type="checkbox"]');
+        const assignBtn = document.querySelector('#assignBtn');
+
+        function checkboxAssignButton() {
+            const checked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+            assignBtn.disabled = !checked;
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('click', checkboxAssignButton);
         });
 
-        // Add event listener to the Assign Deadline button
-        document.querySelector('.assign-deadline').addEventListener('click', () => {
-            // Initialize an empty array to store the selected Topic IDs
-            const selectedTopics = [];
+        assignBtn.addEventListener('click', () => {
+            const sectionTopicID = document.getElementById('section_topicID');
+            sectionTopicID.innerHTML = '';
 
-            // Loop through all the row checkboxes and check if they are checked
-            checkRows.forEach((row) => {
-                if (row.checked) {
-                    // Get the Topic ID of the selected row
-                    const topicID = row.closest('tr').dataset.topicId;
-                    // Add the Topic ID to the selectedTopics array
-                    selectedTopics.push(topicID);
+
+            Array.from(checkboxes).forEach(checkbox => {
+                if (checkbox.checked) {
+                    const row = checkbox.closest('tr');
+                    const topicID = row.querySelector('td:nth-child(2)').innerText;
+                    // const topicName = row.querySelector('td:nth-child(4)').innerText;
+
+                    sectionTopicID.innerHTML += `<input type="hidden" name="topicID[]" value="${topicID}">`;
                 }
             });
+
         });
     </script>
 </body>

@@ -234,7 +234,6 @@ include 'header.php';
                     $topicID = $_POST['topicID'];
                     $sql = "DELETE FROM Topic WHERE TopicID = '$topicID'";
                     $result = mysqli_query($conn, $sql);
-                    $result = mysqli_query($conn, $sql);
                     if ($result) {
                         echo "<script>alert('Topic deleted successfully')</script>";
                         echo "<script>window.location.href='QAM_Topics.php'</script>";

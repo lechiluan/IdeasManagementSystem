@@ -632,7 +632,6 @@ include 'header.php';
                         </div>
                     </div>
                 </div>
-                </form>
             </div>
         </div>
     </div>

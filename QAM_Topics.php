@@ -314,13 +314,10 @@ include 'header.php';
                 $sql = "SELECT * FROM Topic WHERE DeadlineID IS NULL";
                 $result = mysqli_query($conn, $sql);
                 ?>
-
-                <!-- Topic list -->
-                <div class="row mb-5 bg-white" style="margin-bottom: 10px;">
-
-                    <div class="table-responsive">
-                        <?php if (mysqli_num_rows($result) > 0) { ?>
-
+                <?php if (mysqli_num_rows($result) > 0) { ?>
+                    <!-- Topic list -->
+                    <div class="row mb-5 bg-white" style="margin-bottom: 10px;">
+                        <div class="table-responsive">
                             <!-- Button Assign Deadline -->
                             <div class="d-flex justify-content-center align-items-center my-4 fs-4 font-weight-bold">
                                 Topics that have not been
@@ -377,9 +374,9 @@ include 'header.php';
                                     </tbody>
                                 <?php } ?>
                             </table>
-                        <?php } ?>
+                        </div>
                     </div>
-                </div>
+                <?php } ?>
                 <!-- assignDeadlineModal -->
 
                 <?php
@@ -511,7 +508,6 @@ include 'header.php';
                     <?php } ?>
                 <?php } ?>
 
-
                 <?php
                 include 'connection.php';
                 if (isset($_POST['update-deadline-1'])) {
@@ -541,8 +537,8 @@ include 'header.php';
                             echo "<script>window.location.href='QAM_Topics.php'</script>";
                         }
                     }
-                    // Get the first and final closure dates from the form
                 }
+
                 if (isset($_POST['update-deadline-2'])) {
                     $DeadlineID = $_POST['Edit-DeadlineID-2'];
                     // Get new deadline time
@@ -635,6 +631,7 @@ include 'header.php';
                         </div>
                     </div>
                 </div>
+
                 <!-- Edit Topic Modal -->
                 <div class="modal fade" id="editTopicModal" tabindex="-1" aria-labelledby="editDeadlineModalLabel"
                      aria-hidden="true" data-bs-backdrop="false">
@@ -670,6 +667,7 @@ include 'header.php';
                         </div>
                     </div>
                 </div>
+
                 <?php
                 // Delete Topic
                 include 'connection.php';
@@ -749,17 +747,19 @@ include 'footer.php';
     function validateDate() {
         const closureDate = new Date(document.getElementById("firstClosureDate").value);
         const finalClosureDate = new Date(document.getElementById("finalClosureDate").value);
-        const currentDateTime = new Date().toLocaleString("en-US", {timeZone: "Asia/Ho Chi Minh"});
+        const currentDateTime = new Date().toLocaleString("en-US", {timeZone: "Asia/Ho_Chi_Minh"});
+        const currentDate = new Date(currentDateTime);
 
-        if (closureDate <= currentDateTime) {
+        if (closureDate <= currentDate) {
             document.getElementById("firstClosureDate").setCustomValidity("Closure date must be greater than the current date");
+        } else if (finalClosureDate <= currentDate) {
+            document.getElementById("finalClosureDate").setCustomValidity("Final closure date must be greater than the current date");
         } else if (finalClosureDate <= closureDate) {
             document.getElementById("finalClosureDate").setCustomValidity("Final closure date must be greater than the closure date");
-        } else if (finalClosureDate <= currentDateTime) {
-            document.getElementById("finalClosureDate").setCustomValidity("Final closure date must be greater than the current date");
         } else {
             document.getElementById("firstClosureDate").setCustomValidity("");
             document.getElementById("finalClosureDate").setCustomValidity("");
+            document.getElementById("assignDeadlineModalForm").submit();
         }
     }
 </script>

@@ -176,6 +176,29 @@ include 'header.php';
                     </div>
                 </div>
                 <?php
+                include 'connection.php';
+                // Edit Topic
+                if (isset($_POST['edit-topic'])) {
+                    $TopicID = $_POST['Edit-TopicID'];
+                    $TopicName = $_POST['topicName'];
+                    $TopicDescription = $_POST['topicDescription'];
+                    // Check Topic Name is exist
+                    $sql = "SELECT * FROM Topic WHERE TopicName = '$TopicName' AND TopicID != '$TopicID'";
+                    $result = mysqli_query($conn, $sql);
+                    if (mysqli_num_rows($result) > 0) {
+                        echo "<script>alert('Topic name is already exist')</script>";
+                    } else {
+                        $sql = "UPDATE Topic SET TopicName = '$TopicName', Description = '$TopicDescription' WHERE TopicID = '$TopicID'";
+                        $result = mysqli_query($conn, $sql);
+                        if ($result) {
+                            echo "<script>alert('Topic updated successfully')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        } else {
+                            echo "<script>alert('Topic not updated')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        }
+                    }
+                }
                 // Check if the form has been submitted
                 if (isset($_POST['assign'])) {
                     // Get the selected topics from the hidden input field
@@ -333,7 +356,12 @@ include 'header.php';
                                         <td>Closed Submission</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal"
-                                                    data-bs-target="#editDeadlineModal">Edit Topic
+                                                    id="editTopic"
+                                                    data-bs-target="#editTopicModal"
+                                                    data-id="<?php echo $row['TopicID'] ?>"
+                                                    data-name="<?php echo $row['TopicName'] ?>"
+                                                    data-description="<?php echo $row['Description'] ?>"
+                                            >Edit Topic
                                             </button>
                                             <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal"
                                                     data-bs-target="#deleteTopicModal">Delete
@@ -433,8 +461,12 @@ include 'header.php';
                                                 <td>Closed Submission</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary edit-deadline"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editDeadlineModal">Edit Topic
+                                                            data-bs-toggle="modal" id="editTopic"
+                                                            data-bs-target="#editTopicModal"
+                                                            data-id="<?php echo $row['TopicID'] ?>"
+                                                            data-name="<?php echo $row['TopicName'] ?>"
+                                                            data-description="<?php echo $row['Description'] ?>"
+                                                    >Edit Topic
                                                     </button>
                                                     <button class="btn btn-sm btn-danger delete-topic"
                                                             data-bs-toggle="modal"
@@ -515,6 +547,7 @@ include 'header.php';
                     }
                 }
                 ?>
+
                 <!-- Edit Deadline Modal 1-->
                 <div class="modal fade" id="editDeadlineModal1" tabindex="-1" aria-labelledby="editDeadlineModalLabel"
                      aria-hidden="true" data-bs-backdrop="false">
@@ -578,10 +611,8 @@ include 'header.php';
                         </div>
                     </div>
                 </div>
-
-
                 <!-- Edit Topic Modal -->
-                <div class="modal fade" id="editDeadlineModal" tabindex="-1" aria-labelledby="editDeadlineModalLabel"
+                <div class="modal fade" id="editTopicModal" tabindex="-1" aria-labelledby="editDeadlineModalLabel"
                      aria-hidden="true" data-bs-backdrop="false">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -591,21 +622,26 @@ include 'header.php';
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form>
+                                <form action="QAM_Topics.php" method="post">
+                                    <input type="hidden" name="Edit-TopicID" id="edit-TopicID">
                                     <div class="mb-3">
                                         <label for="topicName" class="form-label text-primary">Topic Name:</label>
-                                        <input type="text" class="form-control" id="topicName" required>
+                                        <input type="text" class="form-control" id="edit-topicName" name="topicName"
+                                               required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="topicDescription" class="form-label text-primary">Topic
                                             Description:</label>
-                                        <textarea class="form-control" id="topicDescription" rows="5"
+                                        <textarea class="form-control" id="edit-topicDescription" rows="5"
+                                                  name="topicDescription"
                                                   required></textarea>
                                     </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary w-100" name="edit-topic">Save
+                                            Topic
+                                        </button>
+                                    </div>
                                 </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary w-100">Save Topic</button>
                             </div>
                         </div>
                     </div>
@@ -636,12 +672,10 @@ include 'header.php';
         </div>
     </div>
 </div>
-
 <!-- ================= Footer ================= -->
 <?php
 include 'footer.php';
 ?>
-
 <!-- bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
@@ -661,11 +695,6 @@ include 'footer.php';
                 // Set the values in the input fields
                 document.getElementById('Edit-DeadlineID-1').value = DeadlineID;
                 document.getElementById('newDeadlineTime1').value = ClosureDate;
-
-
-                // Show the modal
-                var editDeadlineModal1 = new bootstrap.Modal(document.getElementById('editDeadlineModal1'));
-                editDeadlineModal1.show();
             });
         });
 
@@ -679,9 +708,24 @@ include 'footer.php';
                 document.getElementById('newDeadlineTime2').value = FinalClosureDate;
                 document.getElementById('Edit-DeadlineID-2').value = DeadlineID;
 
+            });
+        });
+
+        var editTopic = document.querySelectorAll('#editTopic');
+
+        editTopic.forEach(function (e) {
+            e.addEventListener('click', function () {
+                var topicID = e.getAttribute('data-id');
+                var topicName = e.getAttribute('data-name')
+                var topicDescription = e.getAttribute('data-description')
+                // Set the values in the input fields
+                document.getElementById('edit-TopicID').value = topicID;
+                document.getElementById('edit-topicName').value = topicName;
+                document.getElementById('edit-topicDescription').value = topicDescription;
+
                 // Show the modal
-                var editDeadlineModal2 = new bootstrap.Modal(document.getElementById('editDeadlineModal2'));
-                editDeadlineModal2.show();
+                var editTopicModal = new bootstrap.Modal(document.getElementById('editTopicModal'));
+                editTopicModal.show();
             });
         });
     });

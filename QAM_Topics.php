@@ -188,29 +188,52 @@ include 'header.php';
                     // Convert the closure dates to MySQL datetime format
                     $firstClosureDate = date('Y-m-d H:i:s', strtotime($firstClosureDate));
                     $finalClosureDate = date('Y-m-d H:i:s', strtotime($finalClosureDate));
+                    // Check if the final closure date is before the first closure date
 
-                    // Insert the closure dates into the Deadline table
-                    $sql = "INSERT INTO Deadline (ClosureDate, FinalClosureDate) VALUES ('$firstClosureDate', '$finalClosureDate')";
-                    $result = mysqli_query($conn, $sql);
 
-                    // Get the ID of the newly inserted row
-                    $deadlineID = mysqli_insert_id($conn);
-
-                    foreach ($selectedTopics as $topic) {
-                        // Update the selected topics with the new deadline ID
-                        $sql = "UPDATE Topic SET DeadlineID=$deadlineID WHERE TopicID = ($topic)";
+                    // Check if the final closure date is before the current date
+                    if ($finalClosureDate < $firstClosureDate) {
+                        echo "<script>alert('The final closure date must be after the first closure date')</script>";
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
+                    } else if ($finalClosureDate < date('Y-m-d H:i:s')) {
+                        // Check if the final closure date is before the current date
+                        echo "<script>alert('The final closure date must be after the current date')</script>";
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
+                    } else if ($firstClosureDate < date('Y-m-d H:i:s')) {
+                        // Check if the first closure date is before the current date
+                        echo "<script>alert('The first closure date must be after the current date')</script>";
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
+                    } else if ($firstClosureDate > $finalClosureDate) {
+                        // Check if the first closure date is before the final closure date
+                        echo "<script>alert('The first closure date must be before the final closure date')</script>";
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
+                    } else {
+                        // Insert the closure dates into the Deadline table
+                        $sql = "INSERT INTO Deadline (ClosureDate, FinalClosureDate) VALUES ('$firstClosureDate', '$finalClosureDate')";
                         $result = mysqli_query($conn, $sql);
-                    }
 
-                    // Redirect to the topics page
-                    echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        // Get the ID of the newly inserted row
+                        $deadlineID = mysqli_insert_id($conn);
+
+                        foreach ($selectedTopics as $topic) {
+                            // Update the selected topics with the new deadline ID
+                            $sql = "UPDATE Topic SET DeadlineID=$deadlineID WHERE TopicID = ($topic)";
+                            $result = mysqli_query($conn, $sql);
+                        }
+
+                        // Redirect to the topics page
+                        echo "<script>alert('Deadline assigned successfully')</script>";
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
+                    }
                 }
                 ?>
+
                 <?php
                 include 'connection.php';
                 if (isset($_POST['assign'])) {
                     $topicID = $_POST['topicID'];
                     $sql = "DELETE FROM Topic WHERE TopicID = '$topicID'";
+                    $result = mysqli_query($conn, $sql);
                     $result = mysqli_query($conn, $sql);
                     if ($result) {
                         echo "<script>alert('Topic deleted successfully')</script>";
@@ -275,7 +298,8 @@ include 'header.php';
                         <?php if (mysqli_num_rows($result) > 0) { ?>
 
                             <!-- Button Assign Deadline -->
-                            <div class="d-flex justify-content-center align-items-center my-4 fs-4 font-weight-bold">Topics that have not been
+                            <div class="d-flex justify-content-center align-items-center my-4 fs-4 font-weight-bold">
+                                Topics that have not been
                                 set deadlines
                             </div>
 
@@ -343,15 +367,19 @@ include 'header.php';
                                 <label for="idea-submission-deadline" class="form-label font-weight-bold fs-4">Deadline
                                     for Idea Submission</label>
                                 <div class="d-flex flex-column">
-                                            <span class="deadline-time fs-5"><i class="far fa-clock"></i> <?php echo $row['ClosureDate'] ?>
+                                            <span class="deadline-time fs-5"><i
+                                                    class="far fa-clock"></i> <?php echo $row['ClosureDate'] ?>
                                             </span>
                                     <span class="deadline-status fs-5"><i
                                             class="fas fa-exclamation-circle text-danger"></i> The deadline has
                                                 passed</span>
                                     <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal"
+                                            id="editDeadline1"
                                             data-bs-target="#editDeadlineModal1"
-                                            data-bs-title="Edit Deadline for Idea Submission"><i
-                                            class="fas fa-edit"></i>
+                                            data-bs-title="Edit Deadline for Idea Submission"
+                                            data-id-1="<?php echo $row['DeadlineID'] ?>"
+                                            data-closuredate="<?php echo $row['ClosureDate'] ?>">
+                                        <i class="fas fa-edit"></i>
                                         Edit Deadline
                                     </button>
                                 </div>
@@ -360,13 +388,17 @@ include 'header.php';
                                 <label for="comment-deadline" class="form-label font-weight-bold fs-4">Deadline to Close
                                     Comment</label>
                                 <div class="d-flex flex-column">
-                                            <span class="deadline-time fs-5"><i class="far fa-clock"></i> <?php echo $row['FinalClosureDate'] ?>
+                                            <span class="deadline-time fs-5"><i
+                                                    class="far fa-clock"></i> <?php echo $row['FinalClosureDate'] ?>
                                             </span>
                                     <span class="deadline-status fs-5"><i class="fas fa-clock text-success"></i> Open
                                                 for comments</span>
                                     <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal"
+                                            id="editDeadline2"
                                             data-bs-target="#editDeadlineModal2"
-                                            data-bs-title="Edit Deadline to Close Comment">
+                                            data-bs-title="Edit Deadline to Close Comment"
+                                            data-id-2="<?php echo $row['DeadlineID'] ?>"
+                                            data-finalclosuredate="<?php echo $row['FinalClosureDate'] ?>">
                                         <i class="fas fa-edit"></i> Edit
                                         Deadline
                                     </button>
@@ -424,7 +456,67 @@ include 'header.php';
                     <?php } ?>
                 <?php } ?>
 
-                <!-- Edit Deadline Modal -->
+
+                <?php
+                include 'connection.php';
+                if (isset($_POST['update-deadline-1'])) {
+                    $DeadlineID = $_POST['Edit-DeadlineID-1'];
+                    // Get new deadline time
+                    $newDeadlineTime1 = $_POST['newDeadlineTime1'];
+                    $newDeadlineTime1 = date('Y-m-d H:i:s', strtotime($newDeadlineTime1));
+
+                    // Check if the new deadline time is earlier than the final closure date
+                    $sql = "SELECT * FROM Deadline WHERE DeadlineID = $DeadlineID";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    $finalClosureDate = $row['FinalClosureDate'];
+                    if ($newDeadlineTime1 > $finalClosureDate) {
+                        echo "<script>alert('The new deadline time must be earlier than the final closure date!')</script>";
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        exit();
+                    } else {
+                        $sql = "UPDATE Deadline SET ClosureDate = '$newDeadlineTime1' WHERE DeadlineID = $DeadlineID";
+                        $result = mysqli_query($conn, $sql);
+
+                        if ($result) {
+                            echo "<script>alert('Closure Date updated successfully!')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        } else {
+                            echo "<script>alert('Failed to update deadline!')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        }
+                    }
+                    // Get the first and final closure dates from the form
+                }
+                if (isset($_POST['update-deadline-2'])) {
+                    $DeadlineID = $_POST['Edit-DeadlineID-2'];
+                    // Get new deadline time
+                    $newDeadlineTime2 = $_POST['newDeadlineTime2'];
+                    $newDeadlineTime2 = date('Y-m-d H:i:s', strtotime($newDeadlineTime2));
+                    // Check if the new deadline time is earlier than the final closure date
+                    $sql = "SELECT * FROM Deadline WHERE DeadlineID = $DeadlineID";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    $closureDate = $row['ClosureDate'];
+                    if ($newDeadlineTime2 < $closureDate) {
+                        echo "<script>alert('The new deadline time must be later than the closure date!')</script>";
+                        echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        exit();
+                    } else {
+                        $sql = "UPDATE Deadline SET FinalClosureDate = '$newDeadlineTime2' WHERE DeadlineID = $DeadlineID";
+                        $result = mysqli_query($conn, $sql);
+
+                        if ($result) {
+                            echo "<script>alert('Final Closure Date updated successfully!')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        } else {
+                            echo "<script>alert('Failed to update deadline!')</script>";
+                            echo "<script>window.location.href='QAM_Topics.php'</script>";
+                        }
+                    }
+                }
+                ?>
+                <!-- Edit Deadline Modal 1-->
                 <div class="modal fade" id="editDeadlineModal1" tabindex="-1" aria-labelledby="editDeadlineModalLabel"
                      aria-hidden="true" data-bs-backdrop="false">
                     <div class="modal-dialog modal-dialog-centered">
@@ -436,21 +528,27 @@ include 'header.php';
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form>
+                                <form action="QAM_Topics.php" method="post">
                                     <div class="mb-3">
+                                        <input type="hidden" name="Edit-DeadlineID-1" id="Edit-DeadlineID-1">
                                         <label for="newDeadlineTime" class="form-label text-primary">New
                                             Deadline:</label>
-                                        <input type="datetime-local" class="form-control" id="newDeadlineTime" required>
+                                        <input type="datetime-local" class="form-control" id="newDeadlineTime1"
+                                               name="newDeadlineTime1"
+                                               required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary w-100" name="update-deadline-1">
+                                            Update Deadline
+                                        </button>
                                     </div>
                                 </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary w-100">Update Deadline</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Edit Deadline Modal 2-->
                 <div class="modal fade" id="editDeadlineModal2" tabindex="-1" aria-labelledby="editDeadlineModalLabel"
                      aria-hidden="true" data-bs-backdrop="false">
                     <div class="modal-dialog modal-dialog-centered">
@@ -462,22 +560,28 @@ include 'header.php';
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form>
+                                <form action="QAM_Topics.php" method="post">
                                     <div class="mb-3">
+                                        <input type="hidden" name="Edit-DeadlineID-2" id="Edit-DeadlineID-2">
                                         <label for="newDeadlineTime" class="form-label text-primary">New
                                             Deadline:</label>
-                                        <input type="datetime-local" class="form-control" id="newDeadlineTime" required>
+                                        <input type="datetime-local" class="form-control" id="newDeadlineTime2"
+                                               name="newDeadlineTime2"
+                                               required>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary w-100"
+                                                    name="update-deadline-2">Update Deadline
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary w-100">Update Deadline</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Edit Deadline Modal -->
+
+                <!-- Edit Topic Modal -->
                 <div class="modal fade" id="editDeadlineModal" tabindex="-1" aria-labelledby="editDeadlineModalLabel"
                      aria-hidden="true" data-bs-backdrop="false">
                     <div class="modal-dialog modal-dialog-centered">
@@ -548,6 +652,42 @@ include 'footer.php';
 <script src="./js/main.js"></script>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var editDeadline1 = document.querySelectorAll('#editDeadline1');
+
+        editDeadline1.forEach(function (e) {
+            e.addEventListener('click', function () {
+                var ClosureDate = e.getAttribute('data-closuredate');
+                var DeadlineID = e.getAttribute('data-id-1');
+
+                // Set the values in the input fields
+                document.getElementById('Edit-DeadlineID-1').value = DeadlineID;
+                document.getElementById('newDeadlineTime1').value = ClosureDate;
+
+
+                // Show the modal
+                var editDeadlineModal1 = new bootstrap.Modal(document.getElementById('editDeadlineModal1'));
+                editDeadlineModal1.show();
+            });
+        });
+
+        var editDeadline2 = document.querySelectorAll('#editDeadline2');
+
+        editDeadline2.forEach(function (e) {
+            e.addEventListener('click', function () {
+                var FinalClosureDate = e.getAttribute('data-finalclosuredate');
+                var DeadlineID = e.getAttribute('data-id-2');
+                // Set the values in the input fields
+                document.getElementById('newDeadlineTime2').value = FinalClosureDate;
+                document.getElementById('Edit-DeadlineID-2').value = DeadlineID;
+
+                // Show the modal
+                var editDeadlineModal2 = new bootstrap.Modal(document.getElementById('editDeadlineModal2'));
+                editDeadlineModal2.show();
+            });
+        });
+    });
+
     const checkboxes = document.querySelectorAll('#nonAssignDeadline-table input[type="checkbox"]');
     const assignBtn = document.querySelector('#assignBtn');
 
@@ -576,6 +716,7 @@ include 'footer.php';
         });
 
     });
+
 </script>
 </body>
 

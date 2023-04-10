@@ -20,8 +20,8 @@
 
 <body class="bg-gray">
 <!--============ Header =========-->
-<?php 
-        include 'header.php'; 
+<?php
+include 'header.php';
 ?>
 
 <!-- ================= Main ================= -->
@@ -229,7 +229,8 @@
                                         <select class="form-select" id="role" name="role" required>
                                             <option value="" disabled selected>Select Role</option>
                                             <?php foreach ($role_result as $role) : ?>
-                                                <option value="<?= $role['RoleID']; ?>"><?= $role['RoleName']; ?></option>
+                                                <option
+                                                    value="<?= $role['RoleID']; ?>"><?= $role['RoleName']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -239,7 +240,8 @@
                                         <select class="form-select" id="department" name="department" required>
                                             <option value="" disabled selected>Select Department</option>
                                             <?php foreach ($dept_result as $dept) : ?>
-                                                <option value="<?= $dept['DepartmentID']; ?>"><?= $dept['DepartmentName']; ?></option>
+                                                <option
+                                                    value="<?= $dept['DepartmentID']; ?>"><?= $dept['DepartmentName']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -332,7 +334,15 @@
                     $staff_id = $_POST["staffID"];
                     $full_name = $_POST["fullName"];
                     $email = $_POST["email"];
-                    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                    if ($_POST["password"] == "") {
+                        $sql = "SELECT Password FROM Staff WHERE StaffID = '$staff_id'";
+                        $result = mysqli_query($conn, $sql);
+                        $row = mysqli_fetch_assoc($result);
+                        $password = $row["Password"];
+                    } else {
+                        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+                    }
+
                     $role_id = $_POST["role"];
                     $department_id = $_POST["department"];
                     $sql = "UPDATE Staff SET FullName = '$full_name', Email = '$email', Password = '$password', RoleID = '$role_id', DepartmentID = '$department_id' WHERE StaffID = '$staff_id'";
@@ -388,7 +398,7 @@
                                         <label for="password" class="form-label text-primary">New Password:</label>
                                         <div class="input-group">
                                             <input type="password" class="form-control" id="passwordEdit"
-                                                   name="password" required placeholder="New password">
+                                                   name="password" placeholder="New password">
                                             <button class="btn btn-outline-secondary" type="button"
                                                     id="togglePasswordBtnEdit">
                                                 <i class="fas fa-eye"></i>
@@ -400,7 +410,8 @@
                                         <select class="form-select" id="edit_role" name="role" required>
                                             <option value="" disabled selected>Select Role</option>
                                             <?php foreach ($role_result as $role) : ?>
-                                                <option value="<?= $role['RoleID']; ?>"><?= $role['RoleName']; ?></option>
+                                                <option
+                                                    value="<?= $role['RoleID']; ?>"><?= $role['RoleName']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -410,7 +421,8 @@
                                         <select class="form-select" id="edit_department" name="department" required>
                                             <option value="" disabled selected>Select Department</option>
                                             <?php foreach ($dept_result as $dept) : ?>
-                                                <option value="<?= $dept['DepartmentID']; ?>"><?= $dept['DepartmentName']; ?></option>
+                                                <option
+                                                    value="<?= $dept['DepartmentID']; ?>"><?= $dept['DepartmentName']; ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -468,9 +480,9 @@
 </div>
 
 <!--============ Footer =========-->
-<?php 
-        include 'footer.php'; 
-    ?>
+<?php
+include 'footer.php';
+?>
 
 
 <!-- bootstrap -->

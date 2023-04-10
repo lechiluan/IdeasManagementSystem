@@ -364,7 +364,8 @@ include 'header.php';
                                             >Edit Topic
                                             </button>
                                             <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteTopicModal">Delete
+                                                    data-bs-target="#deleteTopicModal" id="deleteTopic"
+                                                    data-id-delete="<?php echo $row['TopicID'] ?>">Delete
                                             </button>
                                             <button class="btn btn-sm btn-secondary view-ideas"
                                                     onclick="window.location.href='QAM_Ideas.php'">View all ideas
@@ -470,7 +471,8 @@ include 'header.php';
                                                     </button>
                                                     <button class="btn btn-sm btn-danger delete-topic"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#deleteTopicModal">Delete
+                                                            data-bs-target="#deleteTopicModal" id="deleteTopic"
+                                                            data-id-delete="<?php echo $row['TopicID'] ?>">Delete
                                                     </button>
                                                     <button class="btn btn-sm btn-secondary view-ideas"
                                                             onclick="window.location.href='QAM_Ideas.php'">View all
@@ -646,26 +648,65 @@ include 'header.php';
                         </div>
                     </div>
                 </div>
-
+                <?php
+                // Delete Topic
+                include 'connection.php';
+                if (isset($_POST['delete'])) {
+                    $topicID = $_POST['Delete-TopicID'];
+                    // Check if deadline have only one topic left in the database before deleting it
+                    $sql = "SELECT * FROM `topic` WHERE `TopicID` = '$topicID'";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    $deadlineID = $row['DeadlineID'];
+                    $sql = "SELECT * FROM `topic` WHERE `DeadlineID` = '$deadlineID'";
+                    $result = mysqli_query($conn, $sql);
+                    $num = mysqli_num_rows($result);
+                    if ($num == 1) {
+                        $sql = "DELETE FROM `topic` WHERE `TopicID` = '$topicID'";
+                        $result1 = mysqli_query($conn, $sql);
+                        $sql = "DELETE FROM `deadline` WHERE `DeadlineID` = '$deadlineID'";
+                        $result2 = mysqli_query($conn, $sql);
+                        if ($result1 && $result2) {
+                            echo '<script>alert("Topic Deleted Successfully")</script>';
+                            echo '<script>window.location.href = "QAM_Topics.php"</script>';
+                        } else {
+                            echo '<script>alert("Topic Deleted Failed")</script>';
+                            echo '<script>window.location.href = "QAM_Topics.php"</script>';
+                        }
+                    }
+                    $sql = "DELETE FROM `topic` WHERE `TopicID` = '$topicID'";
+                    $result = mysqli_query($conn, $sql);
+                    if ($result) {
+                        echo '<script>alert("Topic Deleted Successfully")</script>';
+                        echo '<script>window.location.href = "QAM_Topics.php"</script>';
+                    } else {
+                        echo '<script>alert("Topic Deleted Failed")</script>';
+                        echo '<script>window.location.href = "QAM_Topics.php"</script>';
+                    }
+                }
+                ?>
                 <!-- Delete Topic Modal -->
                 <div class="modal fade" id="deleteTopicModal" tabindex="-1" aria-labelledby="deleteTopicModalLabel"
                      aria-hidden="true" data-bs-backdrop="false">
                     <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header bg-danger text-white">
-                                <h5 class="modal-title" id="deleteTopicModalLabel">Delete Topic</h5>
-                                <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                        <form action="QAM_Topics.php" method="post">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="deleteTopicModalLabel">Delete Topic</h5>
+                                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <input type="hidden" name="Delete-TopicID" id="delete-TopicID">
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete this topic?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-danger" name="delete">Delete</button>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to delete this topic?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
-                                </button>
-                                <button type="button" class="btn btn-danger">Delete</button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -726,6 +767,19 @@ include 'footer.php';
                 // Show the modal
                 var editTopicModal = new bootstrap.Modal(document.getElementById('editTopicModal'));
                 editTopicModal.show();
+            });
+        });
+
+        var deleteTopic = document.querySelectorAll('#deleteTopic');
+        deleteTopic.forEach(function (e) {
+            e.addEventListener('click', function () {
+                var topicID = e.getAttribute('data-id-delete');
+                // Set the values in the input fields
+                document.getElementById('delete-TopicID').value = topicID;
+
+                // Show the modal
+                deleteTopicModal = new bootstrap.Modal(document.getElementById('deleteTopicModal'));
+                deleteTopicModal.show();
             });
         });
     });

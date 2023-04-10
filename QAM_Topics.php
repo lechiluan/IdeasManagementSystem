@@ -398,9 +398,18 @@ include 'header.php';
                                             <span class="deadline-time fs-5"><i
                                                     class="far fa-clock"></i> <?php echo $row['ClosureDate'] ?>
                                             </span>
-                                    <span class="deadline-status fs-5"><i
-                                            class="fas fa-exclamation-circle text-danger"></i> The deadline has
+                                    <?php
+                                    date_default_timezone_set('Asia/Ho_Chi_Minh');
+                                    $currentDate = date("Y-m-d H:i:s");
+                                    if ($currentDate > $row['ClosureDate']) { ?>
+                                        <span class="deadline-status fs-5"><i
+                                                class="fas fa-exclamation-circle text-danger"></i> The deadline has
                                                 passed</span>
+                                    <?php } else { ?>
+                                        <span class="deadline-status fs-5"><i
+                                                class="fas fa-clock text-success"></i> The deadline is
+                                                still open</span>
+                                    <?php } ?>
                                     <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal"
                                             id="editDeadline1"
                                             data-bs-target="#editDeadlineModal1"
@@ -419,8 +428,19 @@ include 'header.php';
                                             <span class="deadline-time fs-5"><i
                                                     class="far fa-clock"></i> <?php echo $row['FinalClosureDate'] ?>
                                             </span>
-                                    <span class="deadline-status fs-5"><i class="fas fa-clock text-success"></i> Open
-                                                for comments</span>
+                                    <?php
+                                    date_default_timezone_set('Asia/Ho_Chi_Minh');
+                                    $currentDate = date("Y-m-d H:i:s");
+                                    if ($currentDate > $row['FinalClosureDate']) { ?>
+                                        <span class="deadline-status fs-5"><i
+                                                class="fas fa-exclamation-circle text-danger"></i> The deadline has
+                                                passed</span>
+                                        ?>
+                                    <?php } else { ?>
+                                        <span class="deadline-status fs-5"><i
+                                                class="fas fa-clock text-success"></i> The deadline is
+                                                still open</span>
+                                    <?php } ?>
                                     <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal"
                                             id="editDeadline2"
                                             data-bs-target="#editDeadlineModal2"
@@ -764,9 +784,6 @@ include 'footer.php';
                 document.getElementById('edit-topicName').value = topicName;
                 document.getElementById('edit-topicDescription').value = topicDescription;
 
-                // Show the modal
-                var editTopicModal = new bootstrap.Modal(document.getElementById('editTopicModal'));
-                editTopicModal.show();
             });
         });
 
@@ -776,10 +793,7 @@ include 'footer.php';
                 var topicID = e.getAttribute('data-id-delete');
                 // Set the values in the input fields
                 document.getElementById('delete-TopicID').value = topicID;
-
-                // Show the modal
-                deleteTopicModal = new bootstrap.Modal(document.getElementById('deleteTopicModal'));
-                deleteTopicModal.show();
+                
             });
         });
     });

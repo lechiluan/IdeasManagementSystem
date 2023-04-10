@@ -278,7 +278,7 @@ include 'header.php';
                                         aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form method="post" action="QAM_Topics.php">
+                                <form method="post" action="QAM_Topics.php" id="assignDeadlineModalForm">
                                     <div id="section_topicID" class="mb-3">
 
                                     </div>
@@ -298,7 +298,9 @@ include 'header.php';
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
                                         </button>
-                                        <button type="submit" class="btn btn-primary" name="assign">Assign</button>
+                                        <button type="submit" class="btn btn-primary" name="assign"
+                                                onclick="validateDate()">Assign
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -743,7 +745,24 @@ include 'footer.php';
         crossorigin="anonymous"></script>
 <!-- main js -->
 <script src="./js/main.js"></script>
+<script>
+    function validateDate() {
+        const closureDate = new Date(document.getElementById("firstClosureDate").value);
+        const finalClosureDate = new Date(document.getElementById("finalClosureDate").value);
+        const currentDateTime = new Date().toLocaleString("en-US", {timeZone: "Asia/Ho Chi Minh"});
 
+        if (closureDate <= currentDateTime) {
+            document.getElementById("firstClosureDate").setCustomValidity("Closure date must be greater than the current date");
+        } else if (finalClosureDate <= closureDate) {
+            document.getElementById("finalClosureDate").setCustomValidity("Final closure date must be greater than the closure date");
+        } else if (finalClosureDate <= currentDateTime) {
+            document.getElementById("finalClosureDate").setCustomValidity("Final closure date must be greater than the current date");
+        } else {
+            document.getElementById("firstClosureDate").setCustomValidity("");
+            document.getElementById("finalClosureDate").setCustomValidity("");
+        }
+    }
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var editDeadline1 = document.querySelectorAll('#editDeadline1');
@@ -793,7 +812,7 @@ include 'footer.php';
                 var topicID = e.getAttribute('data-id-delete');
                 // Set the values in the input fields
                 document.getElementById('delete-TopicID').value = topicID;
-                
+
             });
         });
     });

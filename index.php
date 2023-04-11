@@ -1,3 +1,8 @@
+<?php
+session_start();
+include("connection.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -95,8 +100,6 @@
 
 </html>
 <?php
-session_start();
-include("connection.php");
 if (isset($_POST['email']) && isset($_POST['password'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -107,12 +110,14 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         if (password_verify($password, $row['Password'])) {
+
             $_SESSION['staff_id'] = $row['StaffID'];
             $_SESSION['full_name'] = $row['FullName'];
             $_SESSION['email'] = $row['Email'];
             $_SESSION['phone'] = $row['Phone'];
             $_SESSION['role_id'] = $row['RoleID'];
             $_SESSION['department_id'] = $row['DepartmentID'];
+            $_SESSION['login'] = true;
 
             if (isset($_SESSION['staff_id'])) {
                 if ($_SESSION['role_id'] == 1) {

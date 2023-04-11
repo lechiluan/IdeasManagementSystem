@@ -43,26 +43,30 @@
                         </li>
                         <!-- top 1 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="#" class=" d-flex align-items-center text-decoration-none text-dark">
+                            <a href="Staff.php" class="d-flex align-items-center text-decoration-none text-dark"
+                            id="manage-topics">
                                 <div class="p-2">
-                                    <i class="fa-sharp fa-solid fa-fire" style="font-size: 35px;"></i>
+                                    <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
                                 </div>
                                 <div>
-                                    <p class="m-0" style="padding-left: 10px;">Hot</p>
+                                    <p class="m-0" style="padding-left: 10px;" id="manage-topics-text">Your Post</p>
                                 </div>
                             </a>
                         </li>
+
                         <!-- top 2 -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="#" class=" d-flex align-items-center text-decoration-none text-dark">
+                            <a href="Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
+                            id="manage-topics">
                                 <div class="p-2">
-                                    <i class="fa-solid fa-star" style="font-size: 30px;"></i>
+                                    <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                                 </div>
                                 <div>
-                                    <p class="m-0" style="padding-left: 10px;">New</p>
+                                    <p class="m-0" style="padding-left: 10px;">Topics</p>
                                 </div>
                             </a>
                         </li>
+
                         <hr class="m-0" />
                     </ul>
                 </div>
@@ -127,34 +131,6 @@
                                     <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                                         eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
                                         veniam, quis nostrud exercitation ullamco.</p>
-                                    <!-- Like, Dislike, and Reply buttons -->
-                                    <div class="d-flex align-items-center mt-2">
-                                        <div class="d-flex me-3">
-                                            <button type="button" class="btn btn-outline-primary btn-sm me-2"><i class="far fa-thumbs-up"></i> Like</button>
-                                            <button type="button" class="btn btn-outline-danger btn-sm me-2"><i class="far fa-thumbs-down"></i> Dislike</button>
-                                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="collapse" href="#replyComment1" aria-expanded="false" aria-controls="replyComment1"><i class="far fa-comment"></i>
-                                                Reply</button>
-                                        </div>
-                                    </div>
-                                    <!-- Reply form -->
-                                    <div class="collapse" id="replyComment1">
-                                        <form>
-                                            <!-- Comment content input -->
-                                            <div class="form-floating mb-3" style="padding-top: 20px;">
-                                                <textarea class="form-control" placeholder="Leave a reply here" id="replyContent1" style="height: 100px"></textarea>
-                                                <label for="replyContent1">Leave a reply here</label>
-                                            </div>
-                                            <!-- Checkbox for anonymous reply -->
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" value="" id="anonymousReply1">
-                                                <label class="form-check-label" for="anonymousReply1">
-                                                    Post anonymously
-                                                </label>
-                                            </div>
-                                            <!-- Submit button -->
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                        </form>
-                                    </div>
                                 </div>
                             </div>
                             <!-- Comment form -->
@@ -186,21 +162,25 @@
                                     <h5 class="text-muted">Topic 1</h5>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topic1Modal">Submit your ideas</button>
                                     <!-- deadline -->
-                                    <p class="text-muted">Deadline: March 31, 2023</p>
+                                    <p class="text-muted">Deadline for submit: March 31, 2023</p>
+                                    <p class="text-muted">Final Deadline: March 31, 2023</p>
+
                                 </div>
                                 <div class="p-3 mt-4">
                                     <!-- topic 2 -->
                                     <h5 class="text-muted">Topic 2</h5>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topic2Modal">Submit your ideas</button>
                                     <!-- deadline -->
-                                    <p class="text-muted">Deadline: April 15, 2023</p>
+                                    <p class="text-muted">Deadline for submit: March 31, 2023</p>
+                                    <p class="text-muted">Final Deadline: March 31, 2023</p>
                                 </div>
                                 <div class="p-3 mt-4">
                                     <!-- topic 3 -->
                                     <h5 class="text-muted">Topic 3</h5>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topic3Modal">Submit your ideas</button>
                                     <!-- deadline -->
-                                    <p class="text-muted">Deadline: April 30, 2023</p>
+                                    <p class="text-muted">Deadline for submit: March 31, 2023</p>
+                                    <p class="text-muted">Final Deadline: March 31, 2023</p>
                                 </div>
                             </div>
                         </div>

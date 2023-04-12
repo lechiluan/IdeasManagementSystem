@@ -1,3 +1,7 @@
+<?php
+include("connection.php");
+session_start(); // Start the session
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,7 +46,7 @@ include 'header.php';
                                      style="width: 38px; height: 38px; object-fit: cover"/>
                             </div>
                             <div>
-                                <p class="m-0">Quality Assurance Manager</p>
+                                <p class="m-0"><?php echo $_SESSION['full_name']; ?></p>
                             </div>
                         </a>
                     </li>
@@ -329,7 +333,7 @@ include 'header.php';
                     <?php } ?>
                 </div>
                 <?php
-                include 'connection.php';
+                include("connection.php");
                 if (isset($_POST["edit"])) {
                     $staff_id = $_POST["staffID"];
                     $full_name = $_POST["fullName"];

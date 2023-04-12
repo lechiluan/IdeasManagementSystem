@@ -1,5 +1,5 @@
 <?php
-include 'connection.php';
+include("connection.php");
 session_start(); // Start the session
 ?>
 <!DOCTYPE html>
@@ -46,7 +46,7 @@ include 'header.php';
                                      style="width: 38px; height: 38px; object-fit: cover"/>
                             </div>
                             <div>
-                                <p class="m-0">Quality Assurance Manager</p>
+                                <p class="m-0"><?php echo $_SESSION['full_name']; ?></p>
                             </div>
                         </a>
                     </li>

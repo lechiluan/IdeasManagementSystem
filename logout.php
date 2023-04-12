@@ -1,7 +1,7 @@
 <?php
-    if (isset($_POST['logout'])) {
-        session_destroy();
-        echo "You have been logged out";
-        header("Location: index.php");
-    }
+include("connection.php");
+session_start();
+session_destroy();
+echo "<script>alert('You have been logged out!')</script>";
+header("Location: index.php");
 ?>

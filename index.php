@@ -1,6 +1,18 @@
 <?php
 session_start();
 include("connection.php");
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if (isset($_SESSION["staff_id"])) {
+    if ($_SESSION['role_id'] == 1) {
+        echo "<script>window.location.href='QAM_Topics.php'</script>";
+    } else if ($_SESSION['role_id'] == 2) {
+        echo "<script>window.location.href='QAC_Staff.php'</script>";
+    } else if ($_SESSION['role_id'] == 3) {
+        echo "<script>window.location.href='Staff.php'</script>";
+    } else {
+        echo "<script>window.location.href='index.php'</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -69,7 +81,8 @@ include("connection.php");
                                     <tr>
                                         <th>
                                             <div style="text-align:left; font-weight:normal"><a
-                                                    href="https://passwordreset.microsoftonline.com/?whr=gre.ac.uk">Forgot Password?</a>
+                                                    href="https://passwordreset.microsoftonline.com/?whr=gre.ac.uk">Forgot
+                                                    Password?</a>
                                             </div>
                                         </th>
                                         <th>
@@ -126,8 +139,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
                     echo "<script>window.location.href='QAC_Staff.php'</script>";
                 } else if ($_SESSION['role_id'] == 3) {
                     echo "<script>window.location.href='Staff.php'</script>";
-                }
-                else{
+                } else {
                     echo "<script>window.location.href='index.php'</script>";
                 }
             }

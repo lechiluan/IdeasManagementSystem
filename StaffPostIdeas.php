@@ -1,3 +1,7 @@
+<?php
+include("connection.php");
+session_start(); // Start the session
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +43,7 @@
                                     <img src="https://source.unsplash.com/collection/happy-people" alt="avatar" class="rounded-circle me-2" style="width: 38px; height: 38px; object-fit: cover" />
                                 </div>
                                 <div>
-                                    <p class="m-0">Marris Nguyen</p>
+                                    <p class="m-0"><?php echo $_SESSION['full_name']; ?></p>
                                 </div>
                             </a>
                         </li>
@@ -68,7 +72,6 @@
                                 </div>
                             </a>
                         </li>
-
                         <hr class="m-0" />
                     </ul>
                 </div>
@@ -83,7 +86,7 @@
             <div class="bg-light p-3 text-center mb-3">
                 <form>
                     <!-- head -->
-                    <div class="modal-header bg-primary text-white">
+                    <div class="modal-header bg-primary text-white bg-white">
                         <h5 class="modal-title" id="exampleModalLabel">
                             Submit Your Ideas for Topic 1
                         </h5>

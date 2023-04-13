@@ -65,7 +65,7 @@ include 'header.php';
 
                     <!-- top 2 -->
                     <li class="dropdown-item p-1 rounded">
-                        <a href="MyPost.php" class="d-flex align-items-center text-decoration-none text-dark"
+                        <a href="Staff_MyPost.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
                                 <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
@@ -99,7 +99,7 @@ include 'header.php';
             <!-- p 1 -->
             <?php
             include("connection.php");
-            $sql = "SELECT * FROM Idea, Staff, Topic WHERE Idea.StaffID = Staff.StaffID AND Idea.TopicID = Topic.TopicID ORDER BY Idea.PostDate DESC";
+            $sql = "SELECT * FROM Idea, Staff, Topic WHERE Idea.StaffID = Staff.StaffID AND Idea.TopicID = Topic.TopicID AND Idea.StaffID = '" . $_SESSION['staff_id'] . "' ORDER BY IdeaID DESC";
             $result = mysqli_query($conn, $sql);
             ?>
             <?php if (mysqli_num_rows($result) > 0) { ?>
@@ -249,7 +249,7 @@ include 'header.php';
                             <?php } ?>
                             <!-- Comment form -->
                             <div class="mt-3" id="comment<?php echo $row['IdeaID']; ?>">
-                                <form action="Staff.php" method="post">
+                                <form action="Staff_MyPost.php" method="post">
                                     <!-- Comment content input -->
                                     <input type="hidden" name="ideaID"
                                            value="<?php echo $row['IdeaID']; ?>">
@@ -291,7 +291,7 @@ include 'header.php';
 
                 if (mysqli_query($conn, $sql)) {
                     echo "<script>alert('Comment added successfully!')</script>";
-                    echo "<script>window.location.href='Staff.php'</script>";
+                    echo "<script>window.location.href='Staff_MyPost.php'</script>";
                 } else {
                     echo "<script>alert('Error: " . $sql . "<br>" . mysqli_error($conn) . "')</script>";
                 }
@@ -358,14 +358,14 @@ include 'header.php';
                     // Check if file type is valid
                     if (!in_array($fileType, $validFileTypes)) {
                         echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
-                        echo "<script>window.location.href = 'index.php'</script>";
+                        echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                         exit();
                     }
 
                     // Check file size
                     if ($_FILES['file-upload']['size'] > 5000000) {
                         echo "<script>alert('File size must be less than 5 MB.')</script>";
-                        echo "<script>window.location.href = 'index.php'</script>";
+                        echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                         exit();
                     }
 
@@ -390,15 +390,16 @@ include 'header.php';
 
                         if (!$result) {
                             echo "<script>alert('Error while saving document path.')</script>";
-                            echo "<script>window.location.href = 'index.php'</script>";
+                            echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                         }
                     }
                     echo "<script>alert('Idea added successfully.')</script>";
-                    echo "<script>window.location.href = 'index.php'</script>";
+                    echo "<script>alert('Idea added successfully.')</script>";
+                    echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
 
                 } else {
                     echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
-                    echo "<script>window.location.href = 'index.php'</script>";
+                    echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                 }
             }
             ?>
@@ -417,7 +418,7 @@ include 'header.php';
                                     aria-label="Close"></button>
                         </div>
                         <!-- body -->
-                        <form action="Staff.php" method="post" enctype="multipart/form-data">
+                        <form action="Staff_MyPost.php" method="post" enctype="multipart/form-data">
                             <div class="modal-body">
                                 <!-- choose topic (auto-synced) -->
                                 <input type="hidden" name="topic-id" id="topic-id">

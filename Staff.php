@@ -65,7 +65,7 @@ include 'header.php';
 
                     <!-- top 2 -->
                     <li class="dropdown-item p-1 rounded">
-                        <a href="MyPost.php" class="d-flex align-items-center text-decoration-none text-dark"
+                        <a href="Staff_MyPost.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
                                 <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
@@ -174,13 +174,27 @@ include 'header.php';
                             <!-- like and dislike buttons -->
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex">
-                                    <button type="button" class="btn btn-outline-primary btn-sm me-2"><i
-                                            class="far fa-thumbs-up"></i> Like
+                                    <button type="button" class="btn btn-outline-primary btn-sm me-2 like-btn"
+                                            id="btnLike"
+                                            data-idea-id="<?php echo $row['IdeaID']; ?>">
+                                        <i class="far fa-thumbs-up"></i> Like (<span class="like-count"><?php
+                                            $sql2 = "SELECT * FROM Vote WHERE Vote.IdeaID = " . $row['IdeaID'] . " AND Vote.Status = 1";
+                                            $result2 = mysqli_query($conn, $sql2);
+                                            echo mysqli_num_rows($result2)
+                                            ?></span>)
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm"><i
-                                            class="far fa-thumbs-down"></i> Dislike
+                                    <button type="button" class="btn btn-outline-danger btn-sm dislike-btn"
+                                            id="btnDislike"
+                                            data-idea-id="<?php echo $row['IdeaID']; ?>">
+                                        <i class="far fa-thumbs-down"></i> Dislike (<span class="dislike-count"><?php
+                                            $sql2 = "SELECT * FROM Vote WHERE Vote.IdeaID = " . $row['IdeaID'] . " AND Vote.Status = 0";
+                                            $result2 = mysqli_query($conn, $sql2);
+                                            echo mysqli_num_rows($result2);
+                                            // Check if the user has already disliked the post change the color of the button
+                                            ?></span>)
                                     </button>
                                 </div>
+
                                 <button type="button" class="btn btn-outline-secondary btn-sm comment-toggle"
                                         data-bs-toggle="collapse" href="#comment<?php echo $row['IdeaID']; ?>"
                                         aria-expanded="false"
@@ -192,6 +206,8 @@ include 'header.php';
                                     ?>)
                                 </button>
                             </div>
+
+                            <!-- comment section -->
                             <?php
                             include("connection.php");
                             $sql2 = "SELECT * FROM Comment, Staff WHERE Comment.StaffID = Staff.StaffID AND Comment.IdeaID = " . $row['IdeaID'] . " ORDER BY Comment.CommentDate ASC";
@@ -358,14 +374,14 @@ include 'header.php';
                     // Check if file type is valid
                     if (!in_array($fileType, $validFileTypes)) {
                         echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
-                        echo "<script>window.location.href = 'index.php'</script>";
+                        echo "<script>window.location.href = 'Staff.php'</script>";
                         exit();
                     }
 
                     // Check file size
                     if ($_FILES['file-upload']['size'] > 5000000) {
                         echo "<script>alert('File size must be less than 5 MB.')</script>";
-                        echo "<script>window.location.href = 'index.php'</script>";
+                        echo "<script>window.location.href = 'Staff.php'</script>";
                         exit();
                     }
 
@@ -390,15 +406,15 @@ include 'header.php';
 
                         if (!$result) {
                             echo "<script>alert('Error while saving document path.')</script>";
-                            echo "<script>window.location.href = 'index.php'</script>";
+                            echo "<script>window.location.href = 'Staff.php'</script>";
                         }
                     }
                     echo "<script>alert('Idea added successfully.')</script>";
-                    echo "<script>window.location.href = 'index.php'</script>";
+                    echo "<script>window.location.href = 'Staff.php'</script>";
 
                 } else {
                     echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
-                    echo "<script>window.location.href = 'index.php'</script>";
+                    echo "<script>window.location.href = 'Staff.php'</script>";
                 }
             }
             ?>
@@ -542,6 +558,13 @@ include 'header.php';
         crossorigin="anonymous"></script>
 <!-- main js -->
 <script src="./js/main.js"></script>
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--import -->
+
+<script>
+
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var submitTopic = document.querySelectorAll('#submitTopic');
@@ -559,6 +582,50 @@ include 'header.php';
             });
         });
     });
+
+    // Like button click event listener
+    document.querySelectorAll('.like-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const ideaID = btn.getAttribute('data-idea-id');
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Update like count
+                    const likeCount = btn.querySelector('.like-count');
+                    const data = JSON.parse(this.responseText);
+                    likeCount.textContent = data.like;
+                    // Update dislike count
+                    const dislikeCount = btn.parentNode.querySelector('.dislike-count');
+                    dislikeCount.textContent = data.dislike;
+                }
+            };
+            xhr.open("POST", "vote.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(`idea_id=${ideaID}&status=1`);
+        });
+    });
+
+    // Dislike button click event listener
+    document.querySelectorAll('.dislike-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const ideaID = btn.getAttribute('data-idea-id');
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Update dislike count and like count
+                    const dislikeCount = btn.querySelector('.dislike-count');
+                    const data = JSON.parse(this.responseText);
+                    dislikeCount.textContent = data.dislike;
+                    const likeCount = btn.parentNode.querySelector('.like-count');
+                    likeCount.textContent = data.like;
+                }
+            };
+            xhr.open("POST", "vote.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(`idea_id=${ideaID}&status=0`);
+        });
+    });
+
 </script>
 </body>
 

@@ -166,6 +166,7 @@ include 'header.php';
                             </div>
                             <div class="my-3">
                                 <h6>Topic Name: <?php echo $row['TopicName']; ?></h6>
+                                <h6>Idea Title: <?php echo $row['Title']; ?></h6>
                             </div>
                             <!-- content -->
                             <div class="my-3">
@@ -175,30 +176,55 @@ include 'header.php';
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex">
                                     <button type="button" class="btn btn-outline-primary btn-sm me-2 like-btn"
-                                            id="btnLike"
+                                            id="btnLike-<?php echo $row['IdeaID']; ?>"
                                             data-idea-id="<?php echo $row['IdeaID']; ?>">
                                         <i class="far fa-thumbs-up"></i> Like (<span class="like-count"><?php
                                             $sql2 = "SELECT * FROM Vote WHERE Vote.IdeaID = " . $row['IdeaID'] . " AND Vote.Status = 1";
                                             $result2 = mysqli_query($conn, $sql2);
-                                            echo mysqli_num_rows($result2)
+                                            echo mysqli_num_rows($result2);
+                                            // Check if the user has already liked the post change the color of the button
+                                            $staffID = $_SESSION['staff_id'];
+                                            $ideaID = $row['IdeaID'];
+
+                                            $sql3 = "SELECT * FROM Vote WHERE Vote.IdeaID = $ideaID AND Vote.StaffID = $staffID AND Vote.Status = 1";
+                                            $result3 = mysqli_query($conn, $sql3);
+                                            if (mysqli_num_rows($result3) > 0) {
+                                                // Change class of the button
+                                                echo "<script>document.getElementById('btnLike-$ideaID').classList.add('btn-primary');</script>";
+                                                echo "<script>document.getElementById('btnLike-$ideaID').classList.remove('btn-outline-primary');</script>";
+                                            } else {
+                                                echo "<script>document.getElementById('btnLike-$ideaID').classList.add('btn-outline-primary');</script>";
+                                                echo "<script>document.getElementById('btnLike-$ideaID').classList.remove('btn-primary');</script>";
+                                            }
                                             ?></span>)
                                     </button>
                                     <button type="button" class="btn btn-outline-danger btn-sm dislike-btn"
-                                            id="btnDislike"
+                                            id="btnDislike-<?php echo $row['IdeaID']; ?>"
                                             data-idea-id="<?php echo $row['IdeaID']; ?>">
                                         <i class="far fa-thumbs-down"></i> Dislike (<span class="dislike-count"><?php
-                                            $sql2 = "SELECT * FROM Vote WHERE Vote.IdeaID = " . $row['IdeaID'] . " AND Vote.Status = 0";
-                                            $result2 = mysqli_query($conn, $sql2);
-                                            echo mysqli_num_rows($result2);
+                                            $sql4 = "SELECT * FROM Vote WHERE Vote.IdeaID = " . $row['IdeaID'] . " AND Vote.Status = 0";
+                                            $result4 = mysqli_query($conn, $sql4);
+                                            echo mysqli_num_rows($result4);
                                             // Check if the user has already disliked the post change the color of the button
+                                            $staffID = $_SESSION['staff_id'];
+                                            $ideaID = $row['IdeaID'];
+                                            $sql5 = "SELECT * FROM Vote WHERE Vote.IdeaID = $ideaID AND Vote.StaffID = $staffID AND Vote.Status = 0";
+                                            $result5 = mysqli_query($conn, $sql5);
+                                            if (mysqli_num_rows($result5) > 0) {
+                                                // Change class of the button
+                                                echo "<script>document.getElementById('btnDislike-$ideaID').classList.add('btn-danger');</script>";
+                                                echo "<script>document.getElementById('btnDislike-$ideaID').classList.remove('btn-outline-danger');</script>";
+                                            } else {
+                                                echo "<script>document.getElementById('btnDislike-$ideaID').classList.add('btn-outline-danger');</script>";
+                                                echo "<script>document.getElementById('btnDislike-$ideaID').classList.remove('btn-danger');</script>";
+                                            }
                                             ?></span>)
                                     </button>
                                 </div>
 
                                 <button type="button" class="btn btn-outline-secondary btn-sm comment-toggle"
                                         data-bs-toggle="collapse" href="#comment<?php echo $row['IdeaID']; ?>"
-                                        aria-expanded="false"
-                                        aria-controls="comment">
+                                        aria-expanded="false" aria-controls="comment">
                                     <i class="far fa-comment"></i> Comment (<?php
                                     $sql3 = "SELECT * FROM Comment WHERE Comment.IdeaID = " . $row['IdeaID'];
                                     $result3 = mysqli_query($conn, $sql3);
@@ -212,81 +238,82 @@ include 'header.php';
                             include("connection.php");
                             $sql2 = "SELECT * FROM Comment, Staff WHERE Comment.StaffID = Staff.StaffID AND Comment.IdeaID = " . $row['IdeaID'] . " ORDER BY Comment.CommentDate ASC";
                             $result2 = mysqli_query($conn, $sql2); ?>
-                            <?php if (mysqli_num_rows($result2) > 0) { ?>
-                                <!-- Comment section -->
-                                <?php while ($row2 = mysqli_fetch_assoc($result2)) { ?>
-                                    <div class="comments mt-3">
-                                        <!-- Single comment -->
-                                        <div class="d-flex align-items-start comment">
-                                            <!-- Avatar -->
-                                            <img src="https://source.unsplash.com/collection/happy-people" alt="avatar"
-                                                 class="rounded-circle me-2"
-                                                 style="width: 38px; height: 38px; object-fit: cover">
-                                            <div class="comment-body">
-                                                <!-- Commenter name -->
-                                                <p class="m-0 fw-bold"><?php
-                                                    if ($row2['StaffID'] == $_SESSION['staff_id'] && $row2['is_anonymous'] == 1) {
-                                                        echo "You (Anonymous)";
-                                                    } else if ($row2['StaffID'] == $_SESSION['staff_id']) {
-                                                        echo "You";
-                                                    } else if ($row2['is_anonymous'] == 1) {
-                                                        echo "Anonymous";
-                                                    } else {
-                                                        echo $row2['FullName'];
-                                                    }
-                                                    ?></p>
-                                                <!-- Comment time -->
-                                                <span class="text-muted fs-7"><?php
-                                                    $current_time = new DateTime();
-                                                    $comment_time = new DateTime($row2['CommentDate']);
-                                                    // Calculate the difference between the current time and the post time
-                                                    $diff = $current_time->diff($comment_time);
-                                                    if ($diff->y > 0) {
-                                                        echo $diff->y . " year" . ($diff->y > 1 ? "s" : "") . " ago";
-                                                    } else if ($diff->m > 0) {
-                                                        echo $diff->m . " month" . ($diff->m > 1 ? "s" : "") . " ago";
-                                                    } else if ($diff->d > 0) {
-                                                        echo $diff->d . " day" . ($diff->d > 1 ? "s" : "") . " ago";
-                                                    } else if ($diff->h > 0) {
-                                                        echo $diff->h . " hour" . ($diff->h > 1 ? "s" : "") . " ago";
-                                                    } else if ($diff->i > 0) {
-                                                        echo $diff->i . " minute" . ($diff->i > 1 ? "s" : "") . " ago";
-                                                    } else if ($diff->s > 0) {
-                                                        echo $diff->s . " second" . ($diff->s > 1 ? "s" : "") . " ago";
-                                                    }
-                                                    ?>
-                                                </span>
-                                                <!-- Comment content -->
-                                                <p class="mt-2"><?php echo $row2['CommentContent']; ?></p>
+                            <div id="comment<?php echo $row['IdeaID']; ?>" class="collapse">
+                                <?php if (mysqli_num_rows($result2) > 0) { ?>
+                                    <!-- Comment section -->
+                                    <?php while ($row2 = mysqli_fetch_assoc($result2)) { ?>
+                                        <div class="comments mt-3">
+                                            <!-- Single comment -->
+                                            <div class="d-flex align-items-start comment">
+                                                <!-- Avatar -->
+                                                <img src="https://source.unsplash.com/collection/happy-people"
+                                                     alt="avatar" class="rounded-circle me-2"
+                                                     style="width: 38px; height: 38px; object-fit: cover">
+                                                <div class="comment-body">
+                                                    <!-- Commenter name -->
+                                                    <p class="m-0 fw-bold"><?php
+                                                        if ($row2['StaffID'] == $_SESSION['staff_id'] && $row2['is_anonymous'] == 1) {
+                                                            echo "You (Anonymous)";
+                                                        } else if ($row2['StaffID'] == $_SESSION['staff_id']) {
+                                                            echo "You";
+                                                        } else if ($row2['is_anonymous'] == 1) {
+                                                            echo "Anonymous";
+                                                        } else {
+                                                            echo $row2['FullName'];
+                                                        }
+                                                        ?></p>
+                                                    <!-- Comment time -->
+                                                    <span class="text-muted fs-7"><?php
+                                                        $current_time = new DateTime();
+                                                        $comment_time = new DateTime($row2['CommentDate']);
+                                                        // Calculate the difference between the current time and the post time
+                                                        $diff = $current_time->diff($comment_time);
+                                                        if ($diff->y > 0) {
+                                                            echo $diff->y . " year" . ($diff->y > 1 ? "s" : "") . " ago";
+                                                        } else if ($diff->m > 0) {
+                                                            echo $diff->m . " month" . ($diff->m > 1 ? "s" : "") . " ago";
+                                                        } else if ($diff->d > 0) {
+                                                            echo $diff->d . " day" . ($diff->d > 1 ? "s" : "") . " ago";
+                                                        } else if ($diff->h > 0) {
+                                                            echo $diff->h . " hour" . ($diff->h > 1 ? "s" : "") . " ago";
+                                                        } else if ($diff->i > 0) {
+                                                            echo $diff->i . " minute" . ($diff->i > 1 ? "s" : "") . " ago";
+                                                        } else if ($diff->s > 0) {
+                                                            echo $diff->s . " second" . ($diff->s > 1 ? "s" : "") . " ago";
+                                                        }
+                                                        ?>
+                                                        </span>
+                                                    <!-- Comment content -->
+                                                    <p class="mt-2"><?php echo $row2['CommentContent']; ?></p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    <?php } ?>
                                 <?php } ?>
-                            <?php } ?>
-                            <!-- Comment form -->
-                            <div class="mt-3" id="comment<?php echo $row['IdeaID']; ?>">
-                                <form action="Staff.php" method="post">
-                                    <!-- Comment content input -->
-                                    <input type="hidden" name="ideaID"
-                                           value="<?php echo $row['IdeaID']; ?>">
-                                    <div class="form-floating mb-3">
+                                <!-- Comment form -->
+                                <div class="mt-3">
+                                    <form action="Staff.php" method="post">
+                                        <!-- Comment content input -->
+                                        <input type="hidden" name="ideaID" value="<?php echo $row['IdeaID']; ?>">
+                                        <div class="form-floating mb-3">
                                             <textarea class="form-control" placeholder="Leave a comment here"
                                                       id="commentContent" style="height: 100px"
-                                                      name="commentContent"></textarea>
-                                        <label for="commentContent">Leave a comment here</label>
-                                    </div>
-                                    <!-- Checkbox for anonymous comment -->
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                               id="anonymousComment" name="anonymousComment">
-                                        <label class="form-check-label" for="anonymousComment">
-                                            Post anonymously
-                                        </label>
-                                    </div>
-                                    <!-- Submit button -->
-                                    <button type="submit" class="btn btn-primary" name="add-comment">Submit
-                                    </button>
-                                </form>
+                                                      name="commentContent" required></textarea>
+                                            <label for="commentContent">Leave a comment here</label>
+                                        </div>
+                                        <!-- Checkbox for anonymous comment -->
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                   id="anonymousComment" name="anonymousComment">
+                                            <label class="form-check-label" for="anonymousComment">
+                                                Post anonymously
+                                            </label>
+                                        </div>
+                                        <!-- Submit button -->
+                                        <button type="submit" class="btn btn-primary" name="add-comment">Submit
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     <?php } ?>
@@ -329,10 +356,8 @@ include 'header.php';
                             <div class="p-3 mt-4" style="background-color: #ffffff; margin-bottom: 10px;">
                                 <!-- topic 1 -->
                                 <h5 class="text-muted"><?php echo $row['TopicName'] ?></h5>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        id="submitTopic"
-                                        data-bs-target="#topic1Modal"
-                                        data-id="<?php echo $row['TopicID'] ?>"
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="submitTopic"
+                                        data-bs-target="#topic1Modal" data-id="<?php echo $row['TopicID'] ?>"
                                         data-topic-name="<?php echo $row['TopicName'] ?>"
                                         data-topic-description="<?php echo $row['Description'] ?>"> Submit
                                     your ideas
@@ -356,7 +381,6 @@ include 'header.php';
             <?php
             // Add idea for topic
             include("connection.php");
-
             if (isset($_POST['add-idea'])) {
                 $topicID = $_POST['topic-id'];
                 $title = $_POST['topic-title'];
@@ -391,6 +415,8 @@ include 'header.php';
                     $documentPath = "";
                 }
 
+
+
                 $postDate = date("Y-m-d H:i:s");
                 $staffID = $_SESSION["staff_id"];
 
@@ -411,7 +437,6 @@ include 'header.php';
                     }
                     echo "<script>alert('Idea added successfully.')</script>";
                     echo "<script>window.location.href = 'Staff.php'</script>";
-
                 } else {
                     echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
                     echo "<script>window.location.href = 'Staff.php'</script>";
@@ -420,8 +445,8 @@ include 'header.php';
             ?>
 
             <!-- create modal for topic -->
-            <div class="modal fade" id="topic1Modal" tabindex="-1" aria-labelledby="topic1ModalLabel"
-                 aria-hidden="true" data-bs-backdrop="false">
+            <div class="modal fade" id="topic1Modal" tabindex="-1" aria-labelledby="topic1ModalLabel" aria-hidden="true"
+                 data-bs-backdrop="false">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <!-- head -->
@@ -440,23 +465,23 @@ include 'header.php';
                                 <div class="mb-3">
                                     <label for="topic" class="form-label text-primary">Topic:</label>
                                     <input type="text" class="form-control" id="topic-name" readonly
-                                           style="background-color: #f8f9fa"
-                                           name="topic-name">
+                                           style="background-color: #f8f9fa" name="topic-name">
                                 </div>
                                 <div class="mb-3">
                                     <label for="topic" class="form-label text-primary">Description:</label>
                                     <textarea class="form-control" rows="5" id="topic-description" readonly
-                                              style="background-color: #f8f9fa"
-                                              name="topic-description"></textarea>
+                                              style="background-color: #f8f9fa" name="topic-description"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="topic" class="form-label text-primary">Title:</label>
-                                    <input type="text" class="form-control" id="topic-title" name="topic-title">
+                                    <input type="text" class="form-control" id="topic-title" name="topic-title"
+                                           placeholder="Title">
                                 </div>
                                 <div class="mb-3">
                                     <!-- text -->
                                     <label for="text" class="form-label text-primary">Your Ideas:</label>
-                                    <textarea class="form-control" id="text" rows="5" required
+                                    <textarea class="form-control" id="text" required rows="5"
+                                              placeholder="Enter your ideas here..."
                                               name="message"></textarea>
                                 </div>
                                 <div class="mb-3">
@@ -467,8 +492,8 @@ include 'header.php';
                                     </div>
                                 </div>
                                 <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" value=""
-                                           id="anonymousComment" name="anonymous">
+                                    <input class="form-check-input" type="checkbox" value="" id="anonymousComment"
+                                           name="anonymous">
                                     <label class="form-check-label" for="anonymousComment">
                                         Post anonymously
                                     </label>
@@ -477,8 +502,8 @@ include 'header.php';
                                     <!-- agree to terms and conditions -->
                                     <input type="checkbox" class="form-check-input" id="terms" required>
                                     <label class="form-check-label" for="terms">
-                                        I agree to the <a href="#" data-bs-toggle="modal"
-                                                          data-bs-target="#termsModal" class="text-primary">terms
+                                        I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal"
+                                                          class="text-primary">terms
                                             and conditions</a>
                                     </label>
                                 </div>
@@ -493,8 +518,8 @@ include 'header.php';
             </div>
 
             <!-- terms and conditions modal -->
-            <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel"
-                 aria-hidden="true" data-bs-backdrop="false">
+            <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true"
+                 data-bs-backdrop="false">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <!-- head -->
@@ -502,8 +527,7 @@ include 'header.php';
                             <h5 class="text-dark text-center w-100 m-0" id="termsModalLabel">
                                 Terms and Conditions
                             </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <!-- body -->
                         <div class="modal-body">
@@ -597,6 +621,29 @@ include 'header.php';
                     // Update dislike count
                     const dislikeCount = btn.parentNode.querySelector('.dislike-count');
                     dislikeCount.textContent = data.dislike;
+                    // Change button style
+                    const likeBtn = document.getElementById('btnLike-' + ideaID);
+                    const dislikeBtn = document.getElementById('btnDislike-' + ideaID);
+                    // Check if the user has already liked the idea
+                    if (data.status == 1 && data.idea_id == ideaID) {
+                        // If the user has already liked the idea, remove the like
+                        likeBtn.classList.remove('btn-outline-primary');
+                        likeBtn.classList.add('btn-primary');
+                        dislikeBtn.classList.remove('btn-danger');
+                        dislikeBtn.classList.add('btn-outline-danger');
+
+                    } else if (data.status == 0 && data.idea_id == ideaID) {
+                        // If the user has already disliked the idea, remove the dislike
+                        dislikeBtn.classList.remove('btn-outline-danger');
+                        dislikeBtn.classList.add('btn-danger');
+
+                        likeBtn.classList.remove('btn-primary');
+                        likeBtn.classList.add('btn-outline-primary');
+                    } else {
+                        // If the user has not liked or disliked the idea, add the like
+                        likeBtn.classList.add('btn-outline-primary');
+                        dislikeBtn.classList.add('btn-outline-danger');
+                    }
                 }
             };
             xhr.open("POST", "vote.php", true);
@@ -618,6 +665,30 @@ include 'header.php';
                     dislikeCount.textContent = data.dislike;
                     const likeCount = btn.parentNode.querySelector('.like-count');
                     likeCount.textContent = data.like;
+
+                    // Change button style
+                    const likeBtn = document.getElementById('btnLike-' + ideaID);
+                    const dislikeBtn = document.getElementById('btnDislike-' + ideaID);
+
+                    // Check if the user has already liked the idea
+                    if (data.status == 1 && data.idea_id == ideaID) {
+                        // If the user has already liked the idea, remove the like
+                        likeBtn.classList.remove('btn-outline-primary');
+                        likeBtn.classList.add('btn-primary');
+
+                        dislikeBtn.classList.remove('btn-danger');
+                        dislikeBtn.classList.add('btn-outline-danger');
+                    } else if (data.status == 0 && data.idea_id == ideaID) {
+                        // If the user has already disliked the idea, remove the dislike
+                        dislikeBtn.classList.remove('btn-outline-danger');
+                        dislikeBtn.classList.add('btn-danger');
+                        likeBtn.classList.remove('btn-primary');
+                        likeBtn.classList.add('btn-outline-primary');
+                    } else {
+                        // If the user has not liked or disliked the idea, add the like
+                        likeBtn.classList.add('btn-outline-primary');
+                        dislikeBtn.classList.add('btn-outline-danger');
+                    }
                 }
             };
             xhr.open("POST", "vote.php", true);
@@ -625,7 +696,6 @@ include 'header.php';
             xhr.send(`idea_id=${ideaID}&status=0`);
         });
     });
-
 </script>
 </body>
 

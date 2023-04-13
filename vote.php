@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dislikes_count = mysqli_fetch_assoc($dislikes_result)['DislikeCount'];
 
     // return the counts as a JSON response
-    $response = array('like' => $likes_count, 'dislike' => $dislikes_count);
+    $response = array('like' => $likes_count, 'dislike' => $dislikes_count, 'status' => $status, 'idea_id' => $ideaID);
     header('Content-Type: application/json');
     echo json_encode($response);
 }

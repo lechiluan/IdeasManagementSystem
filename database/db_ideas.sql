@@ -43,7 +43,7 @@ CREATE TABLE Idea
 (
     IdeaID       INT PRIMARY KEY AUTO_INCREMENT,
     Title        VARCHAR(100)  NOT NULL,
-    Content      VARCHAR(1000) NOT NULL,
+    Content      TEXT NOT NULL,
     is_anonymous BOOLEAN       NOT NULL default FALSE,
     PostDate   DATETIME      NOT NULL,
     StaffID      INT           NOT NULL,

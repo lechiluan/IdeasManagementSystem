@@ -55,10 +55,10 @@ include 'header.php';
                         <a href="Staff.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
-                                <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
+                                <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                             </div>
                             <div>
-                                <p class="m-0" style="padding-left: 10px;" id="manage-topics-text">All Post</p>
+                                <p class="m-0" style="padding-left: 10px;">All Post</p>
                             </div>
                         </a>
                     </li>
@@ -68,10 +68,10 @@ include 'header.php';
                         <a href="MyPost.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
-                                <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
+                                <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
                             </div>
                             <div>
-                                <p class="m-0" style="padding-left: 10px;">My Post</p>
+                                <p class="m-0" style="padding-left: 10px;" id="manage-topics-text">My Post</p>
                             </div>
                         </a>
                     </li>

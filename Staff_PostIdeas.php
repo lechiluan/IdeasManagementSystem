@@ -47,6 +47,7 @@ session_start(); // Start the session
                                 </div>
                             </a>
                         </li>
+                        
                         <!-- top 1 -->
                         <li class="dropdown-item p-1 rounded">
                             <a href="Staff.php" class="d-flex align-items-center text-decoration-none text-dark"
@@ -55,20 +56,33 @@ session_start(); // Start the session
                                     <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                                 </div>
                                 <div>
-                                    <p class="m-0" style="padding-left: 10px;">Topics</p>
+                                    <p class="m-0" style="padding-left: 10px;">All Post</p>
                                 </div>
                             </a>
                         </li>
 
                         <!-- top 2 -->
                         <li class="dropdown-item p-1 rounded">
+                            <a href="MyPost.php" class="d-flex align-items-center text-decoration-none text-dark"
+                            id="manage-topics">
+                                <div class="p-2">
+                                    <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
+                                </div>
+                                <div>
+                                    <p class="m-0" style="padding-left: 10px;">My Post</p>
+                                </div>
+                            </a>
+                        </li>
+
+                        <!-- top 3 -->
+                        <li class="dropdown-item p-1 rounded">
                             <a href="Staff_Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
-                               id="manage-topics">
+                            id="manage-topics">
                                 <div class="p-2">
                                     <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
                                 </div>
                                 <div>
-                                    <p class="m-0" style="padding-left: 10px;" id="manage-topics-text">Your Post</p>
+                                    <p class="m-0" style="padding-left: 10px;" id="manage-topics-text">Topics</p>
                                 </div>
                             </a>
                         </li>

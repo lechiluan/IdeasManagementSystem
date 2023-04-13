@@ -113,11 +113,11 @@ session_start(); // Start the session
                             </div>
                         </div>
                         <div class="form-check mb-3">
-                                                <input class="form-check-input" type="checkbox" value="" id="anonymousComment">
-                                                <label class="form-check-label" for="anonymousComment">
-                                                    Post anonymously
-                                                </label>
-                                            </div>
+                            <input class="form-check-input" type="checkbox" value="" id="anonymousComment">
+                            <label class="form-check-label" for="anonymousComment">
+                                Post anonymously
+                            </label>
+                        </div>
                         <div class="form-check mb-3">
                             <!-- agree to terms and conditions -->
                             <input type="checkbox" class="form-check-input" id="terms" required>

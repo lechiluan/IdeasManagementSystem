@@ -123,7 +123,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         if (password_verify($password, $row['Password'])) {
-
             $_SESSION['staff_id'] = $row['StaffID'];
             $_SESSION['full_name'] = $row['FullName'];
             $_SESSION['email'] = $row['Email'];

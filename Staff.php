@@ -179,7 +179,7 @@ include 'header.php';
                     <?php
                     // Display topic
                     include("connection.php");
-                    $sql = "SELECT * FROM Topic WHERE DeadlineID IS NOT NULL";
+                    $sql = "SELECT * FROM Topic WHERE DeadlineID IS NOT NULL ORDER BY CreateDate DESC";
                     $result = mysqli_query($conn, $sql);
                     if (mysqli_num_rows($result) > 0) {
                         ?>
@@ -192,8 +192,10 @@ include 'header.php';
                                         <!-- topic 1 -->
                                         <h5 class="text-muted"><?php echo $row['TopicName'] ?></h5>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                id="submitTopic"
                                                 data-bs-target="#topic1Modal"
-                                                data-id="<?php echo $row['TopicID'] ?>">Submit your ideas
+                                                data-id="<?php echo $row['TopicID'] ?>"
+                                                data-topic-name="<?php echo $row['TopicName'] ?>"> Submit your ideas
                                         </button>
                                         <?php
                                         // Display deadline of topic
@@ -211,8 +213,74 @@ include 'header.php';
                             </div>
                         </div>
                     <?php } ?>
+                    <?php
+                    // Add idea for topic
+                    include("connection.php");
 
-                    <!-- create modal for topic 1 -->
+                    if (isset($_POST['add-idea'])) {
+                        $topicID = $_POST['topic-id'];
+                        $message = $_POST['message'];
+                        $isAnonymous = isset($_POST['anonymous']) ? true : false;
+
+                        // Check if user uploaded a file
+                        if (isset($_FILES['file-upload']['file-upload'])) {
+                            $fileName = $_FILES['file-upload']['name'];
+                            $tempFile = $_FILES['file-upload']['tmp_name'];
+                            $uploadDir = "uploads/";
+                            $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+                            $validFileTypes = array("pdf", "doc", "docx", "txt", "path", "jpg", "png", "jpeg", "gif");
+                            // Check if file type is valid
+                            if (!in_array($fileType, $validFileTypes)) {
+                                echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
+                                echo "<script>window.location.href = 'index.php'</script>";
+                                exit();
+                            }
+
+                            // Check file size
+                            if ($_FILES['file-upload']['size'] > 5000000) {
+                                echo "<script>alert('File size must be less than 5 MB.')</script>";
+                                echo "<script>window.location.href = 'index.php'</script>";
+                                exit();
+                            }
+
+                            $documentPath = $uploadDir . uniqid() . "." . $fileType;
+                            move_uploaded_file($tempFile, $documentPath);
+                        }   else {
+                            $documentPath = "";
+                        }
+
+
+                        $createDate = date("Y-m-d H:i:s");
+                        $staffID = $_SESSION["staff_id"];
+
+                        $sql = "INSERT INTO Idea (Title, Content, is_anonymous, CreateDate, StaffID, TopicID) VALUES ('$message', '$message', '$isAnonymous', '$createDate', '$staffID', '$topicID')";
+                        $result = mysqli_query($conn, $sql);
+
+                        if ($result) {
+                            $ideaID = mysqli_insert_id($conn);
+                            if (!empty($documentPath)) {
+                                $sql = "INSERT INTO Document (DocumentPath, IdeaID) 
+                    VALUES ('$documentPath', '$ideaID')";
+                                $result = mysqli_query($conn, $sql);
+
+                                if (!$result) {
+                                    echo "<script>alert('Error while saving document path.')</script>";
+                                    echo "<script>window.location.href = 'index.php'</script>";
+
+                                }
+                            }
+                            echo "<script>alert('Idea added successfully.')</script>";
+                            echo "<script>window.location.href = 'index.php'</script>";
+
+                        } else {
+                            echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
+                            echo "<script>window.location.href = 'index.php'</script>";
+                        }
+                    }
+                    ?>
+
+                    <!-- create modal for topic -->
                     <div class="modal fade" id="topic1Modal" tabindex="-1" aria-labelledby="topic1ModalLabel"
                          aria-hidden="true" data-bs-backdrop="false">
                         <div class="modal-dialog modal-dialog-centered">
@@ -226,26 +294,34 @@ include 'header.php';
                                             aria-label="Close"></button>
                                 </div>
                                 <!-- body -->
-                                <form>
+                                <form action="Staff.php" method="post" enctype="multipart/form-data">
                                     <div class="modal-body">
                                         <!-- choose topic (auto-synced) -->
+                                        <input type="hidden" name="topic-id" id="topic-id">
                                         <div class="mb-3">
                                             <label for="topic" class="form-label text-primary">Topic:</label>
-                                            <select class="form-select" id="topic" required disabled>
-                                                <option selected value="Topic 1">Topic 1</option>
-                                            </select>
+                                            <input type="text" class="form-control" id="topic-name" readonly
+                                                   name="topic-name">
                                         </div>
                                         <div class="mb-3">
                                             <!-- text -->
                                             <label for="text" class="form-label text-primary">Your Ideas:</label>
-                                            <textarea class="form-control" id="text" rows="5" required></textarea>
+                                            <textarea class="form-control" id="text" rows="5" required
+                                                      name="message"></textarea>
                                         </div>
                                         <div class="mb-3">
                                             <!-- options -->
                                             <label class="form-label text-primary">Upload File:</label>
                                             <div class="input-group">
-                                                <input type="file" class="form-control" id="file">
+                                                <input type="file" class="form-control" id="file" name="file-upload"
                                             </div>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                   id="anonymousComment" name="anonymous">
+                                            <label class="form-check-label" for="anonymousComment">
+                                                Post anonymously
+                                            </label>
                                         </div>
                                         <div class="form-check mb-3">
                                             <!-- agree to terms and conditions -->
@@ -258,9 +334,9 @@ include 'header.php';
                                             </label>
                                         </div>
                                     </div>
-                                    <!-- footer -->
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                        <button type="submit" class="btn btn-primary w-100" name="add-idea">Submit
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -333,6 +409,23 @@ include 'header.php';
             crossorigin="anonymous"></script>
     <!-- main js -->
     <script src="./js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var submitTopic = document.querySelectorAll('#submitTopic');
+
+            submitTopic.forEach(function (e) {
+                e.addEventListener('click', function () {
+                    // Get the values from the input fields
+                    var TopicID = e.getAttribute('data-id');
+                    var TopicName = e.getAttribute('data-topic-name');
+
+                    // Set the values in the input fields
+                    document.getElementById('topic-id').value = TopicID;
+                    document.getElementById('topic-name').value = TopicName;
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

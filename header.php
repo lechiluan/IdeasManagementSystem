@@ -6,19 +6,6 @@
                 <div class="col d-flex align-items-center">
                     <!--logo -->
                     <img class="logoImage" src="./img/logo.png" alt="University of Greenwich">
-                    <!-- search bar -->
-                    <div class="input-group ms-2">
-                        <li class="p-1 d-flex">
-                            <div class="input-group-text bg-gray border-0 rounded-pill"
-                                 style="min-height: 40px; min-width: 300px;">
-                                <i class="fas fa-search me-2 text-muted"></i>
-                                <input type="text" class="form-control rounded-pill border-0 bg-gray"
-                                       placeholder="Search Ideas ..." id="searchInput">
-                                <button class="btn btn-outline-secondary border-0 rounded-circle" type="button"
-                                        id="clearSearch"><i class="fas fa-times"></i></button>
-                            </div>
-                        </li>
-                    </div>
                 </div>
                 <script>
                     // Clear search input when X button is clicked

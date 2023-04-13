@@ -98,11 +98,11 @@ session_start(); // Start the session
                     <div class="col-lg-6">
             <!-- Create Idea Form -->
             <div class="bg-light p-3 text-center mb-3">
-                <form>
+                <form class="text-start">
                     <!-- head -->
-                    <div class="modal-header bg-primary text-white bg-white">
-                        <h5 class="modal-title" id="exampleModalLabel">
-                            Submit Your Ideas for Topic 1
+                    <div class="modal-header bg-primary text-white bg-white mx-auto">
+                        <h5 class="modal-title text-primary" id="exampleModalLabel">
+                            Submit Your Ideas for Topic 
                         </h5>
                     </div>
                     <!-- body -->
@@ -136,8 +136,7 @@ session_start(); // Start the session
                             <!-- agree to terms and conditions -->
                             <input type="checkbox" class="form-check-input" id="terms" required>
                             <label class="form-check-label" for="terms">
-                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" class="text-primary">terms and
-                                    conditions</a>
+                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" class="text-primary">terms and conditions</a>
                             </label>
                         </div>
                     </div>
@@ -147,6 +146,7 @@ session_start(); // Start the session
                     </div>
                 </form>
             </div>
+
 
     <!-- terms and conditions modal -->
     <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true" data-bs-backdrop="false">
@@ -198,7 +198,7 @@ session_start(); // Start the session
 </div>
 
                         <!-- Post -->
-                        <div class="col-lg-6 bg-white" style="height: 200px;">
+                        <div class="col-lg-6 bg-white" style="height: 230px;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <!-- avatar -->
                                 <div class="d-flex align-items-center">
@@ -240,6 +240,7 @@ session_start(); // Start the session
                             </div>
 
                         </div>
+
                     </div>
                 </div>
             </div>

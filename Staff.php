@@ -65,7 +65,7 @@ include 'header.php';
 
                     <!-- top 2 -->
                     <li class="dropdown-item p-1 rounded">
-                        <a href="Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
+                        <a href="Staff_Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
                                 <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>

@@ -65,7 +65,7 @@ include 'header.php';
 
                     <!-- top 2 -->
                     <li class="dropdown-item p-1 rounded">
-                        <a href="Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
+                        <a href="Staff_Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
                                 <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
@@ -87,9 +87,13 @@ include 'header.php';
                 <!-- Latest Topics -->
                 <div class="bg-white p-3 mb-3">
                     <h3 class="text-dark mb-3 text-center">Latest Topics</h3>
+                    <?php
+                    $sql = "SELECT * FROM topic WHERE status = 'active' ORDER BY topic_id DESC LIMIT 3";
+                    $result = mysqli_query($conn, $sql);
+                    ?>
                     <div class="row">
                         <div class="col-6 col-md-4 mb-3">
-                            <a href="StaffPostIdeas.php" class="text-decoration-none text-dark">
+                            <a href="Staff_PostIdeas.php" class="text-decoration-none text-dark">
                                 <div class="bg-light p-3 text-center">
                                     <i class="fas fa-book fa-3x mb-3"></i>
                                     <h5 class="mb-2">Topic Title</h5>

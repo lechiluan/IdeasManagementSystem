@@ -45,7 +45,7 @@ CREATE TABLE Idea
     Title        VARCHAR(100)  NOT NULL,
     Content      VARCHAR(1000) NOT NULL,
     is_anonymous BOOLEAN       NOT NULL default FALSE,
-    CreateDate   DATETIME      NOT NULL,
+    PostDate   DATETIME      NOT NULL,
     StaffID      INT           NOT NULL,
     TopicID      INT           NOT NULL,
     FOREIGN KEY (StaffID) REFERENCES Staff (StaffID),
@@ -77,7 +77,7 @@ CREATE TABLE Comment
     StaffID        INT          NOT NULL,
     IdeaID         INT          NOT NULL,
     is_anonymous   BOOLEAN      NOT NULL default FALSE,
-    CreateDate     DATETIME     NOT NULL,
+    CommentDate     DATETIME     NOT NULL,
     FOREIGN KEY (StaffID) REFERENCES Staff (StaffID),
     FOREIGN KEY (IdeaID) REFERENCES Idea (IdeaID)
 );

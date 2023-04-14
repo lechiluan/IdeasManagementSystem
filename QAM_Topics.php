@@ -341,8 +341,6 @@ include 'header.php';
                                     <th scope="col">Topic Name</th>
                                     <th scope="col">Topic Description</th>
                                     <th scope="col">Create Date</th>
-                                    <th scope="col">Ideas Count</th>
-                                    <th scope="col">Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                                 </thead>
@@ -355,8 +353,6 @@ include 'header.php';
                                         <td><?php echo $row['TopicName']; ?></td>
                                         <td><?php echo $row['Description']; ?></td>
                                         <td><?php echo $row['CreateDate'] ?></td>
-                                        <td>10</td>
-                                        <td>Closed Submission</td>
                                         <td>
                                             <button class="btn btn-sm btn-primary edit-deadline" data-bs-toggle="modal"
                                                     id="editTopic"
@@ -366,9 +362,16 @@ include 'header.php';
                                                     data-description="<?php echo $row['Description'] ?>"
                                             >Edit Topic
                                             </button>
+                                            <?php
+                                            // assume $row['TopicID'] contains the ID of the topic being checked
+                                            // you also need to query the database to check if the topic has any ideas
+                                            $has_ideas = true; // set to true if topic has ideas, false otherwise
+                                            ?>
+
                                             <button class="btn btn-sm btn-danger delete-topic" data-bs-toggle="modal"
                                                     data-bs-target="#deleteTopicModal" id="deleteTopic"
-                                                    data-id-delete="<?php echo $row['TopicID'] ?>">Delete
+                                                    data-id-delete="<?php echo $row['TopicID'] ?>" <?php if ($has_ideas) echo 'disabled'; ?>>
+                                                Delete
                                             </button>
                                             <button class="btn btn-sm btn-secondary view-ideas"
                                                     onclick="window.location.href='QAM_Ideas.php'">View all ideas
@@ -399,21 +402,22 @@ include 'header.php';
                                     for Idea Submission</label>
                                 <div class="d-flex flex-column">
                                             <span class="deadline-time fs-5"><i
-                                                    class="far fa-clock"></i> <?php echo $row['ClosureDate'] ?>
+                                                    class="far fa-clock"></i><strong> <?php echo $row['ClosureDate'] ?></strong> -
+                                                <?php
+                                                date_default_timezone_set('Asia/Ho_Chi_Minh');
+                                                $currentDate = date("Y-m-d H:i:s");
+                                                $date1 = new DateTime($currentDate);
+                                                $date2 = new DateTime($row['ClosureDate']);
+                                                $interval = $date1->diff($date2);
+                                                $interval->format('%a days %h hours %i minutes');
+                                                // Check if the deadline has passed
+                                                if ($currentDate < $row['ClosureDate']) {
+                                                    echo '<span class="badge bg-success">' . $interval->format('%a days %h hours %i minutes') . '</span>';
+                                                } else {
+                                                    echo '<span class="badge bg-danger">Closed</span>';
+                                                }
+                                                ?>
                                             </span>
-                                    <?php
-                                    date_default_timezone_set('Asia/Ho_Chi_Minh');
-                                    $currentDate = date("Y-m-d H:i:s");
-                                    if ($currentDate > $row['ClosureDate']) { ?>
-                                        <span class="deadline-status fs-5"><i
-                                                class="fas fa-exclamation-circle text-danger"></i> The deadline has
-                                                passed</span>
-                                    <?php } else { ?>
-                                        <span class="deadline-status fs-5"><i
-                                                class="fas fa-clock text-success"></i> The deadline is
-                                                still open</span>
-                                    <?php } ?>
-
                                     <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal"
                                             id="editDeadline1"
                                             data-bs-target="#editDeadlineModal1"
@@ -430,20 +434,21 @@ include 'header.php';
                                     Comment</label>
                                 <div class="d-flex flex-column">
                                             <span class="deadline-time fs-5"><i
-                                                    class="far fa-clock"></i> <?php echo $row['FinalClosureDate'] ?>
+                                                    class="far fa-clock"></i><strong><?php echo $row['FinalClosureDate'] ?></strong> -
+                                                <?php
+                                                // Cal Time Left
+                                                $date1 = new DateTime($row['FinalClosureDate']);
+                                                $date2 = new DateTime(date("Y-m-d H:i:s"));
+                                                $interval = $date1->diff($date2);
+                                                $timeLeft = $interval->format('%a days, %h hours, %i minutes');
+                                                // Check Time Left is passed
+                                                if ($timeLeft < 0) {
+                                                    echo '<span class="badge bg-danger">Closed</span>';
+                                                } else {
+                                                    echo '<span class="badge bg-success">' . $timeLeft . '</span>';
+                                                }
+                                                ?>
                                             </span>
-                                    <?php
-                                    date_default_timezone_set('Asia/Ho_Chi_Minh');
-                                    $currentDate = date("Y-m-d H:i:s");
-                                    if ($currentDate > $row['FinalClosureDate']) { ?>
-                                        <span class="deadline-status fs-5"><i
-                                                class="fas fa-exclamation-circle text-danger"></i> The deadline has
-                                                passed</span>
-                                    <?php } else { ?>
-                                        <span class="deadline-status fs-5"><i
-                                                class="fas fa-clock text-success"></i> The deadline is
-                                                still open</span>
-                                    <?php } ?>
                                     <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal"
                                             id="editDeadline2"
                                             data-bs-target="#editDeadlineModal2"
@@ -473,6 +478,7 @@ include 'header.php';
                                             <th scope="col">Topic Description</th>
                                             <th scope="col">Ideas Count</th>
                                             <th scope="col">Status</th>
+                                            <th scope="col">Created Date</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                         </thead>
@@ -481,8 +487,33 @@ include 'header.php';
                                             <tr>
                                                 <td><?php echo $row['TopicName']; ?></td>
                                                 <td><?php echo $row['Description']; ?></td>
-                                                <td>10</td>
-                                                <td>Closed Submission</td>
+                                                <td><?php
+                                                    include 'connection.php';
+                                                    $sql = "SELECT COUNT(*) AS total FROM Idea WHERE TopicID = $row[TopicID]";
+                                                    $result3 = mysqli_query($conn, $sql);
+                                                    $row2 = mysqli_fetch_assoc($result3);
+                                                    echo $row2['total'];
+                                                    ?></td>
+                                                <td>
+                                                    <?php
+                                                    include 'connection.php';
+                                                    // Check if ClosureDate is passed display status is Closed Submission, If FinalClosureDate is passed display status is Closed Comment
+                                                    $sql = "SELECT * FROM Deadline WHERE DeadlineID = $row[DeadlineID]";
+                                                    $result4 = mysqli_query($conn, $sql);
+                                                    $row3 = mysqli_fetch_assoc($result4);
+                                                    date_default_timezone_set('Asia/Ho_Chi_Minh');
+                                                    $currentDate = date("Y-m-d H:i:s");
+
+                                                    if ($currentDate > $row3['ClosureDate'] && $currentDate < $row3['FinalClosureDate']) {
+                                                        echo '<span class="badge bg-warning">Closed Submission</span>';
+                                                    } else if ($currentDate > $row3['FinalClosureDate'] && $currentDate > $row3['ClosureDate']) {
+                                                        echo '<span class="badge bg-danger">Closed Comment</span>';
+                                                    } else {
+                                                        echo '<span class="badge bg-success">Open</span>';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $row['CreateDate']; ?></td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary edit-deadline"
                                                             data-bs-toggle="modal" id="editTopic"
@@ -492,10 +523,17 @@ include 'header.php';
                                                             data-description="<?php echo $row['Description'] ?>"
                                                     >Edit Topic
                                                     </button>
+                                                    <?php
+                                                    // assume $row['TopicID'] contains the ID of the topic being checked
+                                                    // you also need to query the database to check if the topic has any ideas
+                                                    $has_ideas = true; // set to true if topic has ideas, false otherwise
+                                                    ?>
+
                                                     <button class="btn btn-sm btn-danger delete-topic"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#deleteTopicModal" id="deleteTopic"
-                                                            data-id-delete="<?php echo $row['TopicID'] ?>">Delete
+                                                            data-id-delete="<?php echo $row['TopicID'] ?>" <?php if ($has_ideas) echo 'disabled'; ?>>
+                                                        Delete
                                                     </button>
                                                     <button class="btn btn-sm btn-secondary view-ideas"
                                                             onclick="window.location.href='QAM_Ideas.php'">View all

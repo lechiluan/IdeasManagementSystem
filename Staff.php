@@ -594,38 +594,9 @@ include 'header.php';
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- body -->
-                    <div class="modal-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sollicitudin
-                            turpis a augue bibendum
-                            posuere. Nulla ut nulla eget justo varius consequat sed ut lacus. Nam
-                            consectetur ante eget massa
-                            posuere, nec lacinia magna fringilla. In non malesuada augue. Phasellus sed
-                            sapien nulla. Nulla id
-                            neque eu ipsum rhoncus malesuada. Aliquam erat volutpat. Nam eu felis vel
-                            mauris feugiat laoreet
-                            eget eget elit.</p>
-                        <p>Donec quis hendrerit lectus. Integer eu leo consequat, laoreet massa non,
-                            posuere nunc. Praesent non
-                            tellus non ipsum auctor feugiat. Proin pulvinar eros ac purus lacinia
-                            viverra. Vivamus mollis
-                            aliquam quam, nec sollicitudin justo venenatis ac. Praesent blandit dolor
-                            eget luctus vehicula.
-                            Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                            cubilia curae; Duis ut
-                            felis sed dolor placerat ultricies. Donec at convallis elit. Aliquam laoreet
-                            purus eget nisi
-                            vehicula sagittis. Fusce euismod sem in purus consequat faucibus.</p>
-                        <p>Etiam pellentesque, magna nec euismod ultrices, metus dolor eleifend enim, a
-                            luctus justo erat ac
-                            tellus. Nulla tincidunt aliquam libero eget tristique. Fusce dignissim
-                            sapien at tortor faucibus,
-                            quis luctus lectus fringilla. Sed non semper quam. Fusce placerat, ante in
-                            congue ultrices, nisl
-                            arcu dapibus sapien, vel aliquam metus risus sit amet nisl. Integer vitae
-                            libero eget mi
-                            ullamcorper bibendum. Integer euismod vel erat eget consequat. Sed vel
-                            pretium lorem.</p>
-                    </div>
+                    <?php
+                    include "termandconditon.php"
+                    ?>
                 </div>
             </div>
         </div>

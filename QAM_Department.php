@@ -1,7 +1,10 @@
 <?php
 include("connection.php");
 session_start(); // Start the session
-?>
+if (!isset($_SESSION['login'])) {
+    header("Location: index.php");
+} else {
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -294,3 +297,4 @@ session_start(); // Start the session
 </body>
 
 </html>
+<?php } ?>

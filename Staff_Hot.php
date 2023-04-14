@@ -1,6 +1,9 @@
 <?php
 include("connection.php");
 session_start(); // Start the session
+if (!isset($_SESSION['login'])) {
+    header("Location: index.php");
+} else {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +61,7 @@ include 'header.php';
                                 <i class="fa-solid fa-bars-progress topic-icon " style="font-size: 35px;"></i>
                             </div>
                             <div>
-                                <p class="m-0" style="padding-left: 10px;" >All Ideas</p>
+                                <p class="m-0" style="padding-left: 10px;">All Ideas</p>
                             </div>
                         </a>
                     </li>
@@ -140,8 +143,17 @@ include 'header.php';
             // Tính vị trí bắt đầu của bản ghi trên trang hiện tại
             $start = ($current_page - 1) * 5;
 
-            // Truy vấn dữ liệu với LIMIT và OFFSET để hiển thị 5 bản ghi trên mỗi trang
-            $sql = "SELECT * FROM Idea, Staff, Topic WHERE Idea.StaffID = Staff.StaffID AND Idea.TopicID = Topic.TopicID ORDER BY Idea.PostDate DESC LIMIT 5 OFFSET $start";
+
+            $sql = "SELECT Idea.*, Staff.*, Topic.*, COUNT(Vote.IdeaID) AS VoteCount
+FROM Idea
+INNER JOIN Staff ON Idea.StaffID = Staff.StaffID
+INNER JOIN Topic ON Idea.TopicID = Topic.TopicID
+LEFT JOIN Vote ON Idea.IdeaID = Vote.IdeaID
+WHERE Vote.Status = 1
+GROUP BY Idea.IdeaID
+ORDER BY VoteCount DESC
+LIMIT 5 OFFSET $start
+";
             $result = mysqli_query($conn, $sql);
             ?>
             <?php if (mysqli_num_rows($result) > 0) { ?>
@@ -358,29 +370,74 @@ include 'header.php';
                                     <?php } ?>
                                 <?php } ?>
                                 <!-- Comment form -->
-                                <div class="mt-3">
-                                    <form action="Staff.php" method="post">
-                                        <!-- Comment content input -->
-                                        <input type="hidden" name="ideaID" value="<?php echo $row['IdeaID']; ?>">
-                                        <div class="form-floating mb-3">
+                                <?php
+                                // Check current data if greater than closuredate and finalclosuredate then hide the comment form. If just greater than closuredate and less than finalclosuredate then show the comment form with a warning message.
+                                // Use sql to get ClosureDate and FinalClosureDate
+                                $current_date = new DateTime();
+                                $sql6 = "SELECT * FROM Topic, Deadline WHERE Topic.DeadlineID = Deadline.DeadlineID AND Topic.TopicID = " . $row['TopicID'];
+                                $result6 = mysqli_query($conn, $sql6);
+                                $row6 = mysqli_fetch_assoc($result6);
+                                // Convert to DateTime
+                                $closure_date = new DateTime($row6['ClosureDate']);
+                                $final_closure_date = new DateTime($row6['FinalClosureDate']);
+                                if ($current_date > $closure_date && $current_date > $final_closure_date) {
+                                    echo "<div class='alert alert-danger mt-3' role='alert'>This idea has been closed. You can no longer comment on this idea.</div>";
+                                } else if ($current_date > $closure_date && $current_date < $final_closure_date) { ?>
+                                    <div class="alert alert-warning mt-3" role="alert">This idea has been closed. You
+                                        can still comment on this idea but it will be reviewed by the admin.
+                                    </div>
+                                    <!-- Comment form -->
+                                    <div class="mt-3">
+                                        <form action="Staff.php" method="post">
+                                            <!-- Comment content input -->
+                                            <input type="hidden" name="ideaID" value="<?php echo $row['IdeaID']; ?>">
+                                            <div class="form-floating mb-3">
                                             <textarea class="form-control" placeholder="Leave a comment here"
                                                       id="commentContent" style="height: 100px"
                                                       name="commentContent" required></textarea>
-                                            <label for="commentContent">Leave a comment here</label>
-                                        </div>
-                                        <!-- Checkbox for anonymous comment -->
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" type="checkbox" value=""
-                                                   id="anonymousComment" name="anonymousComment">
-                                            <label class="form-check-label" for="anonymousComment">
-                                                Post anonymously
-                                            </label>
-                                        </div>
-                                        <!-- Submit button -->
-                                        <button type="submit" class="btn btn-primary" name="add-comment">Submit
-                                        </button>
-                                    </form>
-                                </div>
+                                                <label for="commentContent">Leave a comment here</label>
+                                            </div>
+                                            <!-- Checkbox for anonymous comment -->
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="anonymousComment" name="anonymousComment">
+                                                <label class="form-check-label" for="anonymousComment">
+                                                    Post anonymously
+                                                </label>
+                                            </div>
+                                            <!-- Submit button -->
+                                            <button type="submit" class="btn btn-primary" name="add-comment">Submit
+                                            </button>
+                                        </form>
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="alert alert-success mt-3" role="alert">You can comment on this idea.
+                                    </div>
+                                    <!-- Comment form -->
+                                    <div class="mt-3">
+                                        <form action="Staff_Hot.php" method="post">
+                                            <!-- Comment content input -->
+                                            <input type="hidden" name="ideaID" value="<?php echo $row['IdeaID']; ?>">
+                                            <div class="form-floating mb-3">
+                                            <textarea class="form-control" placeholder="Leave a comment here"
+                                                      id="commentContent" style="height: 100px"
+                                                      name="commentContent" required></textarea>
+                                                <label for="commentContent">Leave a comment here</label>
+                                            </div>
+                                            <!-- Checkbox for anonymous comment -->
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                       id="anonymousComment" name="anonymousComment">
+                                                <label class="form-check-label" for="anonymousComment">
+                                                    Post anonymously
+                                                </label>
+                                            </div>
+                                            <!-- Submit button -->
+                                            <button type="submit" class="btn btn-primary" name="add-comment">Submit
+                                            </button>
+                                        </form>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     <?php } ?>
@@ -391,8 +448,8 @@ include 'header.php';
                         $first_page = 1;
                         $last_page = $total_pages;
                         if ($page > 1) {
-                            echo "<a href='Staff.php?page=1' class='pagination-link'>&laquo; First</a>";
-                            echo "<a href='Staff.php?page=" . ($page - 1) . "' class='pagination-link'>&lsaquo; Previous</a>";
+                            echo "<a href='Staff_Hot.php?page=1' class='pagination-link'>&laquo; First</a>";
+                            echo "<a href='Staff_Hot.php?page=" . ($page - 1) . "' class='pagination-link'>&lsaquo; Previous</a>";
                         }
                         for ($i = max($first_page, $page - 3); $i <= min($last_page, $page + 3); $i++) {
                             $class = "pagination-link";
@@ -400,11 +457,11 @@ include 'header.php';
                             if ($i == $page) {
                                 $class = "pagination-link active";
                             }
-                            echo "<a href='Staff.php?page=$i' class='$class' style='$style'>$i</a>";
+                            echo "<a href='Staff_Hot.php?page=$i' class='$class' style='$style'>$i</a>";
                         }
                         if ($page < $total_pages) {
-                            echo "<a href='Staff.php?page=" . ($page + 1) . "' class='pagination-link'>Next &rsaquo;</a>";
-                            echo "<a href='Staff.php?page=$total_pages' class='pagination-link'>Last &raquo;</a>";
+                            echo "<a href='Staff_Hot.php?page=" . ($page + 1) . "' class='pagination-link'>Next &rsaquo;</a>";
+                            echo "<a href='Staff_Hot.php?page=$total_pages' class='pagination-link'>Last &raquo;</a>";
                         }
                         ?>
                     </div>
@@ -426,7 +483,7 @@ include 'header.php';
 
             if (mysqli_query($conn, $sql)) {
                 echo "<script>alert('Comment added successfully!')</script>";
-                echo "<script>window.location.href='Staff.php'</script>";
+                echo "<script>window.location.href='Staff_Hot.php'</script>";
             } else {
                 echo "<script>alert('Error: " . $sql . "<br>" . mysqli_error($conn) . "')</script>";
             }
@@ -448,12 +505,28 @@ include 'header.php';
                         <div class="p-3 mt-4" style="background-color: #ffffff; margin-bottom: 10px;">
                             <!-- topic 1 -->
                             <h5 class="text-muted"><?php echo $row['TopicName'] ?></h5>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="submitTopic"
-                                    data-bs-target="#topic1Modal" data-id="<?php echo $row['TopicID'] ?>"
-                                    data-topic-name="<?php echo $row['TopicName'] ?>"
-                                    data-topic-description="<?php echo $row['Description'] ?>"> Submit
-                                your ideas
-                            </button>
+                            <?php
+                            // Check if topic is closed dont display add idea button
+                            $deadlineSql = "SELECT * FROM Deadline, Topic WHERE Deadline.DeadlineID = Topic.DeadlineID AND Topic.TopicID = " . $row['TopicID'];
+                            $deadlineResult = mysqli_query($conn, $deadlineSql);
+                            while ($deadlineRow = mysqli_fetch_assoc($deadlineResult)) {
+                                $closureDate = $deadlineRow['ClosureDate'];
+                                $finalClosureDate = $deadlineRow['FinalClosureDate'];
+                                $currentDate = date("Y-m-d H:i:s");
+                                if ($currentDate < $closureDate && $currentDate < $finalClosureDate) { ?>
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            id="submitTopic"
+                                            data-bs-target="#topic1Modal" data-id="<?php echo $row['TopicID'] ?>"
+                                            data-topic-name="<?php echo $row['TopicName'] ?>"
+                                            data-topic-description="<?php echo $row['Description'] ?>"> Submit
+                                        your ideas
+                                    </button>
+                                <?php } else if ($currentDate > $closureDate && $currentDate > $finalClosureDate) { ?>
+                                    <span class="badge bg-danger">Closed</span>
+                                <?php } else if ($currentDate > $closureDate && $currentDate < $finalClosureDate) { ?>
+                                    <span class="badge bg-warning">Closed Submit</span>
+                                <?php }
+                            } ?>
                             <?php
                             // Display deadline of topic
                             $deadlineSql = "SELECT * FROM Deadline WHERE DeadlineID = " . $row['DeadlineID'];
@@ -489,11 +562,11 @@ include 'header.php';
                 // Check if file type is valid
                 if (!in_array($fileType, $validFileTypes)) {
                     echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
-                    echo "<script>window.location.href = 'Staff.php'</script>";
+                    echo "<script>window.location.href = 'Staff_Hot.php'</script>";
                     exit();
                 } else if ($_FILES['file-upload']['size'] > 5000000) {
                     echo "<script>alert('File size must be less than 5 MB.')</script>";
-                    echo "<script>window.location.href = 'Staff.php'</script>";
+                    echo "<script>window.location.href = 'Staff_Hot.php'</script>";
                     exit();
                 } else {
                     $documentPath = $uploadDir . uniqid() . "." . $fileType;
@@ -518,14 +591,14 @@ include 'header.php';
 
                     if (!$result) {
                         echo "<script>alert('Error while saving document path.')</script>";
-                        echo "<script>window.location.href = 'Staff.php'</script>";
+                        echo "<script>window.location.href = 'Staff_Hot.php'</script>";
                     }
                 }
                 echo "<script>alert('Idea added successfully.')</script>";
-                echo "<script>window.location.href = 'Staff.php'</script>";
+                echo "<script>window.location.href = 'Staff_Hot.php'</script>";
             } else {
                 echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
-                echo "<script>window.location.href = 'Staff.php'</script>";
+                echo "<script>window.location.href = 'Staff_Hot.php'</script>";
             }
         }
         ?>
@@ -544,7 +617,7 @@ include 'header.php';
                                 aria-label="Close"></button>
                     </div>
                     <!-- body -->
-                    <form action="Staff.php" method="post" enctype="multipart/form-data">
+                    <form action="Staff_Hot.php" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                             <!-- choose topic (auto-synced) -->
                             <input type="hidden" name="topic-id" id="topic-id">
@@ -757,3 +830,4 @@ include 'footer.php';
 </body>
 
 </html>
+<?php } ?>

@@ -413,6 +413,7 @@ include 'header.php';
                                                 class="fas fa-clock text-success"></i> The deadline is
                                                 still open</span>
                                     <?php } ?>
+
                                     <button class="btn btn-outline-primary mt-2" data-bs-toggle="modal"
                                             id="editDeadline1"
                                             data-bs-target="#editDeadlineModal1"
@@ -438,7 +439,6 @@ include 'header.php';
                                         <span class="deadline-status fs-5"><i
                                                 class="fas fa-exclamation-circle text-danger"></i> The deadline has
                                                 passed</span>
-                                        ?>
                                     <?php } else { ?>
                                         <span class="deadline-status fs-5"><i
                                                 class="fas fa-clock text-success"></i> The deadline is

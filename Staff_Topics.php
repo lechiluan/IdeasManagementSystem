@@ -101,118 +101,102 @@ include 'header.php';
                 <div class="bg-white p-3 mb-3">
                     <h3 class="text-dark mb-3 text-center">Latest Topics</h3>
                     <?php
-                    $sql = "SELECT * FROM topic WHERE status = 'active' ORDER BY topic_id DESC LIMIT 3";
+                    $sql = "SELECT * FROM Topic, Deadline WHERE Topic.DeadlineID = Deadline.DeadlineID AND Deadline.ClosureDate > NOW() AND Deadline.FinalClosureDate > NOW()  ORDER BY Deadline.ClosureDate DESC";
                     $result = mysqli_query($conn, $sql);
                     ?>
-                    <div class="row">
-                        <div class="col-6 col-md-4 mb-3">
-                            <a href="Staff_PostIdeas.php" class="text-decoration-none text-dark">
-                                <div class="bg-light p-3 text-center">
-                                    <i class="fas fa-book fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Topic Title</h5>
-                                    <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
-                                            submit:</strong> <span class="font-weight-bold">10:00 AM, 28 Mar
-                                                2023</span></p>
-                                    <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong> <span
-                                            class="font-weight-bold">11:59 PM, 31 Mar 2023</span></p>
+                    <?php if (mysqli_num_rows($result) > 0) { ?>
+                        <div class="row">
+                            <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                                <div class="col-6 col-md-4 mb-3">
+                                    <a href="Staff_PostIdeas.php?topic=<?php echo $row['TopicID']; ?>"
+                                       class="text-decoration-none text-dark">
+                                        <div class="bg-light p-3 text-center">
+                                            <i class="fas fa-book fa-3x mb-3"></i>
+                                            <h5 class="mb-2"><?php echo $row['TopicName']; ?></h5>
+                                            <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
+                                                    submit:</strong> <span
+                                                    class="font-weight-bold"><?php echo $row['ClosureDate']; ?></span>
+                                            </p>
+
+                                            <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong>
+                                                <span
+                                                    class="font-weight-bold"><?php echo $row['FinalClosureDate']; ?></span>
+                                            </p>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
+                            <?php } ?>
                         </div>
-                        <div class="col-6 col-md-4 mb-3">
-                            <a href="QAC_Topic_Detail.php" class="text-decoration-none text-dark">
-                                <div class="bg-light p-3 text-center">
-                                    <i class="fas fa-book fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Topic Title</h5>
-                                    <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
-                                            submit:</strong> <span class="font-weight-bold">10:00 AM, 28 Mar
-                                                2023</span></p>
-                                    <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong> <span
-                                            class="font-weight-bold">11:59 PM, 31 Mar 2023</span></p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-4 mb-3">
-                            <a href="https://example.com" class="text-decoration-none text-dark">
-                                <div class="bg-light p-3 text-center">
-                                    <i class="fas fa-book fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Topic Title</h5>
-                                    <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
-                                            submit:</strong> <span class="font-weight-bold">10:00 AM, 28 Mar
-                                                2023</span></p>
-                                    <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong> <span
-                                            class="font-weight-bold">11:59 PM, 31 Mar 2023</span></p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                    <?php } ?>
                 </div>
 
                 <!-- Topic Has Closed -->
                 <div class="bg-white p-3 mb-3">
                     <h3 class="text-dark mb-3 text-center">Topic Has Closed</h3>
-                    <div class="row">
-                        <div class="col-6 col-md-4 mb-3">
-                            <a href="https://example.com" class="text-decoration-none text-dark">
-                                <div class="bg-light p-3 text-center">
-                                    <i class="fas fa-book fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Topic Title</h5>
-                                    <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
-                                            submit:</strong> <span class="font-weight-bold">10:00 AM, 28 Mar
-                                                2023</span></p>
-                                    <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong> <span
-                                            class="font-weight-bold">11:59 PM, 31 Mar 2023</span></p>
+                    <?php
+                    // Get all topics that has closed where the current date is greater than the closure date
+
+                    $sql = "SELECT * FROM Topic, Deadline WHERE Topic.DeadlineID = Deadline.DeadlineID AND Deadline.ClosureDate < NOW()";
+                    $result = mysqli_query($conn, $sql);
+                    ?>
+                    <?php if (mysqli_num_rows($result) > 0) { ?>
+                        <div class="row">
+                            <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                                <div class="col-6 col-md-4 mb-3">
+                                    <a href="Staff_PostIdeas.php?topic=<?php echo $row['TopicID']; ?>"
+                                       class="text-decoration-none text-dark">
+                                        <div class="bg-light p-3 text-center">
+                                            <i class="fas fa-book fa-3x mb-3"></i>
+                                            <h5 class="mb-2"><?php echo $row['TopicName']; ?></h5>
+                                            <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
+                                                    submit:</strong> <span
+                                                    class="font-weight-bold"><?php echo $row['ClosureDate']; ?></span>
+                                            </p>
+
+                                            <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong>
+                                                <span
+                                                    class="font-weight-bold"><?php echo $row['FinalClosureDate']; ?></span>
+                                            </p>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
+                            <?php } ?>
                         </div>
-                        <div class="col-6 col-md-4 mb-3">
-                            <a href="https://example.com" class="text-decoration-none text-dark">
-                                <div class="bg-light p-3 text-center">
-                                    <i class="fas fa-book fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Topic Title</h5>
-                                    <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
-                                            submit:</strong> <span class="font-weight-bold">10:00 AM, 28 Mar
-                                                2023</span></p>
-                                    <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong> <span
-                                            class="font-weight-bold">11:59 PM, 31 Mar 2023</span></p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                    <?php } ?>
                 </div>
 
                 <!-- Topic Has Completely Closed  -->
                 <div class="bg-white p-3 mb-3">
                     <h3 class="text-dark mb-3 text-center">Topic Has Completely Closed</h3>
-                    <div class="row">
-                        <div class="col-6 col-md-4 mb-3">
-                            <a href="https://example.com" class="text-decoration-none text-dark">
-                                <div class="bg-light p-3 text-center">
-                                    <i class="fas fa-book fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Topic Title</h5>
-                                    <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
-                                            submit:</strong> <span class="font-weight-bold">10:00 AM, 28 Mar
-                                                2023</span></p>
-                                    <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong> <span
-                                            class="font-weight-bold">11:59 PM, 31 Mar 2023</span></p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-6 col-md-4 mb-3">
-                            <a href="https://example.com" class="text-decoration-none text-dark">
-                                <div class="bg-light p-3 text-center">
-                                    <i class="fas fa-book fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Topic Title</h5>
-                                    <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
-                                            submit:</strong> <span class="font-weight-bold">10:00 AM, 28 Mar
-                                                2023</span></p>
-                                    <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong> <span
-                                            class="font-weight-bold">11:59 PM, 31 Mar 2023</span></p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                    <?php
+                    $sql = "SELECT * FROM Topic, Deadline WHERE Topic.DeadlineID = Deadline.DeadlineID AND Deadline.ClosureDate < NOW() AND Deadline.FinalClosureDate < NOW()";
+                    $result = mysqli_query($conn, $sql);
+                    ?>
+                    <?php if (mysqli_num_rows($result) > 0) { ?>
+                        <div class="row">
+                            <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                                <div class="col-6 col-md-4 mb-3">
+                                    <a href="Staff_PostIdeas.php?topic=<?php echo $row['TopicID']; ?>"
+                                       class="text-decoration-none text-dark">
+                                        <div class="bg-light p-3 text-center">
+                                            <i class="fas fa-book fa-3x mb-3"></i>
+                                            <h5 class="mb-2"><?php echo $row['TopicName']; ?></h5>
+                                            <p class="mb-1"><i class="fas fa-calendar-alt"></i> <strong>Deadline for
+                                                    submit:</strong> <span
+                                                    class="font-weight-bold"><?php echo $row['ClosureDate']; ?></span>
+                                            </p>
 
+                                            <p><i class="fas fa-calendar-alt"></i> <strong>Final deadline:</strong>
+                                                <span
+                                                    class="font-weight-bold"><?php echo $row['FinalClosureDate']; ?></span>
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                </div>
             </div>
         </div>
 

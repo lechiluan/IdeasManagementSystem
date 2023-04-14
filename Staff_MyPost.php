@@ -166,7 +166,7 @@ include 'header.php';
                             </div>
                             <div class="my-3">
                                 <h6>Topic Name: <?php echo $row['TopicName']; ?></h6>
-                                <h1><?php echo $row['IdeaID']; ?></h1>
+                                <h6>Idea Title: <?php echo $row['Title']; ?></h6>
                             </div>
                             <!-- content -->
                             <div class="my-3">
@@ -298,7 +298,7 @@ include 'header.php';
                                         <div class="form-floating mb-3">
                                             <textarea class="form-control" placeholder="Leave a comment here"
                                                       id="commentContent" style="height: 100px"
-                                                      name="commentContent"></textarea>
+                                                      name="commentContent" required></textarea>
                                             <label for="commentContent">Leave a comment here</label>
                                         </div>
                                         <!-- Checkbox for anonymous comment -->
@@ -381,7 +381,6 @@ include 'header.php';
             <?php
             // Add idea for topic
             include("connection.php");
-
             if (isset($_POST['add-idea'])) {
                 $topicID = $_POST['topic-id'];
                 $title = $_POST['topic-title'];
@@ -415,6 +414,7 @@ include 'header.php';
                 } else {
                     $documentPath = "";
                 }
+
 
                 $postDate = date("Y-m-d H:i:s");
                 $staffID = $_SESSION["staff_id"];
@@ -473,12 +473,14 @@ include 'header.php';
                                 </div>
                                 <div class="mb-3">
                                     <label for="topic" class="form-label text-primary">Title:</label>
-                                    <input type="text" class="form-control" id="topic-title" name="topic-title">
+                                    <input type="text" class="form-control" id="topic-title" name="topic-title"
+                                           placeholder="Title">
                                 </div>
                                 <div class="mb-3">
                                     <!-- text -->
                                     <label for="text" class="form-label text-primary">Your Ideas:</label>
-                                    <textarea class="form-control" id="text" rows="5" required
+                                    <textarea class="form-control" id="text" required rows="5"
+                                              placeholder="Enter your ideas here..."
                                               name="message"></textarea>
                                 </div>
                                 <div class="mb-3">
@@ -695,5 +697,4 @@ include 'header.php';
     });
 </script>
 </body>
-
 </html>

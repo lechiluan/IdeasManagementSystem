@@ -20,7 +20,7 @@ session_start(); // Start the session
           integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <!-- main css -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
-    <title>Home</title>
+    <title>Hot Ideas</title>
 </head>
 
 <body class="bg-gray">
@@ -55,10 +55,10 @@ include 'header.php';
                         <a href="Staff.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
-                                <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
+                                <i class="fa-solid fa-bars-progress topic-icon " style="font-size: 35px;"></i>
                             </div>
                             <div>
-                                <p class="m-0" style="padding-left: 10px;" id="manage-topics-text">All Ideas</p>
+                                <p class="m-0" style="padding-left: 10px;" >All Ideas</p>
                             </div>
                         </a>
                     </li>
@@ -79,10 +79,10 @@ include 'header.php';
                         <a href="Staff_Hot.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
-                                <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
+                                <i class="fa-solid fa-bars-progress topic-icon active" style="font-size: 35px;"></i>
                             </div>
                             <div>
-                                <p class="m-0" style="padding-left: 10px;">Hot Ideas</p>
+                                <p class="m-0" style="padding-left: 10px;" id="manage-topics-text">Hot Ideas</p>
                             </div>
                         </a>
                     </li>

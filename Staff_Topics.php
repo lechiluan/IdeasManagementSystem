@@ -50,20 +50,43 @@ include 'header.php';
                             </div>
                         </a>
                     </li>
-                    <!-- top 1 -->
+                    
                     <li class="dropdown-item p-1 rounded">
                         <a href="Staff.php" class="d-flex align-items-center text-decoration-none text-dark"
+                           id="manage-topics">
+                            <div class="p-2">
+                                <i class="fa-solid fa-bars-progress topic-icon " style="font-size: 35px;"></i>
+                            </div>
+                            <div>
+                                <p class="m-0" style="padding-left: 10px;" >All Ideas</p>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="dropdown-item p-1 rounded">
+                        <a href="Staff_Last.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
                             <div class="p-2">
                                 <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                             </div>
                             <div>
-                                <p class="m-0" style="padding-left: 10px;">All Post</p>
+                                <p class="m-0" style="padding-left: 10px;">Last Ideas</p>
                             </div>
                         </a>
                     </li>
 
-                    <!-- top 2 -->
+                    <li class="dropdown-item p-1 rounded">
+                        <a href="Staff_Hot.php" class="d-flex align-items-center text-decoration-none text-dark"
+                           id="manage-topics">
+                            <div class="p-2">
+                                <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
+                            </div>
+                            <div>
+                                <p class="m-0" style="padding-left: 10px;">Hot Ideas</p>
+                            </div>
+                        </a>
+                    </li>
+
                     <li class="dropdown-item p-1 rounded">
                         <a href="Staff_MyPost.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
@@ -71,12 +94,11 @@ include 'header.php';
                                 <i class="fa-solid fa-bars-progress topic-icon" style="font-size: 35px;"></i>
                             </div>
                             <div>
-                                <p class="m-0" style="padding-left: 10px;">My Post</p>
+                                <p class="m-0" style="padding-left: 10px;">My Ideas</p>
                             </div>
                         </a>
                     </li>
 
-                    <!-- top 3 -->
                     <li class="dropdown-item p-1 rounded">
                         <a href="Staff_Topics.php" class="d-flex align-items-center text-decoration-none text-dark"
                            id="manage-topics">
@@ -88,6 +110,7 @@ include 'header.php';
                             </div>
                         </a>
                     </li>
+                    
 
                     <hr class="m-0"/>
                 </ul>

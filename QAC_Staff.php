@@ -84,7 +84,7 @@ include 'header.php';
 
         // Get the staffs data from the database where section is Session department_id when i save in login page
         $id = $_SESSION['department_id'];
-        $sql = "SELECT * FROM Staff WHERE DepartmentID = '$id'";
+        $sql = "SELECT Staff.*, Role.RoleName, Department.DepartmentName FROM Staff JOIN Role ON Staff.RoleID = Role.RoleID JOIN Department ON Staff.DepartmentID = Department.DepartmentID WHERE Staff.DepartmentID = '$id'";
         $result = mysqli_query($conn, $sql);
         $num = mysqli_num_rows($result);
         ?>
@@ -102,6 +102,8 @@ include 'header.php';
                             <th>ID</th>
                             <th>Full Name</th>
                             <th>Email</th>
+                            <th>Role</th>
+                            <th>Department</th>
                         </tr>
                         </thead>
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
@@ -110,6 +112,17 @@ include 'header.php';
                                 <td><?php echo $row['StaffID']; ?></td>
                                 <td><?php echo $row['FullName']; ?></td>
                                 <td><?php echo $row['Email']; ?></td>
+                                <?php if ($row['RoleID'] == '1') { ?>
+                                    <td><span class="badge bg-danger rounded-pill"><?= $row['RoleName']; ?></span>
+                                    </td>
+                                <?php } else if ($row['RoleID'] == '2') { ?>
+                                    <td><span class="badge bg-warning rounded-pill"><?= $row['RoleName']; ?></span>
+                                    </td>
+                                <?php } else if ($row['RoleID'] == '3') { ?>
+                                    <td><span class="badge bg-success rounded-pill"><?= $row['RoleName']; ?></span>
+                                    </td>
+                                <?php } ?>
+                                <td><?php echo $row['DepartmentName']; ?></td>
                             </tr>
 
                             </tbody>

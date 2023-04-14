@@ -171,6 +171,30 @@ include 'header.php';
                             <!-- content -->
                             <div class="my-3">
                                 <p><?php echo $row['Content']; ?></p>
+                                <?php
+                                // Check if a document exists in the database and display a download button if it does
+                                $sql_download = "SELECT * FROM Document WHERE Document.IdeaID = " . $row['IdeaID'];
+                                $result_download = mysqli_query($conn, $sql_download);
+                                if (mysqli_num_rows($result_download) > 0) {
+                                    // Build a zip file containing all the documents for this idea
+                                    $zip = new ZipArchive();
+                                    $zipName = "documents-" . $row['IdeaID'] . ".zip";
+                                    $zipPath = "uploads/" . $zipName;
+                                    if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
+                                        echo "Error: Could not create zip file";
+                                    }
+                                    while ($row_download = mysqli_fetch_assoc($result_download)) {
+                                        $filePath = $row_download['DocumentPath'];
+                                        $fileName = basename($filePath);
+                                        $zip->addFile($filePath, $fileName);
+                                    }
+                                    $zip->close();
+                                    ?>
+                                    <a href="<?php echo $zipPath; ?>" download="<?php echo $zipName; ?>"
+                                       class="btn btn-primary">Download Documents</a>
+                                    <?php
+                                }
+                                ?>
                             </div>
                             <!-- like and dislike buttons -->
                             <div class="d-flex justify-content-between align-items-center">
@@ -292,7 +316,7 @@ include 'header.php';
                                 <?php } ?>
                                 <!-- Comment form -->
                                 <div class="mt-3">
-                                    <form action="Staff.php" method="post">
+                                    <form action="Staff_MyPost.php" method="post">
                                         <!-- Comment content input -->
                                         <input type="hidden" name="ideaID" value="<?php echo $row['IdeaID']; ?>">
                                         <div class="form-floating mb-3">
@@ -334,7 +358,7 @@ include 'header.php';
 
                 if (mysqli_query($conn, $sql)) {
                     echo "<script>alert('Comment added successfully!')</script>";
-                    echo "<script>window.location.href='Staff.php'</script>";
+                    echo "<script>window.location.href='Staff_MyPost.php'</script>";
                 } else {
                     echo "<script>alert('Error: " . $sql . "<br>" . mysqli_error($conn) . "')</script>";
                 }
@@ -388,33 +412,28 @@ include 'header.php';
                 $isAnonymous = isset($_POST['anonymous']) ? true : false;
 
                 // Check if user uploaded a file
-                if (isset($_FILES['file-upload']['file-upload'])) {
+                if (isset($_FILES['file-upload']['name']) && $_FILES['file-upload']['name'] != "") {
                     $fileName = $_FILES['file-upload']['name'];
                     $tempFile = $_FILES['file-upload']['tmp_name'];
                     $uploadDir = "uploads/";
                     $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-                    $validFileTypes = array("pdf", "doc", "docx", "txt", "path", "jpg", "png", "jpeg", "gif");
+                    $validFileTypes = array("pdf", "doc", "docx", "txt", "path", "png", "jpg", "jpeg", "gif");
                     // Check if file type is valid
                     if (!in_array($fileType, $validFileTypes)) {
                         echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
-                        echo "<script>window.location.href = 'Staff.php'</script>";
+                        echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                         exit();
-                    }
-
-                    // Check file size
-                    if ($_FILES['file-upload']['size'] > 5000000) {
+                    } else if ($_FILES['file-upload']['size'] > 5000000) {
                         echo "<script>alert('File size must be less than 5 MB.')</script>";
-                        echo "<script>window.location.href = 'Staff.php'</script>";
+                        echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                         exit();
+                    } else {
+                        $documentPath = $uploadDir . uniqid() . "." . $fileType;
+                        move_uploaded_file($tempFile, $documentPath);
                     }
-
-                    $documentPath = $uploadDir . uniqid() . "." . $fileType;
-                    move_uploaded_file($tempFile, $documentPath);
                 } else {
                     $documentPath = "";
                 }
-
 
                 $postDate = date("Y-m-d H:i:s");
                 $staffID = $_SESSION["staff_id"];
@@ -431,14 +450,14 @@ include 'header.php';
 
                         if (!$result) {
                             echo "<script>alert('Error while saving document path.')</script>";
-                            echo "<script>window.location.href = 'Staff.php'</script>";
+                            echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                         }
                     }
                     echo "<script>alert('Idea added successfully.')</script>";
-                    echo "<script>window.location.href = 'Staff.php'</script>";
+                    echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                 } else {
                     echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
-                    echo "<script>window.location.href = 'Staff.php'</script>";
+                    echo "<script>window.location.href = 'Staff_MyPost.php'</script>";
                 }
             }
             ?>
@@ -457,7 +476,7 @@ include 'header.php';
                                     aria-label="Close"></button>
                         </div>
                         <!-- body -->
-                        <form action="Staff.php" method="post" enctype="multipart/form-data">
+                        <form action="Staff_MyPost.php" method="post" enctype="multipart/form-data">
                             <div class="modal-body">
                                 <!-- choose topic (auto-synced) -->
                                 <input type="hidden" name="topic-id" id="topic-id">
@@ -697,4 +716,5 @@ include 'header.php';
     });
 </script>
 </body>
+
 </html>

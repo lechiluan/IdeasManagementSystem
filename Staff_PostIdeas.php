@@ -110,8 +110,8 @@ include 'header.php';
                         <!-- Create Idea Form -->
                         <div class="bg-white p-3 text-center mb-3">
                             <form class="text-start" action="Staff_PostIdeas.php?topic=<?php echo $topic; ?>"
+                                  enctype="multipart/form-data"
                                   method="post">
-
                                 <input type="hidden" name="topic-id" value="<?php echo $topic; ?>">
 
                                 <!-- head -->
@@ -143,7 +143,7 @@ include 'header.php';
                                     <div class="mb-3">
                                         <!-- text -->
                                         <label for="text" class="form-label text-primary">Your Ideas:</label>
-                                        <textarea class="form-control" id="text" rows="5" required
+                                        <textarea class="form-control" id="text" rows="5" required name="message"
                                                   placeholder="Enter your ideas here..."
                                         ></textarea>
                                     </div>
@@ -188,34 +188,30 @@ include 'header.php';
                             $message = $_POST['message'];
                             $isAnonymous = isset($_POST['anonymous']) ? true : false;
 
+
                             // Check if user uploaded a file
-                            if (isset($_FILES['file-upload']['file-upload'])) {
+                            if (isset($_FILES['file-upload']['name']) && $_FILES['file-upload']['name'] != "") {
                                 $fileName = $_FILES['file-upload']['name'];
                                 $tempFile = $_FILES['file-upload']['tmp_name'];
                                 $uploadDir = "uploads/";
                                 $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-                                $validFileTypes = array("pdf", "doc", "docx", "txt", "path", "jpg", "png", "jpeg", "gif");
+                                $validFileTypes = array("pdf", "doc", "docx", "txt", "path", "png", "jpg", "jpeg", "gif");
                                 // Check if file type is valid
                                 if (!in_array($fileType, $validFileTypes)) {
                                     echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
                                     echo "<script>window.location.href = 'Staff_PostIdeas.php?topic=$topicID'</script>";
                                     exit();
-                                }
-
-                                // Check file size
-                                if ($_FILES['file-upload']['size'] > 5000000) {
+                                } else if ($_FILES['file-upload']['size'] > 5000000) {
                                     echo "<script>alert('File size must be less than 5 MB.')</script>";
                                     echo "<script>window.location.href = 'Staff_PostIdeas.php?topic=$topicID'</script>";
                                     exit();
+                                } else {
+                                    $documentPath = $uploadDir . uniqid() . "." . $fileType;
+                                    move_uploaded_file($tempFile, $documentPath);
                                 }
-
-                                $documentPath = $uploadDir . uniqid() . "." . $fileType;
-                                move_uploaded_file($tempFile, $documentPath);
                             } else {
                                 $documentPath = "";
                             }
-
 
                             $postDate = date("Y-m-d H:i:s");
                             $staffID = $_SESSION["staff_id"];
@@ -226,7 +222,8 @@ include 'header.php';
                             if ($result) {
                                 $ideaID = mysqli_insert_id($conn);
                                 if (!empty($documentPath)) {
-                                    $sql = "INSERT INTO Document (DocumentPath, IdeaID) VALUES ('$documentPath', '$ideaID')";
+                                    $sql = "INSERT INTO Document (DocumentPath, IdeaID) 
+                    VALUES ('$documentPath', '$ideaID')";
                                     $result = mysqli_query($conn, $sql);
 
                                     if (!$result) {
@@ -372,6 +369,30 @@ include 'header.php';
                                     <!-- content -->
                                     <div class="my-3">
                                         <p><?php echo $row['Content']; ?></p>
+                                        <?php
+                                        // Check if a document exists in the database and display a download button if it does
+                                        $sql_download = "SELECT * FROM Document WHERE Document.IdeaID = " . $row['IdeaID'];
+                                        $result_download = mysqli_query($conn, $sql_download);
+                                        if (mysqli_num_rows($result_download) > 0) {
+                                            // Build a zip file containing all the documents for this idea
+                                            $zip = new ZipArchive();
+                                            $zipName = "documents-" . $row['IdeaID'] . ".zip";
+                                            $zipPath = "uploads/" . $zipName;
+                                            if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
+                                                echo "Error: Could not create zip file";
+                                            }
+                                            while ($row_download = mysqli_fetch_assoc($result_download)) {
+                                                $filePath = $row_download['DocumentPath'];
+                                                $fileName = basename($filePath);
+                                                $zip->addFile($filePath, $fileName);
+                                            }
+                                            $zip->close();
+                                            ?>
+                                            <a href="<?php echo $zipPath; ?>" download="<?php echo $zipName; ?>"
+                                               class="btn btn-primary">Download Documents</a>
+                                            <?php
+                                        }
+                                        ?>
                                     </div>
                                     <!-- like and dislike buttons -->
                                     <div class="d-flex justify-content-between align-items-center">

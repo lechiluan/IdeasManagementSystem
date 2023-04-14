@@ -99,7 +99,27 @@ include 'header.php';
             <!-- p 1 -->
             <?php
             include("connection.php");
-            $sql = "SELECT * FROM Idea, Staff, Topic WHERE Idea.StaffID = Staff.StaffID AND Idea.TopicID = Topic.TopicID ORDER BY Idea.PostDate DESC";
+            // Tính tổng số bản ghi trong bảng Idea
+            $sql_count = "SELECT COUNT(*) as count FROM Idea";
+            $result_count = mysqli_query($conn, $sql_count);
+            $row_count = mysqli_fetch_assoc($result_count);
+            $total_records = $row_count['count'];
+
+            // Tính tổng số trang cần hiển thị
+            $total_pages = ceil($total_records / 5);
+
+            // Xác định trang hiện tại
+            if (isset($_GET['page'])) {
+                $current_page = $_GET['page'];
+            } else {
+                $current_page = 1;
+            }
+
+            // Tính vị trí bắt đầu của bản ghi trên trang hiện tại
+            $start = ($current_page - 1) * 5;
+
+            // Truy vấn dữ liệu với LIMIT và OFFSET để hiển thị 5 bản ghi trên mỗi trang
+            $sql = "SELECT * FROM Idea, Staff, Topic WHERE Idea.StaffID = Staff.StaffID AND Idea.TopicID = Topic.TopicID ORDER BY Idea.PostDate DESC LIMIT 5 OFFSET $start";
             $result = mysqli_query($conn, $sql);
             ?>
             <?php if (mysqli_num_rows($result) > 0) { ?>
@@ -171,6 +191,31 @@ include 'header.php';
                             <!-- content -->
                             <div class="my-3">
                                 <p><?php echo $row['Content']; ?></p>
+                                <?php
+                                // Check if a document exists in the database and display a download button if it does
+                                $sql_download = "SELECT * FROM Document WHERE Document.IdeaID = " . $row['IdeaID'];
+                                $result_download = mysqli_query($conn, $sql_download);
+                                if (mysqli_num_rows($result_download) > 0) {
+                                    // Build a zip file containing all the documents for this idea
+                                    $zip = new ZipArchive();
+                                    $zipName = "documents-" . $row['IdeaID'] . ".zip";
+                                    $zipPath = "uploads/" . $zipName;
+                                    if ($zip->open($zipPath, ZipArchive::CREATE) !== TRUE) {
+                                        echo "Error: Could not create zip file";
+                                    }
+                                    while ($row_download = mysqli_fetch_assoc($result_download)) {
+                                        $filePath = $row_download['DocumentPath'];
+                                        $fileName = basename($filePath);
+                                        $zip->addFile($filePath, $fileName);
+                                    }
+                                    $zip->close();
+                                    ?>
+                                    <a href="<?php echo $zipPath; ?>" download="<?php echo $zipName; ?>"
+                                       class="btn btn-primary">Download Documents</a>
+                                    <?php
+                                }
+                                ?>
+
                             </div>
                             <!-- like and dislike buttons -->
                             <div class="d-flex justify-content-between align-items-center">
@@ -317,262 +362,281 @@ include 'header.php';
                             </div>
                         </div>
                     <?php } ?>
-                </div>
-            <?php } ?>
-
-            <?php
-            include("connection.php");
-            // add comment for topic
-            if (isset($_POST['add-comment'])) {
-                $ideaID = $_POST['ideaID'];
-                $content = $_POST['commentContent'];
-                $staffID = $_SESSION['staff_id'];
-                $commentDate = date("Y-m-d H:i:s");
-                $isAnonymous = isset($_POST['anonymousComment']) ? true : false;
-
-                $sql = "INSERT INTO Comment (CommentContent, StaffID, IdeaID, is_anonymous, CommentDate) VALUES ('$content', '$staffID', '$ideaID', '$isAnonymous', '$commentDate')";
-
-                if (mysqli_query($conn, $sql)) {
-                    echo "<script>alert('Comment added successfully!')</script>";
-                    echo "<script>window.location.href='Staff.php'</script>";
-                } else {
-                    echo "<script>alert('Error: " . $sql . "<br>" . mysqli_error($conn) . "')</script>";
-                }
-            }
-            ?>
-            <?php
-            // Display topic
-            include("connection.php");
-            $sql = "SELECT * FROM Topic WHERE DeadlineID IS NOT NULL ORDER BY CreateDate DESC";
-            $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) > 0) {
-                ?>
-                <!-- ================= Topic ================= -->
-                <div class="col-12 col-lg-3" style="margin-bottom: 50px;">
-                    <div class="d-none d-xxl-block h-100 fixed-top end-0 overflow-hidden scrollbar"
-                         style="max-width: 360px; width: 100%; z-index: 4; padding-top: 56px; left: initial !important;">
-                        <h2 style="margin-top: 15px;">Recent Topics</h2>
-                        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-                            <div class="p-3 mt-4" style="background-color: #ffffff; margin-bottom: 10px;">
-                                <!-- topic 1 -->
-                                <h5 class="text-muted"><?php echo $row['TopicName'] ?></h5>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="submitTopic"
-                                        data-bs-target="#topic1Modal" data-id="<?php echo $row['TopicID'] ?>"
-                                        data-topic-name="<?php echo $row['TopicName'] ?>"
-                                        data-topic-description="<?php echo $row['Description'] ?>"> Submit
-                                    your ideas
-                                </button>
-                                <?php
-                                // Display deadline of topic
-                                $deadlineSql = "SELECT * FROM Deadline WHERE DeadlineID = " . $row['DeadlineID'];
-                                $deadlineResult = mysqli_query($conn, $deadlineSql);
-                                while ($deadlineRow = mysqli_fetch_assoc($deadlineResult)) { ?>
-                                    <!-- deadline -->
-                                    <p class="text-muted">Deadline for
-                                        submit: <?php echo $deadlineRow['ClosureDate'] ?></p>
-                                    <p class="text-muted">Final
-                                        Deadline: <?php echo $deadlineRow['FinalClosureDate'] ?></p>
-                                <?php } ?>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </div>
-            <?php } ?>
-            <?php
-            // Add idea for topic
-            include("connection.php");
-            if (isset($_POST['add-idea'])) {
-                $topicID = $_POST['topic-id'];
-                $title = $_POST['topic-title'];
-                $message = $_POST['message'];
-                $isAnonymous = isset($_POST['anonymous']) ? true : false;
-
-                // Check if user uploaded a file
-                if (isset($_FILES['file-upload']['file-upload'])) {
-                    $fileName = $_FILES['file-upload']['name'];
-                    $tempFile = $_FILES['file-upload']['tmp_name'];
-                    $uploadDir = "uploads/";
-                    $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-
-                    $validFileTypes = array("pdf", "doc", "docx", "txt", "path", "jpg", "png", "jpeg", "gif");
-                    // Check if file type is valid
-                    if (!in_array($fileType, $validFileTypes)) {
-                        echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
-                        echo "<script>window.location.href = 'Staff.php'</script>";
-                        exit();
-                    }
-
-                    // Check file size
-                    if ($_FILES['file-upload']['size'] > 5000000) {
-                        echo "<script>alert('File size must be less than 5 MB.')</script>";
-                        echo "<script>window.location.href = 'Staff.php'</script>";
-                        exit();
-                    }
-
-                    $documentPath = $uploadDir . uniqid() . "." . $fileType;
-                    move_uploaded_file($tempFile, $documentPath);
-                } else {
-                    $documentPath = "";
-                }
-
-
-
-                $postDate = date("Y-m-d H:i:s");
-                $staffID = $_SESSION["staff_id"];
-
-                $sql = "INSERT INTO Idea (Title, Content, is_anonymous, PostDate, StaffID, TopicID) VALUES ('$title', '$message', '$isAnonymous', '$postDate', '$staffID', '$topicID')";
-                $result = mysqli_query($conn, $sql);
-
-                if ($result) {
-                    $ideaID = mysqli_insert_id($conn);
-                    if (!empty($documentPath)) {
-                        $sql = "INSERT INTO Document (DocumentPath, IdeaID) 
-                    VALUES ('$documentPath', '$ideaID')";
-                        $result = mysqli_query($conn, $sql);
-
-                        if (!$result) {
-                            echo "<script>alert('Error while saving document path.')</script>";
-                            echo "<script>window.location.href = 'Staff.php'</script>";
+                    <div class="pagination">
+                        <?php
+                        // display pagination
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $first_page = 1;
+                        $last_page = $total_pages;
+                        if ($page > 1) {
+                            echo "<a href='Staff.php?page=1' class='pagination-link'>&laquo; First</a>";
+                            echo "<a href='Staff.php?page=" . ($page - 1) . "' class='pagination-link'>&lsaquo; Previous</a>";
                         }
-                    }
-                    echo "<script>alert('Idea added successfully.')</script>";
-                    echo "<script>window.location.href = 'Staff.php'</script>";
-                } else {
-                    echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
-                    echo "<script>window.location.href = 'Staff.php'</script>";
-                }
-            }
-            ?>
-
-            <!-- create modal for topic -->
-            <div class="modal fade" id="topic1Modal" tabindex="-1" aria-labelledby="topic1ModalLabel" aria-hidden="true"
-                 data-bs-backdrop="false">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <!-- head -->
-                        <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="exampleModalLabel">
-                                Submit Your Ideas
-                            </h5>
-                            <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <!-- body -->
-                        <form action="Staff.php" method="post" enctype="multipart/form-data">
-                            <div class="modal-body">
-                                <!-- choose topic (auto-synced) -->
-                                <input type="hidden" name="topic-id" id="topic-id">
-                                <div class="mb-3">
-                                    <label for="topic" class="form-label text-primary">Topic:</label>
-                                    <input type="text" class="form-control" id="topic-name" readonly
-                                           style="background-color: #f8f9fa" name="topic-name">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="topic" class="form-label text-primary">Description:</label>
-                                    <textarea class="form-control" rows="5" id="topic-description" readonly
-                                              style="background-color: #f8f9fa" name="topic-description"></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="topic" class="form-label text-primary">Title:</label>
-                                    <input type="text" class="form-control" id="topic-title" name="topic-title"
-                                           placeholder="Title">
-                                </div>
-                                <div class="mb-3">
-                                    <!-- text -->
-                                    <label for="text" class="form-label text-primary">Your Ideas:</label>
-                                    <textarea class="form-control" id="text" required rows="5"
-                                              placeholder="Enter your ideas here..."
-                                              name="message"></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <!-- options -->
-                                    <label class="form-label text-primary">Upload File:</label>
-                                    <div class="input-group">
-                                        <input type="file" class="form-control" id="file" name="file-upload">
-                                    </div>
-                                </div>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input" type="checkbox" value="" id="anonymousComment"
-                                           name="anonymous">
-                                    <label class="form-check-label" for="anonymousComment">
-                                        Post anonymously
-                                    </label>
-                                </div>
-                                <div class="form-check mb-3">
-                                    <!-- agree to terms and conditions -->
-                                    <input type="checkbox" class="form-check-input" id="terms" required>
-                                    <label class="form-check-label" for="terms">
-                                        I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal"
-                                                          class="text-primary">terms
-                                            and conditions</a>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary w-100" name="add-idea">Submit
-                                </button>
-                            </div>
-                        </form>
+                        for ($i = max($first_page, $page - 3); $i <= min($last_page, $page + 3); $i++) {
+                            $class = "pagination-link";
+                            $style = "";
+                            if ($i == $page) {
+                                $class = "pagination-link active";
+                            }
+                            echo "<a href='Staff.php?page=$i' class='$class' style='$style'>$i</a>";
+                        }
+                        if ($page < $total_pages) {
+                            echo "<a href='Staff.php?page=" . ($page + 1) . "' class='pagination-link'>Next &rsaquo;</a>";
+                            echo "<a href='Staff.php?page=$total_pages' class='pagination-link'>Last &raquo;</a>";
+                        }
+                        ?>
                     </div>
+                </div>
+            <?php } ?>
+        </div>
+
+        <?php
+        include("connection.php");
+        // add comment for topic
+        if (isset($_POST['add-comment'])) {
+            $ideaID = $_POST['ideaID'];
+            $content = $_POST['commentContent'];
+            $staffID = $_SESSION['staff_id'];
+            $commentDate = date("Y-m-d H:i:s");
+            $isAnonymous = isset($_POST['anonymousComment']) ? true : false;
+
+            $sql = "INSERT INTO Comment (CommentContent, StaffID, IdeaID, is_anonymous, CommentDate) VALUES ('$content', '$staffID', '$ideaID', '$isAnonymous', '$commentDate')";
+
+            if (mysqli_query($conn, $sql)) {
+                echo "<script>alert('Comment added successfully!')</script>";
+                echo "<script>window.location.href='Staff.php'</script>";
+            } else {
+                echo "<script>alert('Error: " . $sql . "<br>" . mysqli_error($conn) . "')</script>";
+            }
+        }
+        ?>
+        <?php
+        // Display topic
+        include("connection.php");
+        $sql = "SELECT * FROM Topic WHERE DeadlineID IS NOT NULL ORDER BY CreateDate DESC";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+            ?>
+            <!-- ================= Topic ================= -->
+            <div class="col-12 col-lg-3" style="margin-bottom: 50px;">
+                <div class="d-none d-xxl-block h-100 fixed-top end-0 overflow-hidden scrollbar"
+                     style="max-width: 360px; width: 100%; z-index: 4; padding-top: 56px; left: initial !important;">
+                    <h2 style="margin-top: 15px;">Recent Topics</h2>
+                    <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                        <div class="p-3 mt-4" style="background-color: #ffffff; margin-bottom: 10px;">
+                            <!-- topic 1 -->
+                            <h5 class="text-muted"><?php echo $row['TopicName'] ?></h5>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="submitTopic"
+                                    data-bs-target="#topic1Modal" data-id="<?php echo $row['TopicID'] ?>"
+                                    data-topic-name="<?php echo $row['TopicName'] ?>"
+                                    data-topic-description="<?php echo $row['Description'] ?>"> Submit
+                                your ideas
+                            </button>
+                            <?php
+                            // Display deadline of topic
+                            $deadlineSql = "SELECT * FROM Deadline WHERE DeadlineID = " . $row['DeadlineID'];
+                            $deadlineResult = mysqli_query($conn, $deadlineSql);
+                            while ($deadlineRow = mysqli_fetch_assoc($deadlineResult)) { ?>
+                                <!-- deadline -->
+                                <p class="text-muted">Deadline for
+                                    submit: <?php echo $deadlineRow['ClosureDate'] ?></p>
+                                <p class="text-muted">Final
+                                    Deadline: <?php echo $deadlineRow['FinalClosureDate'] ?></p>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
+        <?php } ?>
+        <?php
+        // Add idea for topic
+        include("connection.php");
+        if (isset($_POST['add-idea'])) {
+            $topicID = $_POST['topic-id'];
+            $title = $_POST['topic-title'];
+            $message = $_POST['message'];
+            $isAnonymous = isset($_POST['anonymous']) ? true : false;
 
-            <!-- terms and conditions modal -->
-            <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true"
-                 data-bs-backdrop="false">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
-                        <!-- head -->
-                        <div class="modal-header align-items-center">
-                            <h5 class="text-dark text-center w-100 m-0" id="termsModalLabel">
-                                Terms and Conditions
-                            </h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <!-- body -->
+            // Check if user uploaded a file
+            if (isset($_FILES['file-upload']['name']) && $_FILES['file-upload']['name'] != "") {
+                $fileName = $_FILES['file-upload']['name'];
+                $tempFile = $_FILES['file-upload']['tmp_name'];
+                $uploadDir = "uploads/";
+                $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                $validFileTypes = array("pdf", "doc", "docx", "txt", "path", "png", "jpg", "jpeg", "gif");
+                // Check if file type is valid
+                if (!in_array($fileType, $validFileTypes)) {
+                    echo "<script>alert('Invalid file type. Please upload a PDF, DOC, DOCX, TXT or PATH file.')</script>";
+                    echo "<script>window.location.href = 'Staff.php'</script>";
+                    exit();
+                } else if ($_FILES['file-upload']['size'] > 5000000) {
+                    echo "<script>alert('File size must be less than 5 MB.')</script>";
+                    echo "<script>window.location.href = 'Staff.php'</script>";
+                    exit();
+                } else {
+                    $documentPath = $uploadDir . uniqid() . "." . $fileType;
+                    move_uploaded_file($tempFile, $documentPath);
+                }
+            } else {
+                $documentPath = "";
+            }
+
+            $postDate = date("Y-m-d H:i:s");
+            $staffID = $_SESSION["staff_id"];
+
+            $sql = "INSERT INTO Idea (Title, Content, is_anonymous, PostDate, StaffID, TopicID) VALUES ('$title', '$message', '$isAnonymous', '$postDate', '$staffID', '$topicID')";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result) {
+                $ideaID = mysqli_insert_id($conn);
+                if (!empty($documentPath)) {
+                    $sql = "INSERT INTO Document (DocumentPath, IdeaID) 
+                    VALUES ('$documentPath', '$ideaID')";
+                    $result = mysqli_query($conn, $sql);
+
+                    if (!$result) {
+                        echo "<script>alert('Error while saving document path.')</script>";
+                        echo "<script>window.location.href = 'Staff.php'</script>";
+                    }
+                }
+                echo "<script>alert('Idea added successfully.')</script>";
+                echo "<script>window.location.href = 'Staff.php'</script>";
+            } else {
+                echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
+                echo "<script>window.location.href = 'Staff.php'</script>";
+            }
+        }
+        ?>
+
+        <!-- create modal for topic -->
+        <div class="modal fade" id="topic1Modal" tabindex="-1" aria-labelledby="topic1ModalLabel" aria-hidden="true"
+             data-bs-backdrop="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- head -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Submit Your Ideas
+                        </h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <!-- body -->
+                    <form action="Staff.php" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sollicitudin
-                                turpis a augue bibendum
-                                posuere. Nulla ut nulla eget justo varius consequat sed ut lacus. Nam
-                                consectetur ante eget massa
-                                posuere, nec lacinia magna fringilla. In non malesuada augue. Phasellus sed
-                                sapien nulla. Nulla id
-                                neque eu ipsum rhoncus malesuada. Aliquam erat volutpat. Nam eu felis vel
-                                mauris feugiat laoreet
-                                eget eget elit.</p>
-                            <p>Donec quis hendrerit lectus. Integer eu leo consequat, laoreet massa non,
-                                posuere nunc. Praesent non
-                                tellus non ipsum auctor feugiat. Proin pulvinar eros ac purus lacinia
-                                viverra. Vivamus mollis
-                                aliquam quam, nec sollicitudin justo venenatis ac. Praesent blandit dolor
-                                eget luctus vehicula.
-                                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                                cubilia curae; Duis ut
-                                felis sed dolor placerat ultricies. Donec at convallis elit. Aliquam laoreet
-                                purus eget nisi
-                                vehicula sagittis. Fusce euismod sem in purus consequat faucibus.</p>
-                            <p>Etiam pellentesque, magna nec euismod ultrices, metus dolor eleifend enim, a
-                                luctus justo erat ac
-                                tellus. Nulla tincidunt aliquam libero eget tristique. Fusce dignissim
-                                sapien at tortor faucibus,
-                                quis luctus lectus fringilla. Sed non semper quam. Fusce placerat, ante in
-                                congue ultrices, nisl
-                                arcu dapibus sapien, vel aliquam metus risus sit amet nisl. Integer vitae
-                                libero eget mi
-                                ullamcorper bibendum. Integer euismod vel erat eget consequat. Sed vel
-                                pretium lorem.</p>
+                            <!-- choose topic (auto-synced) -->
+                            <input type="hidden" name="topic-id" id="topic-id">
+                            <div class="mb-3">
+                                <label for="topic" class="form-label text-primary">Topic:</label>
+                                <input type="text" class="form-control" id="topic-name" readonly
+                                       style="background-color: #f8f9fa" name="topic-name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="topic" class="form-label text-primary">Description:</label>
+                                <textarea class="form-control" rows="5" id="topic-description" readonly
+                                          style="background-color: #f8f9fa" name="topic-description"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="topic" class="form-label text-primary">Title:</label>
+                                <input type="text" class="form-control" id="topic-title" name="topic-title"
+                                       placeholder="Title">
+                            </div>
+                            <div class="mb-3">
+                                <!-- text -->
+                                <label for="text" class="form-label text-primary">Your Ideas:</label>
+                                <textarea class="form-control" id="text" required rows="5"
+                                          placeholder="Enter your ideas here..."
+                                          name="message"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <!-- options -->
+                                <label class="form-label text-primary">Upload File:</label>
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="file" name="file-upload">
+                                </div>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" value="" id="anonymousComment"
+                                       name="anonymous">
+                                <label class="form-check-label" for="anonymousComment">
+                                    Post anonymously
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <!-- agree to terms and conditions -->
+                                <input type="checkbox" class="form-check-input" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal"
+                                                      class="text-primary">terms
+                                        and conditions</a>
+                                </label>
+                            </div>
                         </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary w-100" name="add-idea">Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- terms and conditions modal -->
+        <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true"
+             data-bs-backdrop="false">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <!-- head -->
+                    <div class="modal-header align-items-center">
+                        <h5 class="text-dark text-center w-100 m-0" id="termsModalLabel">
+                            Terms and Conditions
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- body -->
+                    <div class="modal-body">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sollicitudin
+                            turpis a augue bibendum
+                            posuere. Nulla ut nulla eget justo varius consequat sed ut lacus. Nam
+                            consectetur ante eget massa
+                            posuere, nec lacinia magna fringilla. In non malesuada augue. Phasellus sed
+                            sapien nulla. Nulla id
+                            neque eu ipsum rhoncus malesuada. Aliquam erat volutpat. Nam eu felis vel
+                            mauris feugiat laoreet
+                            eget eget elit.</p>
+                        <p>Donec quis hendrerit lectus. Integer eu leo consequat, laoreet massa non,
+                            posuere nunc. Praesent non
+                            tellus non ipsum auctor feugiat. Proin pulvinar eros ac purus lacinia
+                            viverra. Vivamus mollis
+                            aliquam quam, nec sollicitudin justo venenatis ac. Praesent blandit dolor
+                            eget luctus vehicula.
+                            Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+                            cubilia curae; Duis ut
+                            felis sed dolor placerat ultricies. Donec at convallis elit. Aliquam laoreet
+                            purus eget nisi
+                            vehicula sagittis. Fusce euismod sem in purus consequat faucibus.</p>
+                        <p>Etiam pellentesque, magna nec euismod ultrices, metus dolor eleifend enim, a
+                            luctus justo erat ac
+                            tellus. Nulla tincidunt aliquam libero eget tristique. Fusce dignissim
+                            sapien at tortor faucibus,
+                            quis luctus lectus fringilla. Sed non semper quam. Fusce placerat, ante in
+                            congue ultrices, nisl
+                            arcu dapibus sapien, vel aliquam metus risus sit amet nisl. Integer vitae
+                            libero eget mi
+                            ullamcorper bibendum. Integer euismod vel erat eget consequat. Sed vel
+                            pretium lorem.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- ================= Footer ================= -->
-    <!--============ Footer =========-->
-    <?php
-    include 'footer.php';
-    ?>
+<!-- ================= Footer ================= -->
+<!--============ Footer =========-->
+<?php
+include 'footer.php';
+?>
 </div>
 </div>
 

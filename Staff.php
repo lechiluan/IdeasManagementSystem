@@ -519,8 +519,8 @@ if (!isset($_SESSION['login'])) {
 //                        $mail->Subject = $subject;
 //                        $mail->Body = $message;
 //                        $mail->send();
-                        echo "<script>alert('Comment added successfully!')</script>";
-                        echo "<script>window.location.href='Staff.php'</script>";
+                    echo "<script>alert('Comment added successfully!')</script>";
+                    echo "<script>window.location.href='Staff.php'</script>";
 //                    } catch (Exception $e) {
 //                        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 //                    }
@@ -676,8 +676,8 @@ if (!isset($_SESSION['login'])) {
 //                        $mail->Body = $message;
 //
 //                        $mail->send();
-                        echo "<script>alert('Idea added successfully.')</script>";
-                        echo "<script>window.location.href = 'Staff.php'</script>";
+                    echo "<script>alert('Idea added successfully.')</script>";
+                    echo "<script>window.location.href = 'Staff.php'</script>";
 //                    } catch (Exception $e) {
 //                        echo "<script>alert('Message could not be sent. Mailer Error: {$mail->ErrorInfo}')</script>";
 //                        echo "<script>window.location.href = 'Staff.php'</script>";

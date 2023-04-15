@@ -32,9 +32,9 @@ CREATE TABLE Deadline
 CREATE TABLE Topic
 (
     TopicID     INT PRIMARY KEY AUTO_INCREMENT,
-    TopicName   VARCHAR(50) NOT NULL,
-    Description LONGTEXT    NOT NULL,
-    CreateDate  DATETIME    NOT NULL,
+    TopicName   LONGTEXT NOT NULL,
+    Description LONGTEXT NOT NULL,
+    CreateDate  DATETIME NOT NULL,
     DeadlineID  INT NULL,
     FOREIGN KEY (DeadlineID) REFERENCES Deadline (DeadlineID)
 );
@@ -42,12 +42,12 @@ CREATE TABLE Topic
 CREATE TABLE Idea
 (
     IdeaID       INT PRIMARY KEY AUTO_INCREMENT,
-    Title        VARCHAR(100) NOT NULL,
-    Content      LONGTEXT     NOT NULL,
-    is_anonymous BOOLEAN      NOT NULL default FALSE,
-    PostDate     DATETIME     NOT NULL,
-    StaffID      INT          NOT NULL,
-    TopicID      INT          NOT NULL,
+    Title        LONGTEXT NOT NULL,
+    Content      LONGTEXT NOT NULL,
+    is_anonymous BOOLEAN  NOT NULL default FALSE,
+    PostDate     DATETIME NOT NULL,
+    StaffID      INT      NOT NULL,
+    TopicID      INT      NOT NULL,
     FOREIGN KEY (StaffID) REFERENCES Staff (StaffID),
     FOREIGN KEY (TopicID) REFERENCES Topic (TopicID)
 );
@@ -55,7 +55,7 @@ CREATE TABLE Idea
 CREATE TABLE Document
 (
     DocumentID   INT PRIMARY KEY AUTO_INCREMENT,
-    DocumentPath VARCHAR(100),
+    DocumentPath LONGTEXT,
     IdeaID       INT,
     FOREIGN KEY (IdeaID) REFERENCES Idea (IdeaID)
 );
@@ -73,7 +73,7 @@ CREATE TABLE Vote
 CREATE TABLE Comment
 (
     CommentID      INT PRIMARY KEY AUTO_INCREMENT,
-    CommentContent VARCHAR(1000) NOT NULL,
+    CommentContent LONGTEXT NOT NULL,
     StaffID        INT           NOT NULL,
     IdeaID         INT           NOT NULL,
     is_anonymous   BOOLEAN       NOT NULL default FALSE,

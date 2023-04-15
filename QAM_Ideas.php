@@ -510,7 +510,7 @@ if (!isset($_SESSION['login'])) {
                             $content = $_POST['commentContent'];
                             $staffID = $_SESSION['staff_id'];
                             $commentDate = date("Y-m-d H:i:s");
-                            $isAnonymous = isset($_POST['anonymousComment']) ? true : false;
+                            $isAnonymous = isset($_POST['anonymousComment']) ? 1 : 0;
 
                             $sql = "INSERT INTO Comment (CommentContent, StaffID, IdeaID, is_anonymous, CommentDate) VALUES ('$content', '$staffID', '$ideaID', '$isAnonymous', '$commentDate')";
 

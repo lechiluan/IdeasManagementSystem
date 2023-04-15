@@ -485,7 +485,7 @@ LIMIT 5 OFFSET $start
                 $content = $_POST['commentContent'];
                 $staffID = $_SESSION['staff_id'];
                 $commentDate = date("Y-m-d H:i:s");
-                $isAnonymous = isset($_POST['anonymousComment']) ? true : false;
+                $isAnonymous = isset($_POST['anonymousComment']) ? 1 : 0;
 
                 $sql = "INSERT INTO Comment (CommentContent, StaffID, IdeaID, is_anonymous, CommentDate) VALUES ('$content', '$staffID', '$ideaID', '$isAnonymous', '$commentDate')";
 
@@ -603,7 +603,7 @@ LIMIT 5 OFFSET $start
                 $topicID = $_POST['topic-id'];
                 $title = $_POST['topic-title'];
                 $message = $_POST['message'];
-                $isAnonymous = isset($_POST['anonymous']) ? true : false;
+                $isAnonymous = isset($_POST['anonymous']) ? 1 : 0;
 
                 // Check if user uploaded a file
                 if (isset($_FILES['file-upload']['name']) && $_FILES['file-upload']['name'] != "") {

@@ -453,16 +453,17 @@ if (!isset($_SESSION['login'])) {
                                             <span class="deadline-time fs-5"><i
                                                     class="far fa-clock"></i><strong><?php echo $row['FinalClosureDate'] ?></strong> -
                                                 <?php
-                                                // Cal Time Left
-                                                $date1 = new DateTime($row['FinalClosureDate']);
-                                                $date2 = new DateTime(date("Y-m-d H:i:s"));
+                                                date_default_timezone_set('Asia/Ho_Chi_Minh');
+                                                $currentDate = date("Y-m-d H:i:s");
+                                                $date1 = new DateTime($currentDate);
+                                                $date2 = new DateTime($row['FinalClosureDate']);
                                                 $interval = $date1->diff($date2);
-                                                $timeLeft = $interval->format('%a days, %h hours, %i minutes');
-                                                // Check Time Left is passed
-                                                if ($timeLeft < 0) {
-                                                    echo '<span class="badge bg-danger">Closed</span>';
+                                                $interval->format('%a days %h hours %i minutes');
+                                                // Check if the deadline has passed
+                                                if ($currentDate < $row['FinalClosureDate']) {
+                                                    echo '<span class="badge bg-success">' . $interval->format('%a days %h hours %i minutes') . '</span>';
                                                 } else {
-                                                    echo '<span class="badge bg-success">' . $timeLeft . '</span>';
+                                                    echo '<span class="badge bg-danger">Closed</span>';
                                                 }
                                                 ?>
                                             </span>

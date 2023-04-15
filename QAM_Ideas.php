@@ -164,7 +164,7 @@ if (!isset($_SESSION['login'])) {
 
                             <!-- List of TOP Ideas -->
                             <div class="bg-light p-3 text-center mb-3">
-                                <a href="#" class="btn btn-sm btn-primary"><i class="fas fa-list"></i> List of TOP Ideas</a>
+                                <a href="Top_Ideas.php" class="btn btn-sm btn-primary"><i class="fas fa-list"></i> List of TOP Ideas</a>
                             </div>
                         </div>
 

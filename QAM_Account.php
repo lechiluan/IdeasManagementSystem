@@ -43,7 +43,7 @@ if (!isset($_SESSION['login'])) {
                         <!-- top -->
                         <!-- avatar -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="#" class="d-flex align-items-center text-decoration-none text-dark">
+                            <a href="Settings.php" class="d-flex align-items-center text-decoration-none text-dark">
                                 <div class="p-2">
                                     <img src="https://source.unsplash.com/collection/happy-people" alt="avatar"
                                          class="rounded-circle me-2"
@@ -125,14 +125,11 @@ if (!isset($_SESSION['login'])) {
                         </button>
                     </div>
                     <?php
-                    include_once("connection.php");
 
-                    //                use PHPMailer\PHPMailer\PHPMailer;
-                    //                use PHPMailer\PHPMailer\Exception;
-                    //
-                    //                require 'PHPMailer/src/PHPMailer.php';
-                    //                require 'PHPMailer/src/SMTP.php';
-                    //                require 'PHPMailer/src/Exception.php';
+                    require 'PHPMailer/src/PHPMailer.php';
+                    require 'PHPMailer/src/SMTP.php';
+                    require 'PHPMailer/src/Exception.php';
+                    include_once("connection.php");
 
                     // Retrieve the list of roles
                     $sql = "SELECT * FROM Role";
@@ -151,50 +148,50 @@ if (!isset($_SESSION['login'])) {
 
                         $sql = "INSERT INTO Staff (FullName, Email, Password, RoleID, DepartmentID) VALUES ('$full_name','$email', '$password', '$role_id', '$dept_id')";
                         $result = mysqli_query($conn, $sql);
-//                    if ($result) {
-//                        // Send email to the new staff member about login details
-//                        $to = $email;
-//                        $subject = 'Login details for new staff member account';
-//                        $message = 'Dear ' . $full_name . ',<br><br>';
-//                        $message .= 'Your account has been created. Please use the following details to log in:<br><br>';
-//                        $message .= 'Email: ' . $email . '<br>';
-//                        $message .= 'Password: ' . $_POST['password'] . '<br><br>';
-//                        $message .= 'Thank you,<br>The Admin Team';
-//
-//                        // Set up the email headers
-//                        $mail = new PHPMailer(true);
-//
-//                        try {
-//                            // Server settings
-//                            $mail->SMTPDebug = 0;
-//                            $mail->isSMTP();
-//                            $mail->Host = 'smtp.gmail.com';
-//                            $mail->SMTPAuth = true;
-//                            $mail->Username = 'greenwich.qa@gmail.com';
-//                            $mail->Password = 'iebdmpqvvkpjglec';
-//                            $mail->SMTPSecure = 'tls';
-//                            $mail->Port = 587;
-//
-//                            // Recipients
-//                            $mail->setFrom('greenwich.qa@gmail.com', 'Greenwich QA');
-//                            $mail->addAddress($to, $full_name);
-//
-//                            // Content
-//                            $mail->isHTML(true);
-//                            $mail->Subject = $subject;
-//                            $mail->Body = $message;
-//
-//                            $mail->send();
-                        echo "<script>alert('Staff member added successfully')</script>";
-                        echo "<script>window.location.href = 'QAM_Account.php'</script>";
-//                        } catch (Exception $e) {
-//                            echo "<script>alert('Error sending email.')</script>";
-//                            echo "<script>window.location.href = 'QAM_Account.php'</script>";
-//                        }
-//                    } else {
-//                        echo "<script>alert('Error adding staff member')</script>";
-//                        echo "<script>window.location.href = 'QAM_Account.php'</script>";
-//                    }
+                        if ($result) {
+                            // Send email to the new staff member about login details
+                            $to = $email;
+                            $subject = 'Login details for new staff member account';
+                            $message = 'Dear ' . $full_name . ',<br><br>';
+                            $message .= 'Your account has been created. Please use the following details to log in:<br><br>';
+                            $message .= 'Email: ' . $email . '<br>';
+                            $message .= 'Password: ' . $_POST['password'] . '<br><br>';
+                            $message .= 'Thank you,<br>Greenwich Quality Assurance Manager';
+
+                            // Set up the email headers
+                            $mail = new PHPMailer\PHPMailer\PHPMailer();
+
+                            try {
+                                // Server settings
+                                $mail->SMTPDebug = 0;
+                                $mail->isSMTP();
+                                $mail->Host = 'smtp.gmail.com';
+                                $mail->SMTPAuth = true;
+                                $mail->Username = 'greenwich.qa@gmail.com';
+                                $mail->Password = 'iebdmpqvvkpjglec';
+                                $mail->SMTPSecure = 'tls';
+                                $mail->Port = 587;
+
+                                // Recipients
+                                $mail->setFrom('greenwich.qa@gmail.com', 'Greenwich QA');
+                                $mail->addAddress($to, $full_name);
+
+                                // Content
+                                $mail->isHTML(true);
+                                $mail->Subject = $subject;
+                                $mail->Body = $message;
+
+                                $mail->send();
+                                echo "<script>alert('Staff member added successfully')</script>";
+                                echo "<script>window.location.href = 'QAM_Account.php'</script>";
+                            } catch (Exception $e) {
+                                echo "<script>alert('Error sending email.')</script>";
+                                echo "<script>window.location.href = 'QAM_Account.php'</script>";
+                            }
+                        } else {
+                            echo "<script>alert('Error adding staff member')</script>";
+                            echo "<script>window.location.href = 'QAM_Account.php'</script>";
+                        }
                     }
                     ?>
 

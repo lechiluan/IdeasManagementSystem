@@ -45,7 +45,7 @@ if (!isset($_SESSION['login'])) {
                         <!-- top -->
                         <!-- avatar -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="#" class="d-flex align-items-center text-decoration-none text-dark">
+                            <a href="Settings.php" class="d-flex align-items-center text-decoration-none text-dark">
                                 <div class="p-2">
                                     <img src="https://source.unsplash.com/collection/happy-people" alt="avatar"
                                          class="rounded-circle me-2"

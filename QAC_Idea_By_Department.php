@@ -92,19 +92,19 @@ if (!isset($_SESSION['login'])) {
                 <div class="d-flex flex-column justify-content-center mx-auto main-container">
                     <div class="row">
                         <div class="col-lg-4">
-                            <?php
-                            if (isset($_GET['topic'])) {
-                                $topic = $_GET['topic'];
-                            }
-                            ?>
                             <!-- Send notification for Staff form -->
                             <div class="bg-light p-3 text-center mb-3">
-                                <a href="QAC_Send_Notification.php?topic=<?php echo $topic; ?>"
+                                <a href="#"
                                    class="text-decoration-none text-dark d-flex flex-column align-items-center">
                                     <i class="fas fa-bell fa-3x mb-3"></i>
                                     <h5 class="mb-2">Send notification for Staff</h5>
                                 </a>
                             </div>
+                            <?php
+                            if (isset($_GET['topic'])) {
+                                $topic = $_GET['topic'];
+                            }
+                            ?>
                             <div class="bg-light p-3 text-center mb-3">
                                 <div class="d-flex justify-content-between">
                                     <a href="QAC_All_Ideas.php?topic=<?php echo $topic; ?>"
@@ -150,7 +150,8 @@ if (!isset($_SESSION['login'])) {
                         // get ideas that sent with get method ?idea = id
                         if (isset($_GET['topic'])) {
                             $topic = $_GET['topic'];
-                            $sql = "SELECT * FROM Idea, Staff, Topic WHERE Idea.StaffID = Staff.StaffID AND Idea.TopicID = Topic.TopicID AND Topic.TopicID = $topic ORDER BY Idea.PostDate DESC";
+                            $department = $_SESSION['department_id'];
+                            $sql = "SELECT * FROM Idea, Staff, Topic WHERE Idea.StaffID = Staff.StaffID AND Idea.TopicID = Topic.TopicID AND Topic.TopicID = $topic AND Staff.DepartmentID = $department ORDER BY Idea.PostDate DESC";
                             $result = mysqli_query($conn, $sql);
                         }
                         ?>

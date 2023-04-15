@@ -1,6 +1,9 @@
 <?php
 include("connection.php");
 session_start(); // Start the session
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+require 'PHPMailer/src/Exception.php';
 if (!isset($_SESSION['login'])) {
     header("Location: index.php");
 } else {
@@ -43,7 +46,7 @@ if (!isset($_SESSION['login'])) {
                         <!-- top -->
                         <!-- avatar -->
                         <li class="dropdown-item p-1 rounded">
-                            <a href="#" class="d-flex align-items-center text-decoration-none text-dark">
+                            <a href="Settings.php" class="d-flex align-items-center text-decoration-none text-dark">
                                 <div class="p-2">
                                     <img src="https://source.unsplash.com/collection/happy-people" alt="avatar"
                                          class="rounded-circle me-2"
@@ -278,8 +281,56 @@ if (!isset($_SESSION['login'])) {
                                             echo "<script>window.location.href = 'Staff_PostIdeas.php?topic=$topicID'</script>";
                                         }
                                     }
-                                    echo "<script>alert('Idea added successfully.')</script>";
-                                    echo "<script>window.location.href = 'Staff_PostIdeas.php?topic=$topicID'</script>";
+
+                                    // Send email notification to QA Coordinator
+                                    $sql = "SELECT * FROM Staff,Department, Role WHERE Staff.DepartmentID = Department.DepartmentID AND Staff.RoleID = Role.RoleID AND Role.RoleID = 2 AND Department.DepartmentID = " . $_SESSION['department_id'];
+
+                                    $result = mysqli_query($conn, $sql);
+                                    $row = mysqli_fetch_assoc($result);
+                                    $email = $row['Email'];
+                                    $name = $row['FullName'];
+                                    // get topic name
+                                    $sql = "SELECT * FROM Topic WHERE TopicID = " . $topicID;
+                                    $result = mysqli_query($conn, $sql);
+                                    $row = mysqli_fetch_assoc($result);
+                                    $topicname = $row['TopicName'];
+
+                                    $mail = new PHPMailer\PHPMailer\PHPMailer();
+                                    $to = $email;
+                                    $subject = 'New idea has been submitted';
+                                    $message = 'Dear ' . $name . ',<br><br>';
+                                    $message .= 'A new idea has been submitted to the topic ' . $topicname . '.<br><br> Please login to the system to review the idea.<br><br>';
+                                    $message .= 'Thank you,<br>Greenwich Quality Assurance Manager';
+
+                                    // Set up the email headers
+
+                                    try {
+                                        // Server settings
+                                        $mail->SMTPDebug = 0;
+                                        $mail->isSMTP();
+                                        $mail->Host = 'smtp.gmail.com';
+                                        $mail->SMTPAuth = true;
+                                        $mail->Username = 'greenwich.qa@gmail.com';
+                                        $mail->Password = 'iebdmpqvvkpjglec';
+                                        $mail->SMTPSecure = 'tls';
+                                        $mail->Port = 587;
+
+                                        // Recipients
+                                        $mail->setFrom('greenwich.qa@gmail.com', 'Greenwich QA');
+                                        $mail->addAddress($to, $name);
+
+                                        // Content
+                                        $mail->isHTML(true);
+                                        $mail->Subject = $subject;
+                                        $mail->Body = $message;
+
+                                        $mail->send();
+                                        echo "<script>alert('Idea added successfully.')</script>";
+                                        echo "<script>window.location.href = 'Staff_PostIdeas.php?topic=$topicID'</script>";
+                                    } catch (Exception $e) {
+                                        echo "<script>alert('Message could not be sent. Mailer Error: {$mail->ErrorInfo}')</script>";
+                                        echo "<script>window.location.href = 'Staff_PostIdeas.php?topic=$topicID'</script>";
+                                    }
                                 } else {
                                     echo "<script>alert('Error while adding idea: " . mysqli_error($conn) . "')</script>";
                                     echo "<script>window.location.href = 'Staff_PostIdeas.php?topic=$topicID'</script>";
@@ -588,7 +639,8 @@ if (!isset($_SESSION['login'])) {
                                                 </div>
                                                 <!-- Comment form -->
                                                 <div class="mt-3">
-                                                    <form action="Staff.php" method="post">
+                                                    <form action="Staff_PostIdeas.php?topic=<?php echo $topic; ?>"
+                                                          method="post">
                                                         <!-- Comment content input -->
                                                         <input type="hidden" name="ideaID"
                                                                value="<?php echo $row['IdeaID']; ?>">
@@ -623,9 +675,6 @@ if (!isset($_SESSION['login'])) {
                         include("connection.php");
                         // add comment for topic
                         if (isset($_POST['add-comment'])) {
-                            if (isset($_GET['topic'])) {
-                                $topic = $_GET['topic'];
-                            }
                             $ideaID = $_POST['ideaID'];
                             $content = $_POST['commentContent'];
                             $staffID = $_SESSION['staff_id'];
@@ -635,8 +684,51 @@ if (!isset($_SESSION['login'])) {
                             $sql = "INSERT INTO Comment (CommentContent, StaffID, IdeaID, is_anonymous, CommentDate) VALUES ('$content', '$staffID', '$ideaID', '$isAnonymous', '$commentDate')";
 
                             if (mysqli_query($conn, $sql)) {
-                                echo "<script>alert('Comment added successfully!')</script>";
-                                echo "<script>window.location.href='Staff_PostIdeas.php?topic=" . $topic . "'</script>";
+                                //  The author of an idea receives an automatic email notification whenever a comment is submitted to any of their ideas.
+                                $sql2 = "SELECT * FROM Idea WHERE IdeaID = '$ideaID'";
+                                $result2 = mysqli_query($conn, $sql2);
+                                $row2 = mysqli_fetch_assoc($result2);
+                                $authorID = $row2['StaffID'];
+                                $sql3 = "SELECT * FROM Staff WHERE StaffID = '$authorID'";
+                                $result3 = mysqli_query($conn, $sql3);
+                                $row3 = mysqli_fetch_assoc($result3);
+                                $authorEmail = $row3['Email'];
+                                $authorName = $row3['StaffName'];
+                                $to = $authorEmail;
+                                $subject = "New comment on your idea";
+                                $message = "Dear " . $row3['StaffName'] . ",<br><br> A new comment has been submitted to your idea $row2[Title].<br><br>";
+                                $message .= 'Comment: ' . $content . '<br><br>';
+                                $message .= 'Please login to your account to view the comment.<br><br>';
+                                $message .= 'Thank you,<br>Greenwich Quality Assurance Manager';
+
+                                // Set up the email headers
+                                $mail = new PHPMailer\PHPMailer\PHPMailer();
+
+                                try {
+                                    // Server settings
+                                    $mail->SMTPDebug = 0;
+                                    $mail->isSMTP();
+                                    $mail->Host = 'smtp.gmail.com';
+                                    $mail->SMTPAuth = true;
+                                    $mail->Username = 'greenwich.qa@gmail.com';
+                                    $mail->Password = 'iebdmpqvvkpjglec';
+                                    $mail->SMTPSecure = 'tls';
+                                    $mail->Port = 587;
+
+                                    // Recipients
+                                    $mail->setFrom('greenwich.qa@gmail.com', 'Greenwich QA');
+                                    $mail->addAddress($to, $authorName);
+
+                                    // Content
+                                    $mail->isHTML(true);
+                                    $mail->Subject = $subject;
+                                    $mail->Body = $message;
+                                    $mail->send();
+                                    echo "<script>alert('Comment added successfully!')</script>";
+                                    echo "<script>window.location.href='Staff_PostIdeas.php?topic=$topic'</script>";
+                                } catch (Exception $e) {
+                                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                                }
                             } else {
                                 echo "<script>alert('Error: " . $sql . "<br>" . mysqli_error($conn) . "')</script>";
                             }

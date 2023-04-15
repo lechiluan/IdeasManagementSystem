@@ -83,24 +83,54 @@ CREATE TABLE Comment
 );
 
 
-INSERT INTO Department (DepartmentID, DepartmentName)
-VALUES (1, 'Academy'),
-       (2, 'Office of Student Affairs'),
-       (3, 'Marketing'),
-       (4, 'Support'),
-       (5, 'IT'),
-       (6, 'Finance');
+INSERT INTO Department (DepartmentName)
+VALUES ('Academy'),
+       ('Office of Student Affairs'),
+       ('Marketing'),
+       ('Support'),
+       ('IT'),
+       ('Finance');
 
-INSERT INTO Role (RoleID, RoleName)
-VALUES (1, 'Quality Assurance Manager (QAM)'),
-       (2, 'Quality Assurance Coordinator(QAC)'),
-       (3, 'Staff');
+INSERT INTO Role (RoleName)
+VALUES ('Quality Assurance Manager (QAM)'),
+       ('Quality Assurance Coordinator(QAC)'),
+       ('Staff');
 
 
-INSERT INTO Staff (StaffID, FullName, Email, Password, RoleID, DepartmentID)
-VALUES (1, 'QAM', 'QAM.greenwich@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 1, 1),
-       (2, 'QAC', 'chiluan6601@gmail.com', '$2y$10$pjaXpyOBJ9Y964u7E4GWv.wy2IMbLdhd/Wj9vSmw4o/UxI8ya6V2C', 2, 1),
-       (3, 'Biran Lee', 'lclshop.dev.@gmail.com', '$2y$10$FlkAQm89yKb4/sOpNEM8UOkPxu.deAdb4vFRq6OAs74aaG5F7vIOu', 3,
-        2),
-       (4, 'Le Trung Kien', 'trungkien@gmail.com', '$2y$10$jukBN3dfGBBjR2RsYz9geuZsbUwPMZnVbb1H7Cj1IoaG0jYMOdciy', 3,
-        3);
+INSERT INTO Staff (FullName, Email, Password, RoleID, DepartmentID)
+VALUES ('Quality Assurance Manager', 'QAM.greenwich@gmail.com',
+        '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 1, 1),
+       ('Quality Assurance Coordinator', 'chiluan6601@gmail.com',
+        '$2y$10$pjaXpyOBJ9Y964u7E4GWv.wy2IMbLdhd/Wj9vSmw4o/UxI8ya6V2C', 2, 1),
+       ('Staff 1', 'staff1@example.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 2', 'staff2@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 3', 'staff3@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 4', 'staff4@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 5', 'staff5@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 6', 'staff6@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 7', 'staff7@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 8', 'staff8@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 9', 'staff9@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 10', 'staff10@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 11', 'staff11@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 12', 'staff12@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 13', 'staff13@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 14', 'staff14@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 15', 'staff15@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 16', 'staff16@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 17', 'staff17@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 18', 'staff18@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 19', 'staff19@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 20', 'staff20@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 21', 'staff21@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 22', 'staff22@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 23', 'staff23@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 24', 'staff24@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 25', 'staff25@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 26', 'staff26@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 27', 'staff27@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 28', 'staff28@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 29', 'staff29@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 30', 'staff30@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 31', 'staff31@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1),
+       ('Staff 32', 'staff32@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 2, 1)

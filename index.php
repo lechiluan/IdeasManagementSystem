@@ -29,7 +29,7 @@ if (isset($_SESSION["staff_id"])) {
             background-image: url(./img/illustration.jpg)
         }
     </style>
-    <title>Sign In</title>
+    <title>University of Greenwich - Ideas Portal</title>
 </head>
 
 <body>

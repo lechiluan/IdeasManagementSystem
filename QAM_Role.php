@@ -179,6 +179,7 @@ if (!isset($_SESSION['login'])) {
                             <tr>
                                 <th>ID</th>
                                 <th>Role Name</th>
+                                <th>Account Count</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -187,6 +188,12 @@ if (!isset($_SESSION['login'])) {
                             <tr>
                                 <td><?php echo $row['RoleID']; ?></td>
                                 <td><?php echo $row['RoleName']; ?></td>
+                                <td><?php
+                                    $role_id = $row['RoleID'];
+                                    $sql = "SELECT * FROM Staff WHERE RoleID = '$role_id'";
+                                    $result2 = mysqli_query($conn, $sql);
+                                    echo mysqli_num_rows($result2);
+                                    ?></td>
                                 <td>
                                     <button class="btn btn-outline-primary" id="edit-role"
                                             data-id="<?php echo $row['RoleID']; ?>"

@@ -394,10 +394,6 @@ if (!isset($_SESSION['login'])) {
                                                         data-id-delete="<?php echo $row['TopicID'] ?>" <?php if ($idea_count != 0) echo 'disabled'; ?>>
                                                     Delete
                                                 </button>
-                                                <button class="btn btn-sm btn-secondary view-ideas"
-                                                        onclick="window.location.href='QAM_Ideas.php'">View all
-                                                    ideas
-                                                </button>
                                             </td>
                                         </tr>
                                         </tbody>
@@ -564,10 +560,9 @@ if (!isset($_SESSION['login'])) {
                                                                 data-id-delete="<?php echo $row['TopicID'] ?>" <?php if ($idea_count != 0) echo 'disabled'; ?>>
                                                             Delete
                                                         </button>
-                                                        <button class="btn btn-sm btn-secondary view-ideas"
-                                                                onclick="window.location.href='QAM_Ideas.php'">View all
-                                                            ideas
-                                                        </button>
+                                                        <a class="btn btn-sm btn-success view-ideas"
+                                                           href="QAM_Ideas.php?topic=<?php echo $row['TopicID'] ?>">View
+                                                            Ideas</a>
                                                     </td>
                                                 </tr>
                                                 </tbody>

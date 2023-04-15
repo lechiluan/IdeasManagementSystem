@@ -250,7 +250,8 @@ if (!isset($_SESSION['login'])) {
                                                         ?>
                                                         <a href="<?php echo $zipPath; ?>"
                                                            download="<?php echo $zipName; ?>"
-                                                           class="btn btn-primary">Download Documents</a>
+                                                           class="btn btn-primary"><i class="fas fa-download"></i>Download
+                                                            Documents</a>
                                                         <?php
                                                     }
                                                     ?>

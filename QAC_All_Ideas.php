@@ -92,19 +92,19 @@ if (!isset($_SESSION['login'])) {
                 <div class="d-flex flex-column justify-content-center mx-auto main-container">
                     <div class="row">
                         <div class="col-lg-4">
-                            <!-- Send notification for Staff form -->
-                            <div class="bg-light p-3 text-center mb-3">
-                                <a href="#"
-                                   class="text-decoration-none text-dark d-flex flex-column align-items-center">
-                                    <i class="fas fa-bell fa-3x mb-3"></i>
-                                    <h5 class="mb-2">Send notification for Staff</h5>
-                                </a>
-                            </div>
                             <?php
                             if (isset($_GET['topic'])) {
                                 $topic = $_GET['topic'];
                             }
                             ?>
+                            <!-- Send notification for Staff form -->
+                            <div class="bg-light p-3 text-center mb-3">
+                                <a href="QAC_Send_Notification.php?topic=<?php echo $topic; ?>"
+                                   class="text-decoration-none text-dark d-flex flex-column align-items-center">
+                                    <i class="fas fa-bell fa-3x mb-3"></i>
+                                    <h5 class="mb-2">Send notification for Staff</h5>
+                                </a>
+                            </div>
                             <div class="bg-light p-3 text-center mb-3">
                                 <div class="d-flex justify-content-between">
                                     <a href="QAC_All_Ideas.php?topic=<?php echo $topic; ?>"
@@ -250,7 +250,8 @@ if (!isset($_SESSION['login'])) {
                                                         ?>
                                                         <a href="<?php echo $zipPath; ?>"
                                                            download="<?php echo $zipName; ?>"
-                                                           class="btn btn-primary">Download Documents</a>
+                                                           class="btn btn-primary"><i class="fas fa-download"></i>Download
+                                                            Documents</a>
                                                         <?php
                                                     }
                                                     ?>

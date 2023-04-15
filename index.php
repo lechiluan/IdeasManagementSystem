@@ -74,23 +74,6 @@ if (isset($_SESSION["staff_id"])) {
                                     </div>
                                 </div>
                             </form>
-                            <div id="introduction" class="groupMargin">
-                                <br>
-                                <table width="100%">
-                                    <tbody>
-                                    <tr>
-                                        <th>
-                                            <div style="text-align:left; font-weight:normal"><a
-                                                    href="https://passwordreset.microsoftonline.com/?whr=gre.ac.uk">Forgot
-                                                    Password?</a>
-                                            </div>
-                                        </th>
-                                        <th>
-                                        </th>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>

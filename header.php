@@ -5,7 +5,9 @@
                 <!-- search -->
                 <div class="col d-flex align-items-center">
                     <!--logo -->
-                    <img class="logoImage" src="./img/logo.png" alt="University of Greenwich">
+                    <a href="index.php" class="text-decoration-none">
+                        <img class="logoImage" src="./img/logo.png" alt="University of Greenwich">
+                    </a>
                 </div>
                 <script>
                     // Clear search input when X button is clicked

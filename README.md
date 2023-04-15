@@ -1,15 +1,16 @@
 # IdeasManagementSystem
 Ideas Management System
 
-Quality Assurance Management Account
+Link website: https://greenwichideas.cleverapps.io/
 
+Quality Assurance Management Account
 username = QAM.greenwich@gmail.com
 password = 12345678
 
 Quality Assurance Coordinator Account
-username = QAC.greenwich@gmail.com
+username = qac2@gmail.com
 password = 12345678
 
 Staff Account
-username = staff.greenwich@gmail.com
+username = staff2@gmail.com
 password = 12345678

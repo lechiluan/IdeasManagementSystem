@@ -99,8 +99,8 @@ VALUES (1, 'Quality Assurance Manager (QAM)'),
 
 INSERT INTO Staff (StaffID, FullName, Email, Password, RoleID, DepartmentID)
 VALUES (1, 'QAM', 'QAM.greenwich@gmail.com', '$2y$10$aUaqeyUNjiSTgi44hJxRCOoHYscBb669g1MGlP.oFJYBFW2pm0hAG', 1, 1),
-       (2, 'QAC', 'QAC.greenwich@gmail.com', '$2y$10$pjaXpyOBJ9Y964u7E4GWv.wy2IMbLdhd/Wj9vSmw4o/UxI8ya6V2C', 2, 1),
-       (3, 'Biran Lee', 'staff.greenwich@gmail.com', '$2y$10$FlkAQm89yKb4/sOpNEM8UOkPxu.deAdb4vFRq6OAs74aaG5F7vIOu', 3,
+       (2, 'QAC', 'chiluan6601@gmail.com', '$2y$10$pjaXpyOBJ9Y964u7E4GWv.wy2IMbLdhd/Wj9vSmw4o/UxI8ya6V2C', 2, 1),
+       (3, 'Biran Lee', 'lclshop.dev.@gmail.com', '$2y$10$FlkAQm89yKb4/sOpNEM8UOkPxu.deAdb4vFRq6OAs74aaG5F7vIOu', 3,
         2),
        (4, 'Le Trung Kien', 'trungkien@gmail.com', '$2y$10$jukBN3dfGBBjR2RsYz9geuZsbUwPMZnVbb1H7Cj1IoaG0jYMOdciy', 3,
         3);

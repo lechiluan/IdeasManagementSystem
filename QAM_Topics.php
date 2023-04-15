@@ -351,7 +351,6 @@ if (!isset($_SESSION['login'])) {
                                     <tr>
                                         <th scope="col"></th>
                                         <th scope="col">Topic Name</th>
-                                        <th scope="col">Topic Description</th>
                                         <th scope="col">Create Date</th>
                                         <th scope="col">Action</th>
                                     </tr>
@@ -363,7 +362,6 @@ if (!isset($_SESSION['login'])) {
                                                        id="checkRow"></td>
                                             <td hidden><?php echo $row['TopicID'] ?></td>
                                             <td><?php echo $row['TopicName']; ?></td>
-                                            <td><?php echo $row['Description']; ?></td>
                                             <td><?php echo $row['CreateDate'] ?></td>
                                             <td>
                                                 <button class="btn btn-sm btn-primary edit-deadline"
@@ -494,7 +492,6 @@ if (!isset($_SESSION['login'])) {
                                             <thead>
                                             <tr>
                                                 <th scope="col">Topic Name</th>
-                                                <th scope="col">Topic Description</th>
                                                 <th scope="col">Ideas Count</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Created Date</th>
@@ -505,7 +502,6 @@ if (!isset($_SESSION['login'])) {
                                                 <tbody>
                                                 <tr>
                                                     <td><?php echo $row['TopicName']; ?></td>
-                                                    <td><?php echo $row['Description']; ?></td>
                                                     <td><?php
                                                         include 'connection.php';
                                                         $sql = "SELECT COUNT(*) AS total FROM Idea WHERE TopicID = $row[TopicID]";

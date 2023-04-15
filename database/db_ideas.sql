@@ -33,7 +33,7 @@ CREATE TABLE Topic
 (
     TopicID     INT PRIMARY KEY AUTO_INCREMENT,
     TopicName   VARCHAR(50)  NOT NULL,
-    Description VARCHAR(200) NOT NULL,
+    Description LONGTEXT NOT NULL,
     CreateDate  DATETIME     NOT NULL,
     DeadlineID  INT NULL,
     FOREIGN KEY (DeadlineID) REFERENCES Deadline (DeadlineID)

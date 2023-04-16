@@ -25,7 +25,7 @@ if (isset($_GET['topic'])) {
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'greenwich.qa@gmail.com';
-            $mail->Password = 'qevnixqcokwnulix';
+            $mail->Password = 'rwdibyoqadzmaxbw';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 

@@ -507,8 +507,8 @@ if (!isset($_SESSION['login'])) {
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = 'greenwich.qa@gmail.com';
-                        $mail->Password = 'qevnixqcokwnulix';
+                        $mail->Username = 'qa.greenwich@gmail.com';
+                        $mail->Password = 'rwdibyoqadzmaxbw';
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
 
@@ -665,8 +665,8 @@ if (!isset($_SESSION['login'])) {
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = 'greenwich.qa@gmail.com';
-                        $mail->Password = 'qevnixqcokwnulix';
+                        $mail->Username = 'qa.greenwich@gmail.com';
+                        $mail->Password = 'rwdibyoqadzmaxbw';
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
 

@@ -516,8 +516,8 @@ LIMIT 5 OFFSET $start
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = 'greenwich.qa@gmail.com';
-                        $mail->Password = 'qevnixqcokwnulix';
+                        $mail->Username = 'qa.reenwich@gmail.com';
+                        $mail->Password = 'rwdibyoqadzmaxbw';
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
 
@@ -675,8 +675,8 @@ LIMIT 5 OFFSET $start
                         $mail->isSMTP();
                         $mail->Host = 'smtp.gmail.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = 'greenwich.qa@gmail.com';
-                        $mail->Password = 'qevnixqcokwnulix';
+                        $mail->Username = 'qa.reenwich@gmail.com';
+                        $mail->Password = 'rwdibyoqadzmaxbw';
                         $mail->SMTPSecure = 'tls';
                         $mail->Port = 587;
 

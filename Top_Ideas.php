@@ -454,7 +454,69 @@ LIMIT 5";
                                 </div>
                             <?php } ?>
                         </div>
+                        <?php
+                        include("connection.php");
+                        // add comment for topic
+                        if (isset($_POST['add-comment'])) {
+                            $ideaID = $_POST['ideaID'];
+                            $content = $_POST['commentContent'];
+                            $staffID = $_SESSION['staff_id'];
+                            $commentDate = date("Y-m-d H:i:s");
+                            $isAnonymous = isset($_POST['anonymousComment']) ? 1 : 0;
 
+                            $sql = "INSERT INTO Comment (CommentContent, StaffID, IdeaID, is_anonymous, CommentDate) VALUES ('$content', '$staffID', '$ideaID', '$isAnonymous', '$commentDate')";
+
+                            if (mysqli_query($conn, $sql)) {
+                                //  The author of an idea receives an automatic email notification whenever a comment is submitted to any of their ideas.
+                                $sql2 = "SELECT * FROM Idea WHERE IdeaID = '$ideaID'";
+                                $result2 = mysqli_query($conn, $sql2);
+                                $row2 = mysqli_fetch_assoc($result2);
+                                $authorID = $row2['StaffID'];
+                                $sql3 = "SELECT * FROM Staff WHERE StaffID = '$authorID'";
+                                $result3 = mysqli_query($conn, $sql3);
+                                $row3 = mysqli_fetch_assoc($result3);
+                                $authorEmail = $row3['Email'];
+                                $authorName = $row3['StaffName'];
+                                $to = $authorEmail;
+                                $subject = "New comment on your idea";
+                                $message = "Dear " . $row3['StaffName'] . ",<br><br> A new comment has been submitted to your idea $row2[Title].<br><br>";
+                                $message .= 'Comment: ' . $content . '<br><br>';
+                                $message .= 'Please login at https://greenwichideas.cleverapps.io/ to your account to view the comment.<br><br>';
+                                $message .= 'Thank you,<br>Greenwich Quality Assurance Manager';
+
+                                // Set up the email headers
+                                $mail = new PHPMailer\PHPMailer\PHPMailer();
+
+                                try {
+                                    // Server settings
+                                    $mail->SMTPDebug = 0;
+                                    $mail->isSMTP();
+                                    $mail->Host = 'smtp.gmail.com';
+                                    $mail->SMTPAuth = true;
+                                    $mail->Username = 'qa.greenwich@gmail.com';
+                                    $mail->Password = 'rwdibyoqadzmaxbw';
+                                    $mail->SMTPSecure = 'tls';
+                                    $mail->Port = 587;
+
+                                    // Recipients
+                                    $mail->setFrom('greenwich.qa@gmail.com', 'Greenwich QA');
+                                    $mail->addAddress($to, $authorName);
+
+                                    // Content
+                                    $mail->isHTML(true);
+                                    $mail->Subject = $subject;
+                                    $mail->Body = $message;
+                                    $mail->send();
+                                    echo "<script>alert('Comment added successfully!')</script>";
+                                    echo "<script>window.location.href='Staff_PostIdeas.php?topic=$topic'</script>";
+                                } catch (Exception $e) {
+                                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                                }
+                            } else {
+                                echo "<script>alert('Error: " . $sql . "<br>" . mysqli_error($conn) . "')</script>";
+                            }
+                        }
+                        ?>
                         <div class="col-md-6">
                             <?php
                             // Get 5 ideas with the most comments

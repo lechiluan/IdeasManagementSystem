@@ -1,3 +1,6 @@
 IdeaID,Title,Content,is_anonymous,PostDate,StaffID,TopicID
-1,"Campus Facilities Management System ","A system that manages the maintenance and upkeep of campus buildings and facilities, including work order management, asset tracking, and preventative maintenance planning.",1,"2023-04-15 17:01:14",9,7
-17,"Tutoring Management System ","A system that manages the tutor-tutee matching process, schedules tutoring sessions, and provides resources to tutors and tutees.",0,"2023-04-15 17:50:18",32,7
+2,"Faculty and Staff Directory","A searchable directory that provides contact information for faculty and staff members, including photos, areas of expertise, and office hours.",0,"2023-04-15 17:09:35",9,9
+3,"Campus Safety and Security App ","An app that provides students with real-time alerts and updates on campus safety and security issues, including emergency notifications, crime reports, and weather alerts.",1,"2023-04-15 17:11:05",9,9
+20,"Faculty and Staff Directory ","A searchable directory that provides contact information for faculty and staff members, including photos, areas of expertise, and office hours.",0,"2023-04-15 17:53:18",32,9
+21,"Campus Facilities Management System","A system that manages the maintenance and upkeep of campus buildings and facilities, including work order management, asset tracking, and preventative maintenance planning.",1,"2023-04-15 19:25:38",16,9
+22,"Campus Facilities Management System","A system that manages the maintenance and upkeep of campus buildings and facilities, including work order management, asset tracking, and preventative maintenance planning.",1,"2023-04-16 07:24:20",16,9

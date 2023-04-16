@@ -10,6 +10,11 @@ require 'PHPMailer/src/Exception.php';
 
 if (isset($_GET['topic'])) {
     $topic = $_GET['topic'];
+    //get topic name
+    $sql = "SELECT TopicName FROM Topic WHERE TopicID = '$topic'";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $topicname = $row['TopicName'];
     $department_id = $_SESSION['department_id'];
     // Get all staff email addresses of my department
     $sql = "SELECT Email FROM Staff WHERE DepartmentID = '$department_id'";
@@ -38,7 +43,7 @@ if (isset($_GET['topic'])) {
             // Content
             $mail->isHTML(true);
             $mail->Subject = 'New idea has been submitted';
-            $mail->Body = "Dear staff,<br><br>There is a new idea has been submitted for $topic. at https://greenwichideas.cleverapps.io/. Please add more ideas to this topic to improve the quality of the topic.<br><br>Thank you.<br><br>Greenwich QA<br><br>";
+            $mail->Body = "Dear staff,<br><br>There is a new idea has been submitted for $topicname at https://greenwichideas.cleverapps.io/. Please add more ideas to this topic to improve the quality of the topic.<br><br>Thank you.<br><br>Greenwich QA<br><br>";
             $mail->send();
             echo "<script>alert('Email sent successfully.')</script>";
             // Reload current page after sending email

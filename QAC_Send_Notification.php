@@ -12,7 +12,7 @@ if (isset($_GET['topic'])) {
     $topic = $_GET['topic'];
     $department_id = $_SESSION['department_id'];
     // Get all staff email addresses of my department
-    $sql = "SELECT Email FROM staff WHERE DepartmentID = '$department_id'";
+    $sql = "SELECT Email FROM Staff WHERE DepartmentID = '$department_id'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {

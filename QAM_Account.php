@@ -168,7 +168,7 @@ if (!isset($_SESSION['login'])) {
                                 $mail->Host = 'smtp.gmail.com';
                                 $mail->SMTPAuth = true;
                                 $mail->Username = 'greenwich.qa@gmail.com';
-                                $mail->Password = 'iebdmpqvvkpjglec';
+                                $mail->Password = 'qevnixqcokwnulix';
                                 $mail->SMTPSecure = 'tls';
                                 $mail->Port = 587;
 

@@ -160,7 +160,7 @@ if (!isset($_SESSION['login'])) {
                                  style="max-width: 680px;">
                                 <?php if (mysqli_num_rows($result) > 0) { ?>
                                     <div class="d-flex flex-column justify-content-center w-100 mx-auto"
-                                         style="padding-top: 60px; max-width: 680px;">
+                                         style="max-width: 680px;">
                                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                                             <div class="bg-white p-4 rounded shadow mt-3">
                                                 <!-- author -->
@@ -519,7 +519,7 @@ if (!isset($_SESSION['login'])) {
                                     $mail->Host = 'smtp.gmail.com';
                                     $mail->SMTPAuth = true;
                                     $mail->Username = 'greenwich.qa@gmail.com';
-                                    $mail->Password = 'iebdmpqvvkpjglec';
+                                    $mail->Password = 'qevnixqcokwnulix';
                                     $mail->SMTPSecure = 'tls';
                                     $mail->Port = 587;
 

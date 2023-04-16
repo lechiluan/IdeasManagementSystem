@@ -153,7 +153,7 @@ if (!isset($_SESSION['login'])) {
                             $to = $email;
                             $subject = 'Login details for new staff member account';
                             $message = 'Dear ' . $full_name . ',<br><br>';
-                            $message .= 'Your account has been created. Please use the following details to log in:<br><br>';
+                            $message .= 'Your account has been created at https://greenwichideas.cleverapps.io/ Please use the following details to log in:<br><br>';
                             $message .= 'Email: ' . $email . '<br>';
                             $message .= 'Password: ' . $_POST['password'] . '<br><br>';
                             $message .= 'Thank you,<br>Greenwich Quality Assurance Manager';

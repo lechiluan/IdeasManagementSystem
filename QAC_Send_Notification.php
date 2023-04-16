@@ -38,7 +38,7 @@ if (isset($_GET['topic'])) {
             // Content
             $mail->isHTML(true);
             $mail->Subject = 'New idea has been submitted';
-            $mail->Body = "Dear staff,<br><br>There is a new idea has been submitted for $topic. Plaese add more ideas to this topic to improve the quality of the topic.<br><br>Thank you.<br><br>Greenwich QA<br><br>";
+            $mail->Body = "Dear staff,<br><br>There is a new idea has been submitted for $topic. at https://greenwichideas.cleverapps.io/. Please add more ideas to this topic to improve the quality of the topic.<br><br>Thank you.<br><br>Greenwich QA<br><br>";
             $mail->send();
             echo "<script>alert('Email sent successfully.')</script>";
             // Reload current page after sending email

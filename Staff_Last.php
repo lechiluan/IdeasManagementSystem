@@ -495,7 +495,7 @@ if (!isset($_SESSION['login'])) {
                     $subject = "New comment on your idea";
                     $message = "Dear " . $row3['StaffName'] . ",<br><br> A new comment has been submitted to your idea $row2[Title].<br><br>";
                     $message .= 'Comment: ' . $content . '<br><br>';
-                    $message .= 'Please login to your account to view the comment.<br><br>';
+                    $message .= 'Please login at https://greenwichideas.cleverapps.io/ to your account to view the comment.<br><br>';
                     $message .= 'Thank you,<br>Greenwich Quality Assurance Manager';
 
                     // Set up the email headers
@@ -654,7 +654,7 @@ if (!isset($_SESSION['login'])) {
                     $to = $email;
                     $subject = 'New idea has been submitted';
                     $message = 'Dear ' . $name . ',<br><br>';
-                    $message .= 'A new idea has been submitted to the topic ' . $topicname . '.<br><br> Please login to the system to review the idea.<br><br>';
+                    $message .= 'A new idea has been submitted to the topic ' . $topicname . '.<br><br> Please login at https://greenwichideas.cleverapps.io/ to review the idea.<br><br>';
                     $message .= 'Thank you,<br>Greenwich Quality Assurance Manager';
 
                     // Set up the email headers

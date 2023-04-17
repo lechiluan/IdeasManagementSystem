@@ -109,7 +109,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             $_SESSION['staff_id'] = $row['StaffID'];
             $_SESSION['full_name'] = $row['FullName'];
             $_SESSION['email'] = $row['Email'];
-            $_SESSION['phone'] = $row['Phone'];
             $_SESSION['role_id'] = $row['RoleID'];
             $_SESSION['department_id'] = $row['DepartmentID'];
             $_SESSION['login'] = true;

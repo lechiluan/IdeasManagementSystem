@@ -222,7 +222,7 @@ if (!isset($_SESSION['login'])) {
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="email"
-                                           value="<?php echo $row['Email']; ?>" required
+                                           value="<?php echo $row['Email']; ?>" required readonly
                                            style="background-color: #e9ecef;">
                                 </div>
                                 <div class="mb-3">
